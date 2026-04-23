@@ -12,7 +12,9 @@
       "Bash(./node_modules/.bin/tailwindcss init *)",
       "Bash(/Users/gentlemonster/Desktop/screenshot-editor/node_modules/.bin/tailwindcss init *)",
       "Bash(/Users/gentlemonster/Desktop/screenshot-editor/node_modules/.bin/vitest run *)",
-      "Bash(git init *)"
+      "Bash(git init *)",
+      "Bash(git -C /Users/gentlemonster/Desktop/screenshot-editor log --oneline)",
+      "Bash(npm run *)"
     ]
   }
 }
