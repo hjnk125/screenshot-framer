@@ -55,10 +55,12 @@ export function calculateOutputSize(
   screenshot: HTMLImageElement,
   frame: Frame,
   frameImg: HTMLImageElement,
+  shadow: ShadowConfig,
 ): CanvasSize {
   const assetW = frameImg.naturalWidth;
   const assetH = frameImg.naturalHeight;
   const s = computeEffectiveScale(screenshot, frame, frameImg);
+  const pad = shadow.enabled ? SHADOW_PADDING * 2 : 0;
 
   if (frame.browserMeta) {
     const toolbarH = frameImg.naturalHeight;
@@ -66,14 +68,14 @@ export function calculateOutputSize(
       (assetW * screenshot.naturalHeight) / screenshot.naturalWidth,
     );
     return {
-      width: Math.round((assetW + SHADOW_PADDING * 2) * s),
-      height: Math.round((toolbarH + contentH + SHADOW_PADDING * 2) * s),
+      width: Math.round((assetW + pad) * s),
+      height: Math.round((toolbarH + contentH + pad) * s),
     };
   }
 
   return {
-    width: Math.round((assetW + SHADOW_PADDING * 2) * s),
-    height: Math.round((assetH + SHADOW_PADDING * 2) * s),
+    width: Math.round((assetW + pad) * s),
+    height: Math.round((assetH + pad) * s),
   };
 }
 
@@ -170,7 +172,7 @@ function applyToMainCanvas(
   ctx.imageSmoothingQuality = "high";
 
   const layers = buildShadowLayers(shadow);
-  const pad = Math.round(SHADOW_PADDING * scale);
+  const pad = shadow.enabled ? Math.round(SHADOW_PADDING * scale) : 0;
   const drawW = Math.round(offscreen.width * scale);
   const drawH = Math.round(offscreen.height * scale);
 

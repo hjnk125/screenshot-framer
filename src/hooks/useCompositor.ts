@@ -128,8 +128,8 @@ export function useCompositor({
     if (!screenshot || !frame) return null;
     const frameImg = frameImgCache.current.get(frame.assetPath);
     if (!frameImg) return null;
-    return calculateOutputSize(screenshot, frame, frameImg);
-  }, [screenshot, frame]);
+    return calculateOutputSize(screenshot, frame, frameImg, shadow);
+  }, [screenshot, frame, shadow]);
 
   return { renderToCanvas, exportPng, getOutputSize };
 }
