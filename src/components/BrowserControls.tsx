@@ -50,21 +50,17 @@ export function BrowserControls({ frame, state }: BrowserControlsProps) {
             Favicon
           </label>
           <div className="flex items-center gap-2">
+            {(state.favicon || frame.browserMeta?.defaultFaviconPath) && (
+              <img
+                src={state.favicon?.src ?? frame.browserMeta?.defaultFaviconPath}
+                className="aspect-square h-[30px] rounded-[7px] border border-black/[0.07] object-cover"
+              />
+            )}
             <button
               onClick={() => faviconInputRef.current?.click()}
               className="flex items-center gap-1.5 rounded-[7px] border border-black/[0.07] bg-card-inner px-2.5 py-1.5 text-[11.5px] font-semibold text-ink transition-colors hover:border-black/20"
             >
-              {state.favicon ? (
-                <>
-                  <img
-                    src={state.favicon.src}
-                    className="h-4 w-4 rounded-sm object-cover"
-                  />
-                  <span>Change</span>
-                </>
-              ) : (
-                <span>Upload</span>
-              )}
+              <span>{state.favicon ? "Change" : "Upload"}</span>
             </button>
             {state.favicon && (
               <button
