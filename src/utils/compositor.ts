@@ -39,8 +39,13 @@ function drawScreenshot(
   const { x, y, width: sw, height: sh } = screenArea
   const { scale, offsetX, offsetY } = transform
 
-  const drawW = sw * scale
-  const drawH = sh * scale
+  // 원본 비율 유지하면서 screenArea를 cover (scale=1 → 꽉 채움)
+  const imgW = screenshot.naturalWidth
+  const imgH = screenshot.naturalHeight
+  const coverScale = Math.max(sw / imgW, sh / imgH)
+
+  const drawW = imgW * coverScale * scale
+  const drawH = imgH * coverScale * scale
   const drawX = x + (sw - drawW) / 2 + offsetX
   const drawY = y + (sh - drawH) / 2 + offsetY
 

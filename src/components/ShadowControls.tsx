@@ -42,7 +42,7 @@ export function ShadowControls({ value, onChange }: ShadowControlsProps) {
             value={value.color}
             disabled={!value.enabled}
             onChange={e => update({ color: e.target.value })}
-            className="h-7 w-10 cursor-pointer rounded border-2 border-[#222] bg-transparent"
+            className="h-7 w-10 cursor-pointer rounded border border-[#222] bg-transparent"
           />
         </div>
       </div>

@@ -26,7 +26,7 @@ export function UploadZone({ onFile }: UploadZoneProps) {
       onDragOver={e => { e.preventDefault(); setDragging(true) }}
       onDragLeave={() => setDragging(false)}
       onDrop={handleDrop}
-      className={`flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed p-10 transition-colors ${
+      className={`flex cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed p-10 transition-colors ${
         dragging
           ? 'border-lime-500 bg-lime-50'
           : 'border-[#222] hover:border-lime-500 hover:bg-lime-50'

@@ -14,13 +14,13 @@ export function FramePicker({ selectedId, onSelect }: FramePickerProps) {
 
   return (
     <div>
-      <div className="flex gap-0 rounded-lg border-2 border-[#222] overflow-hidden mb-3">
+      <div className="flex gap-0 rounded-lg border border-[#222] overflow-hidden mb-3">
         {(['device', 'browser'] as FrameCategory[]).map((cat, i) => (
           <button
             key={cat}
             onClick={() => setTab(cat)}
             className={`flex-1 px-3 py-1.5 text-sm font-medium transition-colors ${
-              i > 0 ? 'border-l-2 border-[#222]' : ''
+              i > 0 ? 'border-l border-[#222]' : ''
             } ${
               tab === cat
                 ? 'bg-[#222] text-white'

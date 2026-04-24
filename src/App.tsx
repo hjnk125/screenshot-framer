@@ -41,16 +41,16 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-white text-[#222]">
-      <header className="border-b-2 border-[#222] px-6 py-4">
+      <header className="border-b border-[#222] px-6 py-4">
         <h1 className="text-lg font-bold tracking-tight">Screenshot Framer</h1>
       </header>
 
       <main className="mx-auto max-w-7xl p-6 grid grid-cols-[320px_1fr] gap-6 h-[calc(100vh-65px)]">
-        <aside className="flex flex-col overflow-y-auto border-r-2 border-[#222] pr-6">
+        <aside className="flex flex-col overflow-y-auto border-r border-[#222] pr-6">
           <div className="border-b border-[#222] pb-5 mb-5">
             <h2 className="mb-2 text-xs font-bold uppercase tracking-wider text-[#222]">스크린샷</h2>
             {image ? (
-              <div className="flex items-center justify-between rounded-xl border-2 border-[#222] px-3 py-2 text-sm">
+              <div className="flex items-center justify-between rounded-xl border border-[#222] px-3 py-2 text-sm">
                 <span className="text-[#222] truncate font-medium">업로드 완료</span>
                 <button onClick={clearImage} className="text-[#222] hover:text-red-600 ml-2 font-bold text-lg leading-none">×</button>
               </div>
