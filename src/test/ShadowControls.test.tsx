@@ -4,7 +4,7 @@ import { ShadowControls } from '../components/ShadowControls'
 import type { ShadowConfig } from '../types/frame'
 import { describe, it, expect, vi } from 'vitest'
 
-const defaultShadow: ShadowConfig = { enabled: false, color: '#000000', blur: 40, intensity: 50 }
+const defaultShadow: ShadowConfig = { enabled: false, opacity: 100 }
 
 describe('ShadowControls', () => {
   it('그림자 체크박스를 렌더링한다', () => {

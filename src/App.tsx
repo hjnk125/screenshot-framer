@@ -14,10 +14,8 @@ import { PreviewCanvas } from './components/PreviewCanvas'
 import { Toast } from './components/Toast'
 
 const DEFAULT_SHADOW: ShadowConfig = {
-  enabled: false,
-  color: '#000000',
-  blur: 40,
-  intensity: 50,
+  enabled: true,
+  opacity: 100,
 }
 
 export default function App() {

@@ -2,11 +2,24 @@ import type { Frame, ShadowConfig, ImageTransform, ExportScale, BrowserState, Sc
 
 export type CanvasSize = { width: number; height: number }
 
-export type ShadowSettings = {
-  shadowColor: string
-  shadowBlur: number
-  shadowOffsetX: number
-  shadowOffsetY: number
+// Padding added around the frame to make shadows visible
+const SHADOW_PADDING = 80
+
+type ShadowLayer = {
+  color: string
+  blur: number
+  offsetX: number
+  offsetY: number
+}
+
+function buildShadowLayers(config: ShadowConfig): ShadowLayer[] {
+  if (!config.enabled) return []
+  const t = config.opacity / 100
+  return [
+    { color: `rgba(0,0,0,${(0.7 * t).toFixed(3)})`, blur: 1,  offsetX: 0, offsetY: 0  },
+    { color: `rgba(0,0,0,${(0.3 * t).toFixed(3)})`, blur: 30, offsetX: 0, offsetY: 20 },
+    { color: `rgba(0,0,0,${(0.2 * t).toFixed(3)})`, blur: 50, offsetX: 0, offsetY: 10 },
+  ]
 }
 
 export function calculateCanvasSize(
@@ -15,19 +28,6 @@ export function calculateCanvasSize(
   scale: ExportScale
 ): CanvasSize {
   return { width: assetWidth * scale, height: assetHeight * scale }
-}
-
-export function buildShadow(config: ShadowConfig): ShadowSettings {
-  if (!config.enabled) {
-    return { shadowColor: 'transparent', shadowBlur: 0, shadowOffsetX: 0, shadowOffsetY: 0 }
-  }
-  const offset = (config.intensity / 100) * 30
-  return {
-    shadowColor: config.color,
-    shadowBlur: config.blur,
-    shadowOffsetX: 0,
-    shadowOffsetY: offset,
-  }
 }
 
 // fitMode: 'cover' = device frames (fill area, crop if needed)
@@ -75,30 +75,39 @@ function applyToMainCanvas(
   scale: ExportScale
 ): void {
   const ctx = canvas.getContext('2d')!
-  const { shadowColor, shadowBlur, shadowOffsetX, shadowOffsetY } = buildShadow(shadow)
-  ctx.shadowColor = shadowColor
-  ctx.shadowBlur = shadowBlur * scale
-  ctx.shadowOffsetX = shadowOffsetX * scale
-  ctx.shadowOffsetY = shadowOffsetY * scale
-  ctx.drawImage(offscreen, 0, 0, canvas.width, canvas.height)
-  ctx.shadowColor = 'transparent'
-  ctx.shadowBlur = 0
-  ctx.shadowOffsetX = 0
-  ctx.shadowOffsetY = 0
+  const layers = buildShadowLayers(shadow)
+  const pad = SHADOW_PADDING * scale
+
+  canvas.width = offscreen.width * scale + pad * 2
+  canvas.height = offscreen.height * scale + pad * 2
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+  if (layers.length > 0) {
+    // Draw each shadow layer onto a temp canvas, then composite under the image
+    const shadowCanvas = document.createElement('canvas')
+    shadowCanvas.width = canvas.width
+    shadowCanvas.height = canvas.height
+    const sCtx = shadowCanvas.getContext('2d')!
+
+    for (const layer of layers) {
+      sCtx.shadowColor = layer.color
+      sCtx.shadowBlur = layer.blur * scale
+      sCtx.shadowOffsetX = layer.offsetX * scale
+      sCtx.shadowOffsetY = layer.offsetY * scale
+      sCtx.drawImage(offscreen, pad, pad, offscreen.width * scale, offscreen.height * scale)
+    }
+
+    ctx.drawImage(shadowCanvas, 0, 0)
+  }
+
+  // Draw the actual image on top (no shadow, covers ghost copies from shadow draws)
+  ctx.drawImage(offscreen, pad, pad, offscreen.width * scale, offscreen.height * scale)
 }
 
 function drawDeviceComposite(params: DrawCompositeParams): void {
   const { canvas, screenshot, frameImg, frame, transform, shadow, scale } = params
   const assetW = frameImg.naturalWidth
   const assetH = frameImg.naturalHeight
-  const { width, height } = calculateCanvasSize(assetW, assetH, scale)
-
-  canvas.width = width
-  canvas.height = height
-
-  const ctx = canvas.getContext('2d')
-  if (!ctx) return
-  ctx.clearRect(0, 0, width, height)
 
   const offscreen = document.createElement('canvas')
   offscreen.width = assetW
@@ -116,19 +125,11 @@ function drawBrowserComposite(params: DrawCompositeParams): void {
   const { browserMeta } = frame
   if (!browserMeta) return
 
-  const ctx = canvas.getContext('2d')
-  if (!ctx) return
-
   const assetW = frameImg.naturalWidth
-  const toolbarH = frameImg.naturalHeight  // toolbar image height = full toolbar
+  const toolbarH = frameImg.naturalHeight
   const contentW = assetW
-  // Content height adapts to screenshot's aspect ratio
   const contentH = Math.round(contentW * screenshot.naturalHeight / screenshot.naturalWidth)
   const totalH = toolbarH + contentH
-
-  canvas.width = contentW * scale
-  canvas.height = totalH * scale
-  ctx.clearRect(0, 0, canvas.width, canvas.height)
 
   const offscreen = document.createElement('canvas')
   offscreen.width = contentW
@@ -146,13 +147,9 @@ function drawBrowserComposite(params: DrawCompositeParams): void {
   }
   offCtx.fill()
 
-  // 2. Screenshot into content area
+  // 2. Screenshot into content area (bottom radius only)
   const screenAreaForBrowser: ScreenArea = {
-    x: 0,
-    y: toolbarH,
-    width: contentW,
-    height: contentH,
-    radius: r,
+    x: 0, y: toolbarH, width: contentW, height: contentH, radius: r,
   }
   drawScreenshot(offCtx, screenshot, screenAreaForBrowser, transform, 'width')
 

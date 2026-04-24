@@ -20,57 +20,21 @@ export function ShadowControls({ value, onChange }: ShadowControlsProps) {
         <span className="text-sm font-medium text-[#222]">그림자</span>
       </label>
 
-      <div className={`space-y-3 ${value.enabled ? '' : 'opacity-30 pointer-events-none'}`}>
-        <SliderRow
-          label="강도"
-          value={value.intensity}
-          min={0} max={100}
-          disabled={!value.enabled}
-          onChange={v => update({ intensity: v })}
-        />
-        <SliderRow
-          label="블러"
-          value={value.blur}
-          min={0} max={100}
-          disabled={!value.enabled}
-          onChange={v => update({ blur: v })}
-        />
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-medium text-[#222]">색상</span>
+      <div className={`${value.enabled ? '' : 'opacity-30 pointer-events-none'}`}>
+        <div className="flex items-center gap-3">
+          <span className="w-12 text-xs font-medium text-[#222]">불투명도</span>
           <input
-            type="color"
-            value={value.color}
+            type="range"
+            min={0}
+            max={100}
+            value={value.opacity}
             disabled={!value.enabled}
-            onChange={e => update({ color: e.target.value })}
-            className="h-7 w-10 cursor-pointer rounded border border-[#222] bg-transparent"
+            onChange={e => update({ opacity: Number(e.target.value) })}
+            className="flex-1 accent-lime-500"
           />
+          <span className="w-8 text-right text-xs font-medium text-[#222]">{value.opacity}</span>
         </div>
       </div>
-    </div>
-  )
-}
-
-function SliderRow(props: {
-  label: string
-  value: number
-  min: number
-  max: number
-  disabled: boolean
-  onChange: (v: number) => void
-}) {
-  return (
-    <div className="flex items-center gap-3">
-      <span className="w-8 text-xs font-medium text-[#222]">{props.label}</span>
-      <input
-        type="range"
-        min={props.min}
-        max={props.max}
-        value={props.value}
-        disabled={props.disabled}
-        onChange={e => props.onChange(Number(e.target.value))}
-        className="flex-1 accent-lime-500"
-      />
-      <span className="w-8 text-right text-xs font-medium text-[#222]">{props.value}</span>
     </div>
   )
 }

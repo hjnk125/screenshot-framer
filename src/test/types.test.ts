@@ -17,10 +17,8 @@ describe('타입 구조 검증', () => {
   it('ShadowConfig 타입이 필요한 필드를 가진다', () => {
     const shadow: ShadowConfig = {
       enabled: true,
-      color: '#000000',
-      blur: 40,
-      intensity: 50,
+      opacity: 80,
     }
-    expect(shadow.blur).toBe(40)
+    expect(shadow.opacity).toBe(80)
   })
 })
