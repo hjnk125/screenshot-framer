@@ -39,7 +39,7 @@ export function PreviewCanvas({ screenshot, frame, onPan, renderToCanvas }: Prev
   if (!screenshot || !frame) {
     return (
       <div className="flex h-full items-center justify-center rounded-card border border-black/[0.07] bg-[url('/checkerboard.svg')] bg-repeat">
-        <p className="text-muted text-[13px] font-medium">프레임과 스크린샷을 선택하면 미리보기가 나타납니다</p>
+        <p className="text-muted text-[13px] font-medium">Select a frame and screenshot to preview</p>
       </div>
     )
   }

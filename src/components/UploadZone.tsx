@@ -32,8 +32,8 @@ export function UploadZone({ onFile }: UploadZoneProps) {
           : 'border-black/[0.15] hover:border-accent hover:bg-accent/5'
       }`}
     >
-      <p className="text-[12px] font-semibold text-ink text-center">클릭하거나 드래그해서 스크린샷 업로드</p>
-      <p className="mt-1 text-[10px] text-muted">PNG · JPG · 최대 8,000px</p>
+      <p className="text-[12px] font-semibold text-ink text-center">Click or drag to upload screenshot</p>
+      <p className="mt-1 text-[10px] text-muted">PNG · JPG · max 8,000px</p>
       <input
         ref={inputRef}
         type="file"

@@ -16,7 +16,7 @@ export function ExportControls({ onExport, disabled }: ExportControlsProps) {
     <div className="bg-ink rounded-card-dense p-3 flex flex-col gap-2">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <span className="text-[9.5px] font-bold text-white/60 uppercase tracking-[0.06em]">내보내기</span>
+        <span className="text-[9.5px] font-bold text-white/60 uppercase tracking-[0.06em]">Export</span>
         <span className="text-[10px] text-white/40 font-mono">{scale}× scale</span>
       </div>
 
@@ -44,7 +44,7 @@ export function ExportControls({ onExport, disabled }: ExportControlsProps) {
         className="w-full py-[9px] px-3 rounded-[9px] bg-accent text-ink text-[12.5px] font-bold flex items-center justify-center gap-[6px] disabled:opacity-30 disabled:cursor-not-allowed hover:brightness-95 transition-all"
       >
         <Icon name="download" size={13} strokeWidth={2.2} />
-        PNG 저장
+        Export PNG
       </button>
     </div>
   )

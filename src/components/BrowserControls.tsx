@@ -15,7 +15,7 @@ export function BrowserControls({ frame, state }: BrowserControlsProps) {
     <div className="space-y-3">
       {/* URL 입력 */}
       <div>
-        <label className="block text-[11px] font-semibold text-soft mb-1">주소</label>
+        <label className="block text-[11px] font-semibold text-soft mb-1">URL</label>
         <input
           type="text"
           value={state.url}
@@ -28,13 +28,13 @@ export function BrowserControls({ frame, state }: BrowserControlsProps) {
       {/* 탭 타이틀 (Chrome만) */}
       {hasTabArea && (
         <div>
-          <label className="block text-[11px] font-semibold text-soft mb-1">탭 제목</label>
+          <label className="block text-[11px] font-semibold text-soft mb-1">Tab title</label>
           <input
             type="text"
             value={state.title}
             onChange={e => state.setTitle(e.target.value)}
             className="w-full rounded-[10px] border border-black/[0.07] bg-card-inner px-3 py-1.5 text-[12px] font-medium text-ink focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent"
-            placeholder="페이지 제목"
+            placeholder="Page title"
           />
         </div>
       )}
@@ -51,10 +51,10 @@ export function BrowserControls({ frame, state }: BrowserControlsProps) {
               {state.favicon ? (
                 <>
                   <img src={state.favicon.src} className="w-4 h-4 rounded-sm object-cover" />
-                  <span>변경</span>
+                  <span>Change</span>
                 </>
               ) : (
-                <span>업로드</span>
+                <span>Upload</span>
               )}
             </button>
             {state.favicon && (
@@ -62,7 +62,7 @@ export function BrowserControls({ frame, state }: BrowserControlsProps) {
                 onClick={state.clearFavicon}
                 className="text-[11.5px] text-muted hover:text-ink font-medium transition-colors"
               >
-                제거
+                Remove
               </button>
             )}
           </div>

@@ -6,7 +6,7 @@ export const FRAMES: Frame[] = [
     label: 'MacBook Pro 16',
     category: 'device',
     assetPath: '/frames/device/macbook-pro-16.png',
-    screenArea: { x: 442, y: 377, width: 3456, height: 2170, radius: 0 },
+    screenArea: { x: 442, y: 330, width: 3456, height: 2234, radius: 0 },
     aspectRatio: 3456 / 2170,
   },
   {
@@ -39,7 +39,7 @@ export const FRAMES: Frame[] = [
   },
   {
     id: 'chrome-dark',
-    label: 'Chrome (다크)',
+    label: 'Chrome (Dark)',
     category: 'browser',
     assetPath: '/frames/browser/chrome-dark-toolbar.png',
     screenArea: { x: 0, y: 0, width: 3840, height: 0, radius: 10 },
@@ -72,7 +72,7 @@ export const FRAMES: Frame[] = [
   },
   {
     id: 'safari-bigSur-dark',
-    label: 'Safari (Big Sur) (다크)',
+    label: 'Safari (Big Sur) (Dark)',
     category: 'browser',
     assetPath: '/frames/browser/safari-bigSur-dark-toolbar.png',
     screenArea: { x: 0, y: 0, width: 3840, height: 0, radius: 10 },
@@ -98,7 +98,7 @@ export const FRAMES: Frame[] = [
   },
   {
     id: 'safari-catalina-dark',
-    label: 'Safari (Catalina) (다크)',
+    label: 'Safari (Catalina) (Dark)',
     category: 'browser',
     assetPath: '/frames/browser/safari-catalina-dark-toolbar.png',
     screenArea: { x: 0, y: 0, width: 3840, height: 0, radius: 10 },
