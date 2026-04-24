@@ -57,19 +57,6 @@ export function ExportControls({
         ))}
       </div>
 
-      {/* Output size info */}
-      {outputSize && estimatedBytes !== null && (
-        <div className="flex items-center justify-between">
-          <span className="font-mono text-[10px] text-white/40">
-            {outputSize.width.toLocaleString()} ×{" "}
-            {outputSize.height.toLocaleString()} px
-          </span>
-          <span className="font-mono text-[10px] text-white/40">
-            {formatFileSize(estimatedBytes)}
-          </span>
-        </div>
-      )}
-
       {/* Export button */}
       <button
         onClick={() => onExport(scale)}
@@ -79,6 +66,15 @@ export function ExportControls({
         <Icon name="download" size={13} strokeWidth={2.2} />
         Export PNG
       </button>
+
+      {/* Output size info */}
+      {outputSize && estimatedBytes !== null && (
+        <p className="text-center font-mono text-[10px] text-white/30">
+          {outputSize.width.toLocaleString()} ×{" "}
+          {outputSize.height.toLocaleString()} px ∙{" "}
+          {formatFileSize(estimatedBytes)}
+        </p>
+      )}
     </div>
   );
 }

@@ -1,14 +1,11 @@
 import { useEffect, useRef, useCallback } from "react";
-import type { Frame, ExportScale } from "../types/frame";
+import type { Frame } from "../types/frame";
 
 type PreviewCanvasProps = {
   screenshot: HTMLImageElement | null;
   frame: Frame | null;
   onPan: (dx: number, dy: number) => void;
-  renderToCanvas: (
-    canvas: HTMLCanvasElement,
-    scale: ExportScale,
-  ) => Promise<void>;
+  renderToCanvas: (canvas: HTMLCanvasElement) => Promise<void>;
 };
 
 export function PreviewCanvas({
@@ -22,7 +19,7 @@ export function PreviewCanvas({
 
   useEffect(() => {
     if (!canvasRef.current) return;
-    renderToCanvas(canvasRef.current, 1);
+    renderToCanvas(canvasRef.current);
   }, [renderToCanvas]);
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {

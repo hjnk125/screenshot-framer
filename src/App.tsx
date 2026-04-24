@@ -4,12 +4,14 @@ import { useImageUpload } from "./hooks/useImageUpload";
 import { useImageTransform } from "./hooks/useImageTransform";
 import { useCompositor } from "./hooks/useCompositor";
 import { useBrowserState } from "./hooks/useBrowserState";
+import { useDeviceBg } from "./hooks/useDeviceBg";
 import { UploadZone } from "./components/UploadZone";
 import { FramePicker } from "./components/FramePicker";
 import { ImageAdjust } from "./components/ImageAdjust";
 import { ShadowControls } from "./components/ShadowControls";
 import { ExportControls } from "./components/ExportControls";
 import { BrowserControls } from "./components/BrowserControls";
+import { DeviceControls } from "./components/DeviceControls";
 import { PreviewCanvas } from "./components/PreviewCanvas";
 import { Toast } from "./components/Toast";
 
@@ -29,6 +31,7 @@ export default function App() {
   const [selectedFrame, setSelectedFrame] = useState<Frame | null>(null);
   const [shadow, setShadow] = useState<ShadowConfig>(DEFAULT_SHADOW);
   const browserState = useBrowserState();
+  const deviceBgState = useDeviceBg();
   const [defaultFavicon, setDefaultFavicon] = useState<HTMLImageElement | null>(
     null,
   );
@@ -55,6 +58,7 @@ export default function App() {
     shadow,
     browserState: isBrowser ? browserState : undefined,
     defaultFavicon: isBrowser ? defaultFavicon : null,
+    deviceBg: !isBrowser ? deviceBgState.deviceBg : undefined,
   });
 
   // Fade visibility — show when aside has more content below
@@ -171,7 +175,7 @@ export default function App() {
             showHint={!!image && !selectedFrame}
           />
 
-          {/* 4. Browser controls — conditional */}
+          {/* 4a. Browser controls — conditional */}
           {isBrowser && selectedFrame && (
             <div className="shrink-0 rounded-card-dense border border-black/[0.07] bg-card p-4">
               <div className="mb-3 flex items-center justify-between">
@@ -180,6 +184,18 @@ export default function App() {
                 </span>
               </div>
               <BrowserControls frame={selectedFrame} state={browserState} />
+            </div>
+          )}
+
+          {/* 4b. Device controls — conditional */}
+          {!isBrowser && selectedFrame && (
+            <div className="shrink-0 rounded-card-dense border border-black/[0.07] bg-card p-4">
+              <div className="mb-3 flex items-center justify-between">
+                <span className="text-[10px] font-semibold uppercase tracking-[0.05em] text-soft">
+                  Device
+                </span>
+              </div>
+              <DeviceControls state={deviceBgState} />
             </div>
           )}
 

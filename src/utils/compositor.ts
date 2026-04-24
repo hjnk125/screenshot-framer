@@ -5,6 +5,7 @@ import type {
   ExportScale,
   BrowserState,
   ScreenArea,
+  DeviceBgConfig,
 } from "../types/frame";
 
 export type CanvasSize = { width: number; height: number };
@@ -172,9 +173,48 @@ function applyToMainCanvas(
   );
 }
 
+function drawDeviceBg(
+  ctx: CanvasRenderingContext2D,
+  bg: DeviceBgConfig,
+  screenArea: ScreenArea,
+): void {
+  if (bg.type === "transparent") return;
+  const { x, y, width: w, height: h, radius } = screenArea;
+
+  ctx.save();
+  ctx.beginPath();
+  if (radius > 0 && ctx.roundRect) {
+    ctx.roundRect(x, y, w, h, radius);
+  } else {
+    ctx.rect(x, y, w, h);
+  }
+  ctx.clip();
+
+  if (bg.type === "white" || bg.type === "black") {
+    ctx.fillStyle = bg.type === "white" ? "#ffffff" : "#000000";
+    ctx.fillRect(x, y, w, h);
+  } else if (bg.type === "image" && bg.image) {
+    const { naturalWidth: iw, naturalHeight: ih } = bg.image;
+    const bgScale = Math.max(w / iw, h / ih);
+    const dw = iw * bgScale;
+    const dh = ih * bgScale;
+    ctx.drawImage(bg.image, x + (w - dw) / 2, y + (h - dh) / 2, dw, dh);
+  }
+
+  ctx.restore();
+}
+
 function drawDeviceComposite(params: DrawCompositeParams): void {
-  const { canvas, screenshot, frameImg, frame, transform, shadow, scale } =
-    params;
+  const {
+    canvas,
+    screenshot,
+    frameImg,
+    frame,
+    transform,
+    shadow,
+    scale,
+    deviceBg,
+  } = params;
   const assetW = frameImg.naturalWidth;
   const assetH = frameImg.naturalHeight;
 
@@ -183,18 +223,17 @@ function drawDeviceComposite(params: DrawCompositeParams): void {
   offscreen.height = assetH;
   const offCtx = offscreen.getContext("2d")!;
 
+  // 1. Background (below screenshot)
+  if (deviceBg) {
+    drawDeviceBg(offCtx, deviceBg, frame.screenArea);
+  }
+
+  // 2. Screenshot
   drawScreenshot(offCtx, screenshot, frame.screenArea, transform, "cover");
+  // 3. Frame overlay
   offCtx.drawImage(frameImg, 0, 0, assetW, assetH);
 
-  // 1x = screenshot native pixels + frame proportional around it
-  const { width: sw, height: sh } = frame.screenArea;
-  const coverBase = Math.max(
-    sw / screenshot.naturalWidth,
-    sh / screenshot.naturalHeight,
-  );
-  const effectiveScale = (1 / coverBase) * scale;
-
-  applyToMainCanvas(canvas, offscreen, shadow, effectiveScale);
+  applyToMainCanvas(canvas, offscreen, shadow, scale);
 }
 
 function drawBrowserComposite(params: DrawCompositeParams): void {
@@ -310,11 +349,7 @@ function drawBrowserComposite(params: DrawCompositeParams): void {
     offCtx.fillText(text, titleX, midY);
   }
 
-  // 1x = screenshot native width + frame proportional around it
-  const naturalScale = screenshot.naturalWidth / assetW;
-  const effectiveScale = naturalScale * scale;
-
-  applyToMainCanvas(canvas, offscreen, shadow, effectiveScale);
+  applyToMainCanvas(canvas, offscreen, shadow, scale);
 }
 
 export type DrawCompositeParams = {
@@ -324,9 +359,10 @@ export type DrawCompositeParams = {
   frame: Frame;
   transform: ImageTransform;
   shadow: ShadowConfig;
-  scale: ExportScale;
+  scale: number; // raw multiplier applied to the frame asset size
   browserState?: BrowserState;
   defaultFavicon?: HTMLImageElement | null;
+  deviceBg?: DeviceBgConfig;
 };
 
 export function drawComposite(params: DrawCompositeParams): void {

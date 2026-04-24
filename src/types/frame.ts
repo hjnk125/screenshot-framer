@@ -67,3 +67,10 @@ export type ImageTransform = {
 };
 
 export type ExportScale = 1 | 2;
+
+export type DeviceBgType = "transparent" | "white" | "black" | "image";
+
+export type DeviceBgConfig = {
+  type: DeviceBgType;
+  image: HTMLImageElement | null;
+};
