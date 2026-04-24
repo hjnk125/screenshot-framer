@@ -32,8 +32,8 @@ export const FRAMES: Frame[] = [
       tabArea: {
         x: 234, y: 20, width: 720, height: 100,
         bgColor: '#ffffff', textColor: '#202124', fontSize: 26,
-        faviconX: 32, faviconY: 36, faviconSize: 28,
-        textOffsetX: 72,
+        faviconX: 32, faviconY: 35, faviconSize: 30,
+        textOffsetX: 76,
       },
       defaultFaviconPath: '/chrome-light-favicon.svg',
     },
@@ -53,8 +53,8 @@ export const FRAMES: Frame[] = [
       tabArea: {
         x: 234, y: 20, width: 720, height: 100,
         bgColor: '#35363a', textColor: '#e8eaed', fontSize: 26,
-        faviconX: 32, faviconY: 36, faviconSize: 28,
-        textOffsetX: 72,
+        faviconX: 32, faviconY: 35, faviconSize: 30,
+        textOffsetX: 76,
       },
       defaultFaviconPath: '/chrome-dark-favicon.svg',
     },

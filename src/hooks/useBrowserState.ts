@@ -8,8 +8,8 @@ export type UseBrowserStateReturn = BrowserState & {
   clearFavicon: () => void
 }
 
-const DEFAULT_URL = 'https://figma.com'
-const DEFAULT_TITLE = 'Figma'
+const DEFAULT_URL = 'https://www.example.com'
+const DEFAULT_TITLE = 'New Tab'
 
 export function useBrowserState(): UseBrowserStateReturn {
   const [url, setUrl] = useState(DEFAULT_URL)

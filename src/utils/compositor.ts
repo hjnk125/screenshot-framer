@@ -156,19 +156,9 @@ function drawBrowserComposite(params: DrawCompositeParams): void {
   // 3. Toolbar image on top
   offCtx.drawImage(frameImg, 0, 0, contentW, toolbarH)
 
-  // 4. URL bar overlay
+  // 4. URL bar text overlay (no background fill — toolbar image provides background)
   const { urlBar } = browserMeta
   if (urlBar.width > 0 && browserState?.url) {
-    offCtx.fillStyle = urlBar.bgColor
-    offCtx.beginPath()
-    const urlR = urlBar.height / 2
-    if (offCtx.roundRect) {
-      offCtx.roundRect(urlBar.x, urlBar.y, urlBar.width, urlBar.height, urlR)
-    } else {
-      offCtx.rect(urlBar.x, urlBar.y, urlBar.width, urlBar.height)
-    }
-    offCtx.fill()
-
     offCtx.fillStyle = urlBar.textColor
     offCtx.font = `${urlBar.fontSize}px -apple-system, "Helvetica Neue", sans-serif`
     offCtx.textBaseline = 'middle'
@@ -177,25 +167,17 @@ function drawBrowserComposite(params: DrawCompositeParams): void {
       offCtx.textAlign = 'center'
       offCtx.fillText(browserState.url, urlBar.x + urlBar.width / 2, midY, urlBar.width - 24)
     } else {
+      // left-aligned: place text after lock icon with comfortable padding
       offCtx.textAlign = 'left'
-      offCtx.fillText(browserState.url, urlBar.x + 16, midY, urlBar.width - 32)
+      const textStartX = urlBar.x + 90
+      const maxW = urlBar.width - 90 - 16
+      offCtx.fillText(browserState.url, textStartX, midY, maxW)
     }
   }
 
-  // 5. Favicon overlay in URL bar (Chrome only) — user upload or default
-  if (browserMeta.faviconArea) {
-    const faviconImg = browserState?.favicon ?? defaultFavicon ?? null
-    if (faviconImg) {
-      const { x, y, size } = browserMeta.faviconArea
-      offCtx.drawImage(faviconImg, x, y, size, size)
-    }
-  }
-
-  // 6. Tab area overlay (Chrome only) — title + favicon in active tab
+  // 5. Tab area overlay (Chrome only) — title + favicon (no background fill — toolbar image provides it)
   if (browserMeta.tabArea && browserState?.title) {
     const tab = browserMeta.tabArea
-    offCtx.fillStyle = tab.bgColor
-    offCtx.fillRect(tab.x, tab.y, tab.width, tab.height)
 
     const faviconImg = browserState?.favicon ?? defaultFavicon ?? null
     if (faviconImg) {
@@ -206,8 +188,19 @@ function drawBrowserComposite(params: DrawCompositeParams): void {
     offCtx.font = `${tab.fontSize}px -apple-system, "Helvetica Neue", sans-serif`
     offCtx.textBaseline = 'middle'
     offCtx.textAlign = 'left'
-    const titleMaxW = tab.width - tab.textOffsetX - 20
-    offCtx.fillText(browserState.title, tab.x + tab.textOffsetX, tab.y + tab.height / 2, titleMaxW)
+    const titleX = tab.x + tab.textOffsetX
+    const titleMaxW = tab.width - tab.textOffsetX - 52
+    const midY = tab.y + tab.height / 2
+
+    // Ellipsis truncation
+    let text = browserState.title
+    if (offCtx.measureText(text).width > titleMaxW) {
+      while (text.length > 0 && offCtx.measureText(text + '…').width > titleMaxW) {
+        text = text.slice(0, -1)
+      }
+      text = text + '…'
+    }
+    offCtx.fillText(text, titleX, midY)
   }
 
   applyToMainCanvas(canvas, offscreen, shadow, scale)
