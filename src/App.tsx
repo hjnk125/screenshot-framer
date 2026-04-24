@@ -85,7 +85,7 @@ export default function App() {
               </div>
               <span className="text-[12px] font-semibold text-white">Screenshot Framer</span>
             </div>
-            <span className="text-[10px] text-white/50 font-mono">v0.3</span>
+            <span className="text-[10px] text-white/50 font-mono">v0.1</span>
           </div>
 
           {/* 2. File card */}

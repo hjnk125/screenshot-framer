@@ -41,7 +41,7 @@ export function ShadowControls({ value, onChange }: ShadowControlsProps) {
       {/* Opacity slider (only when enabled) */}
       {value.enabled && (
         <div className="flex items-center gap-[10px]">
-          <span className="text-[11px] font-semibold text-muted shrink-0">0</span>
+          <span className="text-[11px] font-mono text-muted shrink-0">0</span>
           <div className="flex-1 relative h-4 flex items-center">
             <div className="w-full h-[4px] bg-card-inner rounded border border-black/[0.07]" />
             <div
@@ -61,7 +61,7 @@ export function ShadowControls({ value, onChange }: ShadowControlsProps) {
               style={{ left: `calc(${pct}% - 7px)` }}
             />
           </div>
-          <span className="text-[11px] font-semibold text-muted shrink-0 pl-[6px]">100</span>
+          <span className="text-[11px] font-mono text-muted shrink-0 pl-[6px]">100</span>
         </div>
       )}
     </div>

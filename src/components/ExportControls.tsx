@@ -10,7 +10,7 @@ type ExportControlsProps = {
 const SCALES: ExportScale[] = [1, 2, 3]
 
 export function ExportControls({ onExport, disabled }: ExportControlsProps) {
-  const [scale, setScale] = useState<ExportScale>(2)
+  const [scale, setScale] = useState<ExportScale>(1)
 
   return (
     <div className="bg-ink rounded-card-dense p-4 flex flex-col gap-2">
