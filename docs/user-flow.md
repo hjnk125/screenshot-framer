@@ -113,6 +113,24 @@ minWidth:
 
 ---
 
+## Browser 프레임 — Short Toolbar 자동 전환
+
+스크린샷 가로 **800px 미만**이면 모든 브라우저 프레임이 자동으로 **2328px short 툴바**로 전환.
+
+| 구분 | 일반 | Short |
+|---|---|---|
+| 너비 | 3840px | 2328px |
+| 전환 조건 | screenshot.naturalWidth ≥ 800 | screenshot.naturalWidth < 800 |
+| 좌표 방식 | 원본 좌표 | 좌측 기준점 동일, 우측만 짧게 |
+
+**Chrome short toolbar 주요 좌표 (2328px 기준):**
+- `tabArea`: x=234, width=640, faviconX=32, faviconSize=32, textOffsetX=78
+- `urlBar`: x=328, width=1943
+
+구현: `useCompositor.ts`의 `resolveFrame()` 함수에서 처리.
+
+---
+
 ## 반응형 레이아웃
 
 | 구간 | 레이아웃 |
