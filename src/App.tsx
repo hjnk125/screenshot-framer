@@ -137,7 +137,7 @@ export default function App() {
 
           {/* 4. Browser controls — conditional */}
           {isBrowser && selectedFrame && (
-            <div className="bg-card rounded-card border border-black/[0.07] p-4 shrink-0">
+            <div className="bg-card rounded-card-dense border border-black/[0.07] p-4 shrink-0">
               <div className="flex items-center justify-between mb-3">
                 <span className="text-[11px] font-semibold text-soft uppercase tracking-[0.04em]">Browser</span>
               </div>
@@ -175,7 +175,7 @@ export default function App() {
       </div>
 
       {/* Desktop-only preview */}
-      <div className="hidden lg:flex lg:row-span-2 lg:min-h-0 lg:overflow-hidden">
+      <div className="hidden lg:block lg:row-span-2 lg:min-h-0 lg:overflow-hidden">
         <PreviewCanvas
           screenshot={image}
           frame={selectedFrame}
