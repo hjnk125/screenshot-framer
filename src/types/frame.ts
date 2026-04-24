@@ -5,6 +5,7 @@ export type ScreenArea = {
   y: number
   width: number
   height: number
+  radius: number
 }
 
 export type Frame = {

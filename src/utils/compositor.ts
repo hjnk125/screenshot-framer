@@ -44,9 +44,14 @@ function drawScreenshot(
   const drawX = x + (sw - drawW) / 2 + offsetX
   const drawY = y + (sh - drawH) / 2 + offsetY
 
+  const { radius = 0 } = screenArea
   ctx.save()
   ctx.beginPath()
-  ctx.rect(x, y, sw, sh)
+  if (radius > 0 && ctx.roundRect) {
+    ctx.roundRect(x, y, sw, sh, radius)
+  } else {
+    ctx.rect(x, y, sw, sh)
+  }
   ctx.clip()
   ctx.drawImage(screenshot, drawX, drawY, drawW, drawH)
   ctx.restore()
