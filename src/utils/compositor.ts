@@ -160,7 +160,7 @@ function drawBrowserComposite(params: DrawCompositeParams): void {
   const { urlBar } = browserMeta
   if (urlBar.width > 0 && browserState?.url) {
     offCtx.fillStyle = urlBar.textColor
-    offCtx.font = `${urlBar.fontSize}px -apple-system, "Helvetica Neue", sans-serif`
+    offCtx.font = `${urlBar.fontSize}px "SF Compact Text", sans-serif`
     offCtx.textBaseline = 'middle'
     const midY = urlBar.y + urlBar.height / 2
     if (urlBar.align === 'center') {
@@ -185,7 +185,7 @@ function drawBrowserComposite(params: DrawCompositeParams): void {
     }
 
     offCtx.fillStyle = tab.textColor
-    offCtx.font = `${tab.fontSize}px -apple-system, "Helvetica Neue", sans-serif`
+    offCtx.font = `${tab.fontSize}px "SF Compact Text", sans-serif`
     offCtx.textBaseline = 'middle'
     offCtx.textAlign = 'left'
     const titleX = tab.x + tab.textOffsetX
