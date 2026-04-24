@@ -84,7 +84,7 @@ export function FramePicker({ selectedId, onSelect, showHint }: FramePickerProps
     <>
       <div ref={cardRef} className="bg-card rounded-card-dense border border-black/[0.07] p-4 flex flex-col shrink-0">
         <div className="flex items-center justify-between mb-3">
-          <span className="text-[11px] font-semibold text-soft uppercase tracking-[0.04em]">Frame</span>
+          <span className="text-[10px] font-semibold text-soft uppercase tracking-[0.05em]">Frame</span>
         </div>
 
         {/* Segment control */}

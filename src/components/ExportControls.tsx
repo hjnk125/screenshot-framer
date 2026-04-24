@@ -16,7 +16,7 @@ export function ExportControls({ onExport, disabled }: ExportControlsProps) {
     <div className="bg-ink rounded-card-dense p-4 flex flex-col gap-2">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <span className="text-[9.5px] font-bold text-white/60 uppercase tracking-[0.06em]">Export</span>
+        <span className="text-[10px] font-semibold text-white/60 uppercase tracking-[0.05em]">Export</span>
         <span className="text-[10px] text-white/40 font-mono">{scale}× scale</span>
       </div>
 

@@ -13,12 +13,12 @@ export function ShadowControls({ value, onChange }: ShadowControlsProps) {
     <div className="bg-card rounded-card-dense border border-black/[0.07] p-4 flex flex-col shrink-0">
       {/* Label + hint */}
       <div className="flex items-center justify-between mb-3">
-        <span className="text-[11px] font-semibold text-soft uppercase tracking-[0.04em]">Shadow</span>
-        <span className="text-[11px] text-muted font-mono">{value.enabled ? `${pct}%` : 'OFF'}</span>
+        <span className="text-[10px] font-semibold text-soft uppercase tracking-[0.05em]">Shadow</span>
+        <span className="text-[10px] text-muted font-mono">{value.enabled ? `${pct}%` : 'OFF'}</span>
       </div>
 
       {/* Toggle row */}
-      <div className={`flex items-center gap-[10px] ${value.enabled ? 'mb-3' : ''}`}>
+      <div className={`flex items-center gap-3 ${value.enabled ? 'mb-3' : ''}`}>
         <button
           onClick={() => update({ enabled: !value.enabled })}
           aria-label="Toggle shadow"
@@ -40,7 +40,7 @@ export function ShadowControls({ value, onChange }: ShadowControlsProps) {
 
       {/* Opacity slider (only when enabled) */}
       {value.enabled && (
-        <div className="flex items-center gap-[10px]">
+        <div className="flex items-center gap-3">
           <span className="text-[11px] font-mono text-muted shrink-0">0</span>
           <div className="flex-1 relative h-4 flex items-center">
             <div className="w-full h-[4px] bg-card-inner rounded border border-black/[0.07]" />

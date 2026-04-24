@@ -92,8 +92,8 @@ export default function App() {
           <div className="bg-card-dense rounded-card-dense border border-black/[0.07] p-4 shrink-0">
             {image && fileInfo ? (
               <>
-                <div className="flex justify-between items-baseline mb-[6px]">
-                  <span className="text-[9.5px] font-bold text-soft uppercase tracking-[0.06em]">File</span>
+                <div className="flex justify-between items-baseline mb-3">
+                  <span className="text-[10px] font-semibold text-soft uppercase tracking-[0.05em]">File</span>
                   <span className="text-[10px] text-muted font-mono">
                     {fileInfo.size >= 1024 * 1024
                       ? `${(fileInfo.size / 1024 / 1024).toFixed(1)} MB`
@@ -120,8 +120,8 @@ export default function App() {
               </>
             ) : (
               <>
-                <div className="mb-[6px]">
-                  <span className="text-[9.5px] font-bold text-soft uppercase tracking-[0.06em]">File</span>
+                <div className="mb-3">
+                  <span className="text-[10px] font-semibold text-soft uppercase tracking-[0.05em]">File</span>
                 </div>
                 <UploadZone onFile={onFile} />
               </>
@@ -139,7 +139,7 @@ export default function App() {
           {isBrowser && selectedFrame && (
             <div className="bg-card rounded-card-dense border border-black/[0.07] p-4 shrink-0">
               <div className="flex items-center justify-between mb-3">
-                <span className="text-[11px] font-semibold text-soft uppercase tracking-[0.04em]">Browser</span>
+                <span className="text-[10px] font-semibold text-soft uppercase tracking-[0.05em]">Browser</span>
               </div>
               <BrowserControls frame={selectedFrame} state={browserState} />
             </div>
