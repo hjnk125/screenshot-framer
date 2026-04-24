@@ -61,8 +61,8 @@ export default function App() {
         {/* 1. Title card (B style · dark) */}
         <div className="bg-ink rounded-card-dense px-3 py-[10px] flex items-center justify-between gap-2 shrink-0">
           <div className="flex items-center gap-[9px]">
-            <div className="w-[22px] h-[22px] rounded-[6px] bg-accent flex items-center justify-center text-[11px] font-extrabold text-ink select-none">
-              ▢
+            <div className="w-[22px] h-[22px] rounded-[6px] bg-accent flex items-center justify-center select-none">
+              <img src="/logo.svg" alt="" className="w-[14px] h-[14px]" />
             </div>
             <span className="text-[12px] font-semibold text-white">Screenshot Framer</span>
           </div>
