@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from "react";
-import type { Frame, ShadowConfig, ExportScale } from "./types/frame";
+import type { Frame, ShadowConfig } from "./types/frame";
 import { useImageUpload } from "./hooks/useImageUpload";
 import { useImageTransform } from "./hooks/useImageTransform";
 import { useCompositor } from "./hooks/useCompositor";
@@ -81,12 +81,9 @@ export default function App() {
     },
     [handleFile],
   );
-  const handleExport = useCallback(
-    (scale: ExportScale) => {
-      exportPng(scale);
-    },
-    [exportPng],
-  );
+  const handleExport = useCallback(() => {
+    exportPng();
+  }, [exportPng]);
 
   const handleFrameSelect = useCallback(
     (frame: Frame) => {

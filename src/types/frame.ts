@@ -66,7 +66,7 @@ export type ImageTransform = {
   offsetY: number;
 };
 
-export type ExportScale = 1 | 2;
+export type ExportScale = 1;
 
 export type DeviceBgType = "transparent" | "white" | "black" | "image";
 

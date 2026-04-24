@@ -8,40 +8,72 @@ import type {
   DeviceBgConfig,
 } from "../types/frame";
 
+// Step-wise downscaling: halve each pass with high-quality interpolation.
+// Single-pass bilinear degrades badly at >2:1 ratios — this avoids that.
+function stepDown(
+  src: HTMLCanvasElement,
+  targetW: number,
+  targetH: number,
+): HTMLCanvasElement {
+  let cur = src;
+  while (cur.width / targetW > 2 || cur.height / targetH > 2) {
+    const nextW = Math.max(Math.round(cur.width / 2), targetW);
+    const nextH = Math.max(Math.round(cur.height / 2), targetH);
+    const step = document.createElement("canvas");
+    step.width = nextW;
+    step.height = nextH;
+    const sCtx = step.getContext("2d")!;
+    sCtx.imageSmoothingEnabled = true;
+    sCtx.imageSmoothingQuality = "high";
+    sCtx.drawImage(cur, 0, 0, nextW, nextH);
+    cur = step;
+  }
+  return cur;
+}
+
 export type CanvasSize = { width: number; height: number };
+
+// naturalScale: match scale so screenshot pixels map 1:1 in the screen area.
+// Use screenArea.width (not frameImg.naturalWidth) so device bezels don't shrink content.
+// Cap at 1.0: never upscale the frame asset above its native resolution.
+// portrait (aspectRatio < 1) → 800px min output width, landscape/browser → 1500px min.
+export function computeEffectiveScale(
+  screenshot: HTMLImageElement,
+  frame: Frame,
+  frameImg: HTMLImageElement,
+): number {
+  const screenW = frame.browserMeta
+    ? frameImg.naturalWidth
+    : frame.screenArea.width;
+  const naturalScale = screenshot.naturalWidth / screenW;
+  const minWidth = frame.aspectRatio < 1 ? 800 : 1500;
+  const minScale = minWidth / frameImg.naturalWidth;
+  return Math.min(Math.max(naturalScale, minScale), 1);
+}
 
 export function calculateOutputSize(
   screenshot: HTMLImageElement,
   frame: Frame,
   frameImg: HTMLImageElement,
-  scale: ExportScale,
 ): CanvasSize {
   const assetW = frameImg.naturalWidth;
-  const pad = SHADOW_PADDING * 2;
+  const assetH = frameImg.naturalHeight;
+  const s = computeEffectiveScale(screenshot, frame, frameImg);
 
   if (frame.browserMeta) {
     const toolbarH = frameImg.naturalHeight;
     const contentH = Math.round(
       (assetW * screenshot.naturalHeight) / screenshot.naturalWidth,
     );
-    const naturalScale = screenshot.naturalWidth / assetW;
-    const effectiveScale = naturalScale * scale;
     return {
-      width: Math.round((assetW + pad) * effectiveScale),
-      height: Math.round((toolbarH + contentH + pad) * effectiveScale),
+      width: Math.round((assetW + SHADOW_PADDING * 2) * s),
+      height: Math.round((toolbarH + contentH + SHADOW_PADDING * 2) * s),
     };
   }
 
-  const assetH = frameImg.naturalHeight;
-  const { width: sw, height: sh } = frame.screenArea;
-  const coverBase = Math.max(
-    sw / screenshot.naturalWidth,
-    sh / screenshot.naturalHeight,
-  );
-  const effectiveScale = (1 / coverBase) * scale;
   return {
-    width: Math.round((assetW + pad) * effectiveScale),
-    height: Math.round((assetH + pad) * effectiveScale),
+    width: Math.round((assetW + SHADOW_PADDING * 2) * s),
+    height: Math.round((assetH + SHADOW_PADDING * 2) * s),
   };
 }
 
@@ -112,6 +144,8 @@ function drawScreenshot(
   const drawY = y + (sh - drawH) / 2 + offsetY;
 
   ctx.save();
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
   ctx.beginPath();
   if (radius > 0 && ctx.roundRect) {
     // browser frames: top corners stay square, only bottom corners are rounded
@@ -129,48 +163,45 @@ function applyToMainCanvas(
   canvas: HTMLCanvasElement,
   offscreen: HTMLCanvasElement,
   shadow: ShadowConfig,
-  scale: ExportScale,
+  scale: number,
 ): void {
   const ctx = canvas.getContext("2d")!;
-  const layers = buildShadowLayers(shadow);
-  const pad = SHADOW_PADDING * scale;
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
 
-  canvas.width = offscreen.width * scale + pad * 2;
-  canvas.height = offscreen.height * scale + pad * 2;
+  const layers = buildShadowLayers(shadow);
+  const pad = Math.round(SHADOW_PADDING * scale);
+  const drawW = Math.round(offscreen.width * scale);
+  const drawH = Math.round(offscreen.height * scale);
+
+  canvas.width = drawW + pad * 2;
+  canvas.height = drawH + pad * 2;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+  // Step-down to target size so bilinear never handles >2:1 in one pass
+  const scaled = stepDown(offscreen, drawW, drawH);
+
   if (layers.length > 0) {
-    // Draw each shadow layer onto a temp canvas, then composite under the image
     const shadowCanvas = document.createElement("canvas");
     shadowCanvas.width = canvas.width;
     shadowCanvas.height = canvas.height;
     const sCtx = shadowCanvas.getContext("2d")!;
+    sCtx.imageSmoothingEnabled = true;
+    sCtx.imageSmoothingQuality = "high";
 
     for (const layer of layers) {
       sCtx.shadowColor = layer.color;
       sCtx.shadowBlur = layer.blur * scale;
       sCtx.shadowOffsetX = layer.offsetX * scale;
       sCtx.shadowOffsetY = layer.offsetY * scale;
-      sCtx.drawImage(
-        offscreen,
-        pad,
-        pad,
-        offscreen.width * scale,
-        offscreen.height * scale,
-      );
+      sCtx.drawImage(scaled, pad, pad, drawW, drawH);
     }
 
     ctx.drawImage(shadowCanvas, 0, 0);
   }
 
-  // Draw the actual image on top (no shadow, covers ghost copies from shadow draws)
-  ctx.drawImage(
-    offscreen,
-    pad,
-    pad,
-    offscreen.width * scale,
-    offscreen.height * scale,
-  );
+  // Draw actual image on top (no shadow)
+  ctx.drawImage(scaled, pad, pad, drawW, drawH);
 }
 
 function drawDeviceBg(
