@@ -94,7 +94,8 @@ export default function App() {
   );
 
   return (
-    <div className="flex h-screen flex-col gap-[14px] overflow-y-auto bg-page p-[14px] text-ink lg:grid lg:grid-cols-[360px_1fr] lg:grid-rows-[1fr_auto] lg:overflow-hidden">
+    <div className="h-screen bg-page">
+    <div className="mx-auto flex h-full max-w-[1440px] flex-col gap-[14px] overflow-y-auto p-[14px] text-ink lg:grid lg:grid-cols-[360px_1fr] lg:grid-rows-[1fr_auto] lg:overflow-hidden">
       {/* Sidebar wrapper — relative for fade overlay */}
       <div className="relative flex flex-col lg:min-h-0">
         <aside
@@ -243,6 +244,7 @@ export default function App() {
       />
 
       <Toast message={error} onClose={clearImage} />
+    </div>
     </div>
   );
 }
