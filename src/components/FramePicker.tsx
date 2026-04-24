@@ -6,17 +6,26 @@ import { Icon } from './Icon'
 type FramePickerProps = {
   selectedId: string | null
   onSelect: (frame: Frame) => void
+  showHint?: boolean
 }
 
-export function FramePicker({ selectedId, onSelect }: FramePickerProps) {
+export function FramePicker({ selectedId, onSelect, showHint }: FramePickerProps) {
   const [tab, setTab] = useState<FrameCategory>('device')
 
   const filtered = FRAMES.filter(f => f.category === tab)
 
   return (
-    <div className="bg-card rounded-card border border-black/[0.07] p-4 flex flex-col shrink-0">
+    <div className="bg-card rounded-card border border-black/[0.07] p-3 flex flex-col shrink-0">
       <div className="flex items-center justify-between mb-3">
-        <span className="text-[11px] font-semibold text-soft uppercase tracking-[0.04em]">프레임</span>
+        <span className="text-[11px] font-semibold text-soft uppercase tracking-[0.04em]">Frame</span>
+        {showHint && (
+          <span className="flex items-center gap-[5px] text-[11px] font-semibold text-accent animate-bounce select-none">
+            Pick a frame
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+              <path d="M7 2v10M7 12l-3-3M7 12l3-3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </span>
+        )}
       </div>
 
       {/* Segment control */}
@@ -31,7 +40,7 @@ export function FramePicker({ selectedId, onSelect }: FramePickerProps) {
                 : 'bg-transparent text-soft hover:text-ink'
             }`}
           >
-            {cat === 'device' ? '디바이스' : '브라우저'}
+            {cat === 'device' ? 'Device' : 'Browser'}
           </button>
         ))}
       </div>

@@ -1,5 +1,4 @@
 import type { ShadowConfig } from '../types/frame'
-import { Icon } from './Icon'
 
 type ShadowControlsProps = {
   value: ShadowConfig
@@ -11,10 +10,10 @@ export function ShadowControls({ value, onChange }: ShadowControlsProps) {
   const pct = value.opacity
 
   return (
-    <div className="bg-card rounded-card border border-black/[0.07] p-4 flex flex-col shrink-0">
+    <div className="bg-card rounded-card border border-black/[0.07] p-3 flex flex-col shrink-0">
       {/* Label + hint */}
       <div className="flex items-center justify-between mb-3">
-        <span className="text-[11px] font-semibold text-soft uppercase tracking-[0.04em]">그림자</span>
+        <span className="text-[11px] font-semibold text-soft uppercase tracking-[0.04em]">Shadow</span>
         <span className="text-[11px] text-muted font-mono">{value.enabled ? `${pct}%` : 'OFF'}</span>
       </div>
 
@@ -22,7 +21,7 @@ export function ShadowControls({ value, onChange }: ShadowControlsProps) {
       <div className={`flex items-center gap-[10px] ${value.enabled ? 'mb-3' : ''}`}>
         <button
           onClick={() => update({ enabled: !value.enabled })}
-          aria-label="그림자 활성화"
+          aria-label="Toggle shadow"
           aria-pressed={value.enabled}
           className={`relative w-[32px] h-[18px] rounded-full border-none cursor-pointer transition-colors shrink-0 ${
             value.enabled ? 'bg-ink' : 'bg-[#d5d5d3]'
@@ -35,14 +34,14 @@ export function ShadowControls({ value, onChange }: ShadowControlsProps) {
           />
         </button>
         <span className={`text-[12px] font-medium transition-colors ${value.enabled ? 'text-ink' : 'text-muted'}`}>
-          그림자 활성화
+          Shadow
         </span>
       </div>
 
       {/* Opacity slider (only when enabled) */}
       {value.enabled && (
         <div className="flex items-center gap-[10px]">
-          <Icon name="shadow" size={14} className="text-muted shrink-0" />
+          <span className="text-[11px] font-semibold text-muted shrink-0">0</span>
           <div className="flex-1 relative h-4 flex items-center">
             <div className="w-full h-[4px] bg-card-inner rounded border border-black/[0.07]" />
             <div
@@ -62,7 +61,7 @@ export function ShadowControls({ value, onChange }: ShadowControlsProps) {
               style={{ left: `calc(${pct}% - 7px)` }}
             />
           </div>
-          <span className="w-[32px] text-right text-[11px] font-semibold text-ink font-mono">{pct}</span>
+          <span className="text-[11px] font-semibold text-muted shrink-0 pl-[6px]">100</span>
         </div>
       )}
     </div>

@@ -54,11 +54,15 @@ export default function App() {
   }, [resetTransform])
 
   return (
-    <div className="grid grid-cols-[360px_1fr] gap-[14px] p-[14px] h-screen bg-page overflow-hidden text-ink">
+    <div className="
+      p-[20px] gap-[20px] bg-page text-ink
+      flex flex-col min-h-screen
+      lg:h-screen lg:overflow-hidden lg:grid lg:grid-cols-[360px_1fr] lg:grid-rows-[1fr_auto] lg:min-h-0
+    ">
       {/* Sidebar */}
-      <aside className="flex flex-col gap-3 min-h-0 overflow-y-auto">
+      <aside className="flex flex-col gap-3 lg:min-h-0 lg:overflow-y-auto">
 
-        {/* 1. Title card (B style · dark) */}
+        {/* 1. Title card (dark) */}
         <div className="bg-ink rounded-card-dense px-3 py-[10px] flex items-center justify-between gap-2 shrink-0">
           <div className="flex items-center gap-[9px]">
             <div className="w-[22px] h-[22px] rounded-[6px] bg-accent flex items-center justify-center select-none">
@@ -69,12 +73,12 @@ export default function App() {
           <span className="text-[10px] text-white/50 font-mono">v0.3</span>
         </div>
 
-        {/* 2. File card (B style · compact) */}
-        <div className="bg-card-dense rounded-card-dense border border-black/[0.07] p-[10px] shrink-0">
+        {/* 2. File card */}
+        <div className="bg-card-dense rounded-card-dense border border-black/[0.07] p-3 shrink-0">
           {image && fileInfo ? (
             <>
               <div className="flex justify-between items-baseline mb-[6px]">
-                <span className="text-[9.5px] font-bold text-soft uppercase tracking-[0.06em]">파일</span>
+                <span className="text-[9.5px] font-bold text-soft uppercase tracking-[0.06em]">File</span>
                 <span className="text-[10px] text-muted font-mono">
                   {fileInfo.size >= 1024 * 1024
                     ? `${(fileInfo.size / 1024 / 1024).toFixed(1)} MB`
@@ -102,27 +106,31 @@ export default function App() {
           ) : (
             <>
               <div className="mb-[6px]">
-                <span className="text-[9.5px] font-bold text-soft uppercase tracking-[0.06em]">파일</span>
+                <span className="text-[9.5px] font-bold text-soft uppercase tracking-[0.06em]">File</span>
               </div>
               <UploadZone onFile={onFile} />
             </>
           )}
         </div>
 
-        {/* 3. Frame picker (A style — component has card shell) */}
-        <FramePicker selectedId={selectedFrame?.id ?? null} onSelect={handleFrameSelect} />
+        {/* 3. Frame picker */}
+        <FramePicker
+          selectedId={selectedFrame?.id ?? null}
+          onSelect={handleFrameSelect}
+          showHint={!!image && !selectedFrame}
+        />
 
-        {/* 4. Browser controls — conditional (A style) */}
+        {/* 4. Browser controls — conditional */}
         {isBrowser && selectedFrame && (
-          <div className="bg-card rounded-card border border-black/[0.07] p-4 shrink-0">
+          <div className="bg-card rounded-card border border-black/[0.07] p-3 shrink-0">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-[11px] font-semibold text-soft uppercase tracking-[0.04em]">브라우저</span>
+              <span className="text-[11px] font-semibold text-soft uppercase tracking-[0.04em]">Browser</span>
             </div>
             <BrowserControls frame={selectedFrame} state={browserState} />
           </div>
         )}
 
-        {/* 5. Image adjust — conditional (A style — component has card shell) */}
+        {/* 5. Image adjust — conditional */}
         {image && selectedFrame && (
           <ImageAdjust
             scale={transform.scale}
@@ -131,24 +139,24 @@ export default function App() {
           />
         )}
 
-        {/* 6. Shadow (A style — component has card shell) */}
+        {/* 6. Shadow */}
         <ShadowControls value={shadow} onChange={setShadow} />
-
-        {/* 7. Export (B style · dark hero — component has card shell) */}
-        <div className="mt-auto pt-1">
-          <ExportControls
-            onExport={handleExport}
-            disabled={!image || !selectedFrame}
-          />
-        </div>
       </aside>
 
-      {/* Preview canvas */}
-      <PreviewCanvas
-        screenshot={image}
-        frame={selectedFrame}
-        onPan={pan}
-        renderToCanvas={renderToCanvas}
+      {/* Preview canvas — mobile: between shadow and export / desktop: right col */}
+      <div className="min-h-[360px] lg:row-span-2 lg:min-h-0">
+        <PreviewCanvas
+          screenshot={image}
+          frame={selectedFrame}
+          onPan={pan}
+          renderToCanvas={renderToCanvas}
+        />
+      </div>
+
+      {/* Export */}
+      <ExportControls
+        onExport={handleExport}
+        disabled={!image || !selectedFrame}
       />
 
       <Toast message={error} onClose={clearImage} />
