@@ -144,7 +144,7 @@ export default function App() {
       </aside>
 
       {/* Preview canvas — mobile: between shadow and export / desktop: right col */}
-      <div className="aspect-square lg:aspect-auto lg:row-span-2">
+      <div className="aspect-square lg:aspect-auto lg:row-span-2 lg:min-h-0 lg:overflow-hidden">
         <PreviewCanvas
           screenshot={image}
           frame={selectedFrame}

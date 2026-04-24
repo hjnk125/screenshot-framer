@@ -45,7 +45,7 @@ export function PreviewCanvas({ screenshot, frame, onPan, renderToCanvas }: Prev
   }
 
   return (
-    <div className="flex items-center justify-center rounded-card border border-black/[0.07] bg-[url('/checkerboard.svg')] bg-repeat p-10 overflow-hidden">
+    <div className="flex h-full items-center justify-center rounded-card border border-black/[0.07] bg-[url('/checkerboard.svg')] bg-repeat p-10 overflow-hidden">
       <canvas
         ref={canvasRef}
         className="max-w-full max-h-full object-contain cursor-grab active:cursor-grabbing"
