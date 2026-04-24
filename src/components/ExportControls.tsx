@@ -13,13 +13,17 @@ export function ExportControls({ onExport, disabled }: ExportControlsProps) {
 
   return (
     <div className="flex items-center gap-2">
-      <div className="flex gap-1 rounded-lg bg-gray-900 p-1">
-        {SCALES.map(s => (
+      <div className="flex gap-0 rounded-lg border-2 border-[#222] overflow-hidden">
+        {SCALES.map((s, i) => (
           <button
             key={s}
             onClick={() => setScale(s)}
-            className={`rounded-md px-3 py-1 text-sm transition-colors ${
-              scale === s ? 'bg-gray-700 text-white' : 'text-gray-400 hover:text-gray-200'
+            className={`px-3 py-2 text-sm font-medium transition-colors ${
+              i > 0 ? 'border-l-2 border-[#222]' : ''
+            } ${
+              scale === s
+                ? 'bg-[#222] text-white'
+                : 'bg-white text-[#222] hover:bg-lime-50'
             }`}
           >
             {s}x
@@ -29,7 +33,7 @@ export function ExportControls({ onExport, disabled }: ExportControlsProps) {
       <button
         onClick={() => onExport(scale)}
         disabled={disabled}
-        className="flex-1 rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed"
+        className="flex-1 rounded-lg bg-lime-500 px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-lime-400 disabled:opacity-30 disabled:cursor-not-allowed border-2 border-lime-500 hover:border-lime-400"
       >
         PNG 저장
       </button>

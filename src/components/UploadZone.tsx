@@ -26,12 +26,14 @@ export function UploadZone({ onFile }: UploadZoneProps) {
       onDragOver={e => { e.preventDefault(); setDragging(true) }}
       onDragLeave={() => setDragging(false)}
       onDrop={handleDrop}
-      className={`flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed p-12 transition-colors ${
-        dragging ? 'border-blue-400 bg-blue-950/30' : 'border-gray-700 hover:border-gray-500'
+      className={`flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed p-10 transition-colors ${
+        dragging
+          ? 'border-lime-500 bg-lime-50'
+          : 'border-[#222] hover:border-lime-500 hover:bg-lime-50'
       }`}
     >
-      <p className="text-gray-400 text-sm">클릭하거나 드래그해서 스크린샷 업로드</p>
-      <p className="mt-1 text-gray-600 text-xs">PNG, JPG (최대 8,000px)</p>
+      <p className="text-[#222] text-sm font-medium">클릭하거나 드래그해서 스크린샷 업로드</p>
+      <p className="mt-1 text-[#666] text-xs">PNG, JPG (최대 8,000px)</p>
       <input
         ref={inputRef}
         type="file"

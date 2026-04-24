@@ -14,13 +14,17 @@ export function FramePicker({ selectedId, onSelect }: FramePickerProps) {
 
   return (
     <div>
-      <div className="flex gap-1 rounded-lg bg-gray-900 p-1 mb-3">
-        {(['device', 'browser'] as FrameCategory[]).map(cat => (
+      <div className="flex gap-0 rounded-lg border-2 border-[#222] overflow-hidden mb-3">
+        {(['device', 'browser'] as FrameCategory[]).map((cat, i) => (
           <button
             key={cat}
             onClick={() => setTab(cat)}
-            className={`flex-1 rounded-md px-3 py-1.5 text-sm transition-colors ${
-              tab === cat ? 'bg-gray-700 text-white' : 'text-gray-400 hover:text-gray-200'
+            className={`flex-1 px-3 py-1.5 text-sm font-medium transition-colors ${
+              i > 0 ? 'border-l-2 border-[#222]' : ''
+            } ${
+              tab === cat
+                ? 'bg-[#222] text-white'
+                : 'bg-white text-[#222] hover:bg-lime-50'
             }`}
           >
             {cat === 'device' ? '디바이스' : '브라우저'}
@@ -32,10 +36,10 @@ export function FramePicker({ selectedId, onSelect }: FramePickerProps) {
           <button
             key={frame.id}
             onClick={() => onSelect(frame)}
-            className={`rounded-xl border px-3 py-2 text-sm text-left transition-colors ${
+            className={`rounded-lg border-2 px-3 py-2 text-sm text-left font-medium transition-colors ${
               selectedId === frame.id
-                ? 'border-blue-500 bg-blue-950/40 text-white'
-                : 'border-gray-800 text-gray-400 hover:border-gray-600 hover:text-gray-200'
+                ? 'border-lime-500 bg-lime-500 text-white'
+                : 'border-[#222] text-[#222] hover:border-lime-500 hover:bg-lime-50'
             }`}
           >
             {frame.label}

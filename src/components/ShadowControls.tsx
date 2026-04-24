@@ -15,12 +15,12 @@ export function ShadowControls({ value, onChange }: ShadowControlsProps) {
           type="checkbox"
           checked={value.enabled}
           onChange={e => update({ enabled: e.target.checked })}
-          className="rounded"
+          className="rounded accent-lime-500 w-4 h-4"
         />
-        <span className="text-sm text-gray-300">그림자</span>
+        <span className="text-sm font-medium text-[#222]">그림자</span>
       </label>
 
-      <div className={`space-y-3 ${value.enabled ? '' : 'opacity-40 pointer-events-none'}`}>
+      <div className={`space-y-3 ${value.enabled ? '' : 'opacity-30 pointer-events-none'}`}>
         <SliderRow
           label="강도"
           value={value.intensity}
@@ -36,13 +36,13 @@ export function ShadowControls({ value, onChange }: ShadowControlsProps) {
           onChange={v => update({ blur: v })}
         />
         <div className="flex items-center justify-between">
-          <span className="text-xs text-gray-400">색상</span>
+          <span className="text-xs font-medium text-[#222]">색상</span>
           <input
             type="color"
             value={value.color}
             disabled={!value.enabled}
             onChange={e => update({ color: e.target.value })}
-            className="h-7 w-10 cursor-pointer rounded border-0 bg-transparent"
+            className="h-7 w-10 cursor-pointer rounded border-2 border-[#222] bg-transparent"
           />
         </div>
       </div>
@@ -60,7 +60,7 @@ function SliderRow(props: {
 }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="w-8 text-xs text-gray-400">{props.label}</span>
+      <span className="w-8 text-xs font-medium text-[#222]">{props.label}</span>
       <input
         type="range"
         min={props.min}
@@ -68,9 +68,9 @@ function SliderRow(props: {
         value={props.value}
         disabled={props.disabled}
         onChange={e => props.onChange(Number(e.target.value))}
-        className="flex-1 accent-blue-500"
+        className="flex-1 accent-lime-500"
       />
-      <span className="w-8 text-right text-xs text-gray-500">{props.value}</span>
+      <span className="w-8 text-right text-xs font-medium text-[#222]">{props.value}</span>
     </div>
   )
 }
