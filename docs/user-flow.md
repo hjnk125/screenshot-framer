@@ -56,6 +56,7 @@
 ### 3-A. Device 설정 (Device 프레임 선택 시)
 
 **Background** — 화면 영역 안쪽 배경:
+
 - **None** (기본): 투명 (체커보드)
 - **White**: 흰색 채움
 - **Black**: 검정 채움
@@ -63,11 +64,11 @@
 
 ### 3-B. Browser 설정 (Browser 프레임 선택 시)
 
-| 항목 | 설명 | 대상 |
-|---|---|---|
-| URL | 주소창에 표시될 텍스트 | 전체 브라우저 |
-| Tab title | 탭에 표시될 제목 | Chrome만 |
-| Favicon | 탭 파비콘 이미지 업로드 | Chrome만 |
+| 항목      | 설명                    | 대상          |
+| --------- | ----------------------- | ------------- |
+| URL       | 주소창에 표시될 텍스트  | 전체 브라우저 |
+| Tab title | 탭에 표시될 제목        | Chrome만      |
+| Favicon   | 탭 파비콘 이미지 업로드 | Chrome만      |
 
 Chrome 기본 파비콘: `/chrome-light-favicon.svg`, `/chrome-dark-favicon.svg`
 
@@ -117,14 +118,15 @@ minWidth:
 
 스크린샷 가로 **800px 미만**이면 모든 브라우저 프레임이 자동으로 **2328px short 툴바**로 전환.
 
-| 구분 | 일반 | Short |
-|---|---|---|
-| 너비 | 3840px | 2328px |
+| 구분      | 일반                          | Short                         |
+| --------- | ----------------------------- | ----------------------------- |
+| 너비      | 3840px                        | 2328px                        |
 | 전환 조건 | screenshot.naturalWidth ≥ 800 | screenshot.naturalWidth < 800 |
-| 좌표 방식 | 원본 좌표 | 좌측 기준점 동일, 우측만 짧게 |
+| 좌표 방식 | 원본 좌표                     | 좌측 기준점 동일, 우측만 짧게 |
 
 **Chrome short toolbar 주요 좌표 (2328px 기준):**
-- `tabArea`: x=234, width=640, faviconX=32, faviconSize=32, textOffsetX=78
+
+- `tabArea`: x=234, width=640, faviconX=32, faviconSize=34, textOffsetX=82, textOffsetY=1
 - `urlBar`: x=328, width=1943
 
 구현: `useCompositor.ts`의 `resolveFrame()` 함수에서 처리.
@@ -133,8 +135,8 @@ minWidth:
 
 ## 반응형 레이아웃
 
-| 구간 | 레이아웃 |
-|---|---|
-| mobile / tablet (`< lg`) | 세로 스크롤, 사이드바 아이템 → 프리뷰 캔버스 → Export |
-| desktop (`≥ lg`) | 좌: 사이드바 (360px, 독립 스크롤) / 우: 프리뷰 캔버스 (전체 높이) / 하단: Export |
-| wide (`> 1440px`) | 1440px max-width, 양옆 여백 |
+| 구간                     | 레이아웃                                                                         |
+| ------------------------ | -------------------------------------------------------------------------------- |
+| mobile / tablet (`< lg`) | 세로 스크롤, 사이드바 아이템 → 프리뷰 캔버스 → Export                            |
+| desktop (`≥ lg`)         | 좌: 사이드바 (360px, 독립 스크롤) / 우: 프리뷰 캔버스 (전체 높이) / 하단: Export |
+| wide (`> 1440px`)        | 1440px max-width, 양옆 여백                                                      |
