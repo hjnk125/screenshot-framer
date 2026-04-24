@@ -56,8 +56,8 @@ export default function App() {
   return (
     <div className="
       p-[20px] gap-[20px] bg-page text-ink
-      flex flex-col min-h-screen
-      lg:h-screen lg:overflow-hidden lg:grid lg:grid-cols-[360px_1fr] lg:grid-rows-[1fr_auto] lg:min-h-0
+      flex flex-col h-screen overflow-y-auto
+      lg:overflow-hidden lg:grid lg:grid-cols-[360px_1fr] lg:grid-rows-[1fr_auto]
     ">
       {/* Sidebar */}
       <aside className="flex flex-col gap-3 lg:min-h-0 lg:overflow-y-auto">
@@ -144,7 +144,7 @@ export default function App() {
       </aside>
 
       {/* Preview canvas — mobile: between shadow and export / desktop: right col */}
-      <div className="min-h-[360px] lg:row-span-2 lg:min-h-0">
+      <div className="aspect-square lg:aspect-auto lg:row-span-2">
         <PreviewCanvas
           screenshot={image}
           frame={selectedFrame}
