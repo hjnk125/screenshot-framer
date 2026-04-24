@@ -37,5 +37,7 @@
 @layer base {
   body {
     font-family: 'Pretendard', sans-serif;
+    background-color: #e8e8e6;
+    overflow: hidden;
   }
 }

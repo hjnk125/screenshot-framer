@@ -54,88 +54,102 @@ export default function App() {
   }, [resetTransform])
 
   return (
-    <div className="min-h-screen bg-white text-[#222]">
-      <header className="border-b border-[#222] px-6 py-4">
-        <h1 className="text-lg font-bold tracking-tight">Screenshot Framer</h1>
-      </header>
+    <div className="grid grid-cols-[360px_1fr] gap-[14px] p-[14px] h-screen bg-page overflow-hidden text-ink">
+      {/* Sidebar */}
+      <aside className="flex flex-col gap-3 min-h-0 overflow-y-auto">
 
-      <main className="mx-auto max-w-7xl p-6 grid grid-cols-[320px_1fr] gap-6 h-[calc(100vh-65px)]">
-        <aside className="flex flex-col overflow-y-auto border-r border-[#222] pr-6">
-          <div className="border-b border-[#222] pb-5 mb-5">
-            <h2 className="mb-2 text-xs font-bold uppercase tracking-wider text-[#222]">스크린샷</h2>
-            {image && fileInfo ? (
-              <div className="flex items-center gap-3 rounded-xl border border-[#222] p-2">
-                <div className="w-14 h-14 shrink-0 rounded-lg border border-[#222] overflow-hidden bg-[#f0f0f0]">
-                  <img
-                    src={image.src}
-                    alt="preview"
-                    className="w-full h-full object-cover"
-                  />
+        {/* 1. Title card (B style · dark) */}
+        <div className="bg-ink rounded-card-dense px-3 py-[10px] flex items-center justify-between gap-2 shrink-0">
+          <div className="flex items-center gap-[9px]">
+            <div className="w-[22px] h-[22px] rounded-[6px] bg-accent flex items-center justify-center text-[11px] font-extrabold text-ink select-none">
+              ▢
+            </div>
+            <span className="text-[12px] font-semibold text-white">Screenshot Framer</span>
+          </div>
+          <span className="text-[10px] text-white/50 font-mono">v0.3</span>
+        </div>
+
+        {/* 2. File card (B style · compact) */}
+        <div className="bg-card-dense rounded-card-dense border border-black/[0.07] p-[10px] shrink-0">
+          {image && fileInfo ? (
+            <>
+              <div className="flex justify-between items-baseline mb-[6px]">
+                <span className="text-[9.5px] font-bold text-soft uppercase tracking-[0.06em]">파일</span>
+                <span className="text-[10px] text-muted font-mono">
+                  {fileInfo.size >= 1024 * 1024
+                    ? `${(fileInfo.size / 1024 / 1024).toFixed(1)} MB`
+                    : `${(fileInfo.size / 1024).toFixed(0)} KB`}
+                </span>
+              </div>
+              <div className="flex gap-2 items-center">
+                <div className="w-10 h-10 rounded-[8px] shrink-0 border border-black/[0.07] overflow-hidden bg-[#f0f0ef]">
+                  <img src={image.src} alt="preview" className="w-full h-full object-cover" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold text-[#222] truncate">{fileInfo.name}</p>
-                  <p className="text-xs text-[#666] mt-0.5">
-                    {image.naturalWidth} × {image.naturalHeight}px
-                  </p>
-                  <p className="text-xs text-[#666]">
-                    {(fileInfo.size / 1024).toFixed(0)} KB
+                  <p className="text-[12px] font-semibold text-ink truncate">{fileInfo.name}</p>
+                  <p className="text-[10px] text-muted mt-[1px] font-mono">
+                    {image.naturalWidth} × {image.naturalHeight}
                   </p>
                 </div>
                 <button
                   onClick={clearImage}
-                  className="shrink-0 w-6 h-6 flex items-center justify-center rounded-full border border-[#222] text-[#222] hover:bg-red-600 hover:text-white hover:border-red-600 transition-colors text-sm font-bold leading-none"
+                  className="w-[22px] h-[22px] rounded-[6px] flex items-center justify-center text-[14px] leading-none text-soft hover:bg-red-500 hover:text-white transition-colors shrink-0"
                 >
-                  ×
+                  ✕
                 </button>
               </div>
-            ) : (
+            </>
+          ) : (
+            <>
+              <div className="mb-[6px]">
+                <span className="text-[9.5px] font-bold text-soft uppercase tracking-[0.06em]">파일</span>
+              </div>
               <UploadZone onFile={onFile} />
-            )}
-          </div>
-
-          <div className="border-b border-[#222] pb-5 mb-5">
-            <h2 className="mb-2 text-xs font-bold uppercase tracking-wider text-[#222]">프레임</h2>
-            <FramePicker selectedId={selectedFrame?.id ?? null} onSelect={handleFrameSelect} />
-          </div>
-
-          {image && selectedFrame && (
-            <div className="border-b border-[#222] pb-5 mb-5">
-              <h2 className="mb-2 text-xs font-bold uppercase tracking-wider text-[#222]">이미지 조정</h2>
-              <ImageAdjust
-                scale={transform.scale}
-                onScaleChange={setScale}
-                onReset={resetTransform}
-              />
-            </div>
+            </>
           )}
+        </div>
 
-          {isBrowser && selectedFrame && (
-            <div className="border-b border-[#222] pb-5 mb-5">
-              <h2 className="mb-2 text-xs font-bold uppercase tracking-wider text-[#222]">브라우저</h2>
-              <BrowserControls frame={selectedFrame} state={browserState} />
+        {/* 3. Frame picker (A style — component has card shell) */}
+        <FramePicker selectedId={selectedFrame?.id ?? null} onSelect={handleFrameSelect} />
+
+        {/* 4. Browser controls — conditional (A style) */}
+        {isBrowser && selectedFrame && (
+          <div className="bg-card rounded-card border border-black/[0.07] p-4 shrink-0">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[11px] font-semibold text-soft uppercase tracking-[0.04em]">브라우저</span>
             </div>
-          )}
-
-          <div className="border-b border-[#222] pb-5 mb-5">
-            <h2 className="mb-2 text-xs font-bold uppercase tracking-wider text-[#222]">그림자</h2>
-            <ShadowControls value={shadow} onChange={setShadow} />
+            <BrowserControls frame={selectedFrame} state={browserState} />
           </div>
+        )}
 
-          <div className="mt-auto pt-2">
-            <ExportControls
-              onExport={handleExport}
-              disabled={!image || !selectedFrame}
-            />
-          </div>
-        </aside>
+        {/* 5. Image adjust — conditional (A style — component has card shell) */}
+        {image && selectedFrame && (
+          <ImageAdjust
+            scale={transform.scale}
+            onScaleChange={setScale}
+            onReset={resetTransform}
+          />
+        )}
 
-        <PreviewCanvas
-          screenshot={image}
-          frame={selectedFrame}
-          onPan={pan}
-          renderToCanvas={renderToCanvas}
-        />
-      </main>
+        {/* 6. Shadow (A style — component has card shell) */}
+        <ShadowControls value={shadow} onChange={setShadow} />
+
+        {/* 7. Export (B style · dark hero — component has card shell) */}
+        <div className="mt-auto pt-1">
+          <ExportControls
+            onExport={handleExport}
+            disabled={!image || !selectedFrame}
+          />
+        </div>
+      </aside>
+
+      {/* Preview canvas */}
+      <PreviewCanvas
+        screenshot={image}
+        frame={selectedFrame}
+        onPan={pan}
+        renderToCanvas={renderToCanvas}
+      />
 
       <Toast message={error} onClose={clearImage} />
     </div>

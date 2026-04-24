@@ -7,15 +7,14 @@ import { describe, it, expect, vi } from 'vitest'
 const defaultShadow: ShadowConfig = { enabled: false, opacity: 100 }
 
 describe('ShadowControls', () => {
-  it('그림자 체크박스를 렌더링한다', () => {
+  it('그림자 토글 버튼을 렌더링한다', () => {
     render(<ShadowControls value={defaultShadow} onChange={() => {}} />)
-    expect(screen.getByRole('checkbox')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '그림자 활성화' })).toBeInTheDocument()
   })
 
-  it('disabled 상태에서 슬라이더가 비활성화된다', () => {
+  it('disabled 상태에서 슬라이더가 렌더링되지 않는다', () => {
     render(<ShadowControls value={defaultShadow} onChange={() => {}} />)
-    const sliders = screen.getAllByRole('slider')
-    sliders.forEach(s => expect(s).toBeDisabled())
+    expect(screen.queryByRole('slider')).not.toBeInTheDocument()
   })
 
   it('enabled 상태에서 슬라이더가 활성화된다', () => {
@@ -28,7 +27,7 @@ describe('ShadowControls', () => {
   it('토글 클릭 시 onChange가 호출된다', async () => {
     const onChange = vi.fn()
     render(<ShadowControls value={defaultShadow} onChange={onChange} />)
-    await userEvent.click(screen.getByRole('checkbox'))
+    await userEvent.click(screen.getByRole('button', { name: '그림자 활성화' }))
     expect(onChange).toHaveBeenCalledWith({ ...defaultShadow, enabled: true })
   })
 })

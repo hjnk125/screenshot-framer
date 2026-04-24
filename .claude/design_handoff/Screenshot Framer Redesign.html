@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Screenshot Framer — Redesign</title>
+<style>
+  @font-face {
+    font-family: 'Pretendard';
+    font-weight: 400;
+    src: local('Pretendard'), local('Pretendard-Regular'), local('-apple-system'), local('system-ui');
+  }
+  html, body { margin: 0; padding: 0; background: #e8e8e6; font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif; }
+  body { overflow: hidden; }
+  /* Hide native range thumb so our custom dot shows */
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+  }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; background: transparent; }
+  input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; background: transparent; border: none; }
+  input[type="range"]::-webkit-slider-runnable-track { background: transparent; }
+  input[type="range"]::-moz-range-track { background: transparent; }
+  button { font-family: inherit; }
+  /* Scrollbar polish for inner lists */
+  *::-webkit-scrollbar { width: 6px; height: 6px; }
+  *::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 6px; }
+  *::-webkit-scrollbar-track { background: transparent; }
+</style>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="variations/shared-mocks.jsx"></script>
+<script type="text/babel" src="variations/variation-a.jsx"></script>
+<script type="text/babel" src="variations/variation-b.jsx"></script>
+<script type="text/babel" src="variations/variation-c.jsx"></script>
+
+<script type="text/babel">
+  const App = () => (
+    <DesignCanvas>
+      <DCSection id="redesign" title="Screenshot Framer · 리디자인" subtitle="Bento grid · Light gray · Lime accent (3가지 방향)">
+        <DCArtboard id="a" label="A · Bento Light — 균형" width={1280} height={820}>
+          <VariationA/>
+        </DCArtboard>
+        <DCArtboard id="b" label="B · Bento Dense — 정보 밀도" width={1280} height={820}>
+          <VariationB/>
+        </DCArtboard>
+        <DCArtboard id="c" label="C · Bento Soft — 여유" width={1280} height={820}>
+          <VariationC/>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="notes" title="디자인 노트" subtitle="공통 시스템과 선택 포인트">
+        <DCArtboard id="sys" label="토큰 & 시스템" width={620} height={820}>
+          <div style={{
+            width: "100%", height: "100%",
+            background: "#fbfaf7", padding: 28,
+            fontFamily: "'Pretendard', sans-serif",
+            color: "#1d1e20", boxSizing: "border-box",
+            overflow: "auto",
+          }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "#9b9a95", letterSpacing: ".08em" }}>DESIGN SYSTEM</div>
+            <h1 style={{ fontSize: 26, fontWeight: 600, margin: "6px 0 20px", letterSpacing: "-.02em" }}>Bento Light · 기본 시스템</h1>
+
+            <h3 style={{ fontSize: 13, fontWeight: 700, color: "#5a5a58", letterSpacing: ".04em", textTransform: "uppercase", margin: "16px 0 10px" }}>배경 & 표면</h3>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, marginBottom: 20 }}>
+              {[
+                { name: "Page", hex: "#ECECEC", bg: "#ececec" },
+                { name: "Card", hex: "#FAFAF9", bg: "#fafaf9" },
+                { name: "Inner", hex: "#FFFFFF", bg: "#ffffff" },
+                { name: "Ink", hex: "#17181A", bg: "#17181a", text: "#fff" },
+                { name: "Accent", hex: "#D7FF3A", bg: "#d7ff3a" },
+                { name: "Border", hex: "06% α", bg: "rgba(0,0,0,0.06)" },
+              ].map(c => (
+                <div key={c.name} style={{
+                  background: c.bg, borderRadius: 12,
+                  border: "1px solid rgba(0,0,0,0.08)",
+                  padding: "22px 12px 10px", color: c.text || "#17181a",
+                }}>
+                  <div style={{ fontSize: 12, fontWeight: 600 }}>{c.name}</div>
+                  <div style={{ fontSize: 10, fontFamily: "ui-monospace, monospace", opacity: 0.7, marginTop: 2 }}>{c.hex}</div>
+                </div>
+              ))}
+            </div>
+
+            <h3 style={{ fontSize: 13, fontWeight: 700, color: "#5a5a58", letterSpacing: ".04em", textTransform: "uppercase", margin: "16px 0 10px" }}>라운드 · 간격</h3>
+            <div style={{ display: "grid", gap: 8, fontSize: 12, lineHeight: 1.6 }}>
+              <div><b style={{ width: 110, display: "inline-block" }}>카드</b> 20px (A) / 14px (B) / 26px (C)</div>
+              <div><b style={{ width: 110, display: "inline-block" }}>Inner</b> 10–16px</div>
+              <div><b style={{ width: 110, display: "inline-block" }}>Input</b> 8–12px</div>
+              <div><b style={{ width: 110, display: "inline-block" }}>카드 간격</b> 10–14px</div>
+              <div><b style={{ width: 110, display: "inline-block" }}>카드 패딩</b> 10 · 16 · 20px</div>
+            </div>
+
+            <h3 style={{ fontSize: 13, fontWeight: 700, color: "#5a5a58", letterSpacing: ".04em", textTransform: "uppercase", margin: "20px 0 10px" }}>타이포그래피</h3>
+            <div style={{ display: "grid", gap: 10 }}>
+              <div>
+                <div style={{ fontSize: 10, color: "#9b9a95", fontFamily: "ui-monospace, monospace" }}>Section label · 11/600 · uppercase</div>
+                <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: ".04em", textTransform: "uppercase", color: "#5a5a58" }}>프레임</div>
+              </div>
+              <div>
+                <div style={{ fontSize: 10, color: "#9b9a95", fontFamily: "ui-monospace, monospace" }}>Card title · 14–18/600 · -.01em</div>
+                <div style={{ fontSize: 16, fontWeight: 600, letterSpacing: "-.015em" }}>미리보기</div>
+              </div>
+              <div>
+                <div style={{ fontSize: 10, color: "#9b9a95", fontFamily: "ui-monospace, monospace" }}>Body · 12–13/500</div>
+                <div style={{ fontSize: 12.5, fontWeight: 500 }}>스크린샷에 프레임을 입혀 주세요</div>
+              </div>
+              <div>
+                <div style={{ fontSize: 10, color: "#9b9a95", fontFamily: "ui-monospace, monospace" }}>Numeric · ui-monospace</div>
+                <div style={{ fontSize: 13, fontWeight: 600, fontFamily: "ui-monospace, monospace" }}>3456 × 2160 px</div>
+              </div>
+            </div>
+
+            <h3 style={{ fontSize: 13, fontWeight: 700, color: "#5a5a58", letterSpacing: ".04em", textTransform: "uppercase", margin: "20px 0 10px" }}>원칙</h3>
+            <ol style={{ margin: 0, paddingLeft: 18, fontSize: 12, lineHeight: 1.75, color: "#3a3b3d" }}>
+              <li>라임은 <b>선택/Export CTA</b>에만. 보더/장식에는 쓰지 않음.</li>
+              <li>검정은 Export 히어로 블록 하나에 집중해 시각적 앵커 역할.</li>
+              <li>카드 경계는 shadow가 아니라 <b>1px soft border</b>로.</li>
+              <li>숫자·치수는 모노스페이스 — 툴 같은 느낌의 정확성.</li>
+              <li>체커보드는 16–22px · 낮은 대비 — 프리뷰를 방해하지 않음.</li>
+            </ol>
+          </div>
+        </DCArtboard>
+
+        <DCArtboard id="reco" label="추천 & 다음 단계" width={620} height={820}>
+          <div style={{
+            width: "100%", height: "100%",
+            background: "#17181a", padding: 28,
+            fontFamily: "'Pretendard', sans-serif",
+            color: "#fff", boxSizing: "border-box",
+            overflow: "auto",
+          }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "#d7ff3a", letterSpacing: ".08em" }}>MY RECOMMENDATION</div>
+            <h1 style={{ fontSize: 28, fontWeight: 600, margin: "6px 0 20px", letterSpacing: "-.02em" }}>A · Bento Light</h1>
+            <p style={{ fontSize: 13, lineHeight: 1.7, color: "rgba(255,255,255,0.75)", marginTop: 0 }}>
+              벤토 그리드가 자연스럽게 기능별로 섹션을 분리해주고, 라임이 Export 히어로 블록 하나에 집중돼서
+              툴처럼 보이면서도 장난스러운 포인트를 유지해요. 가장 "스크린샷 툴" 같아 보이는 방향이에요.
+            </p>
+
+            <div style={{ marginTop: 24, display: "grid", gap: 12 }}>
+              {[
+                { v: "A", label: "Bento Light — 균형", note: "기본 추천 · 기능별 카드 분리가 가장 자연스러움" },
+                { v: "B", label: "Bento Dense — 정보 밀도", note: "prosumer · 숫자·치수 강조 · Pro 툴 느낌" },
+                { v: "C", label: "Bento Soft — 여유", note: "Editorial 감성 · 큰 라운드 · 더 우아함, 밀도는 낮아짐" },
+              ].map(o => (
+                <div key={o.v} style={{
+                  border: "1px solid rgba(255,255,255,0.1)", borderRadius: 14, padding: 14,
+                  background: o.v === "A" ? "rgba(215,255,58,0.06)" : "transparent",
+                  borderColor: o.v === "A" ? "rgba(215,255,58,0.25)" : "rgba(255,255,255,0.1)",
+                }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <div style={{
+                      width: 24, height: 24, borderRadius: 7,
+                      background: o.v === "A" ? "#d7ff3a" : "rgba(255,255,255,0.08)",
+                      color: o.v === "A" ? "#17181a" : "#fff",
+                      display: "grid", placeItems: "center",
+                      fontSize: 12, fontWeight: 700,
+                    }}>{o.v}</div>
+                    <div style={{ fontSize: 13.5, fontWeight: 600 }}>{o.label}</div>
+                  </div>
+                  <div style={{ fontSize: 11.5, color: "rgba(255,255,255,0.55)", marginTop: 6, lineHeight: 1.5 }}>{o.note}</div>
+                </div>
+              ))}
+            </div>
+
+            <h3 style={{ fontSize: 13, fontWeight: 700, color: "rgba(255,255,255,0.4)", letterSpacing: ".04em", textTransform: "uppercase", margin: "28px 0 10px" }}>다음 단계</h3>
+            <ol style={{ margin: 0, paddingLeft: 18, fontSize: 12.5, lineHeight: 1.8, color: "rgba(255,255,255,0.75)" }}>
+              <li>방향 하나 선택 → <code style={{ background: "rgba(255,255,255,0.08)", padding: "1px 6px", borderRadius: 4, fontSize: 11 }}>src/App.tsx</code> 에 적용</li>
+              <li>Tailwind 토큰 추가: <code style={{ background: "rgba(255,255,255,0.08)", padding: "1px 6px", borderRadius: 4, fontSize: 11 }}>bg-page / bg-card / accent-lime</code></li>
+              <li>컴포넌트별로 순차 리팩: Upload → FramePicker → ImageAdjust → Shadow → Export</li>
+              <li>PreviewCanvas 툴바(상단) · 상태 스트립(하단) 추가 — 원하면 덧붙일 수 있어요</li>
+            </ol>
+
+            <div style={{ marginTop: 24, padding: 14, background: "rgba(215,255,58,0.08)", borderRadius: 12, border: "1px solid rgba(215,255,58,0.2)" }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#d7ff3a", letterSpacing: ".04em", textTransform: "uppercase", marginBottom: 6 }}>참고</div>
+              <div style={{ fontSize: 12, lineHeight: 1.6, color: "rgba(255,255,255,0.8)" }}>
+                3개 방향 모두 <b>기능·hook·컴포넌트 분리를 그대로 유지</b>합니다.
+                변경되는 건 레이아웃(섹션→카드)·토큰(색/라운드/그림자)·타이포 스케일뿐이에요.
+              </div>
+            </div>
+          </div>
+        </DCArtboard>
+      </DCSection>
+    </DesignCanvas>
+  );
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

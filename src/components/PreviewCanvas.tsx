@@ -38,14 +38,14 @@ export function PreviewCanvas({ screenshot, frame, onPan, renderToCanvas }: Prev
 
   if (!screenshot || !frame) {
     return (
-      <div className="flex h-full items-center justify-center rounded-2xl border border-dashed border-[#222] bg-[#fafafa]">
-        <p className="text-[#888] text-sm font-medium">프레임과 스크린샷을 선택하면 미리보기가 나타납니다</p>
+      <div className="flex h-full items-center justify-center rounded-card border border-black/[0.07] bg-[url('/checkerboard.svg')] bg-repeat">
+        <p className="text-muted text-[13px] font-medium">프레임과 스크린샷을 선택하면 미리보기가 나타납니다</p>
       </div>
     )
   }
 
   return (
-    <div className="flex items-center justify-center rounded-2xl border border-[#222] bg-[url('/checkerboard.svg')] bg-repeat p-4 overflow-auto">
+    <div className="flex items-center justify-center rounded-card border border-black/[0.07] bg-[url('/checkerboard.svg')] bg-repeat p-10 overflow-hidden">
       <canvas
         ref={canvasRef}
         className="max-w-full max-h-full object-contain cursor-grab active:cursor-grabbing"

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Screenshot Framer — Final</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #e8e8e6; font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif; overflow: hidden; }
+  input[type="range"] { -webkit-appearance: none; appearance: none; background: transparent; }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; background: transparent; }
+  input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; background: transparent; border: none; }
+  button { font-family: inherit; }
+  *::-webkit-scrollbar { width: 6px; height: 6px; }
+  *::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 6px; }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="variations/shared-mocks.jsx"></script>
+<script type="text/babel">
+const T = {
+  pageBg: "#e8e8e6",
+  card: "#fafaf9",
+  cardDense: "#f7f7f5",
+  cardInner: "#ffffff",
+  text: "#17181a",
+  muted: "#8a8a88",
+  soft: "#5a5a58",
+  border: "rgba(0,0,0,0.07)",
+  accent: "#d7ff3a",
+  accentDark: "#17181a",
+};
+
+const App = () => {
+  const [frameTab, setFrameTab] = React.useState("device");
+  const [selectedFrame, setSelectedFrame] = React.useState("macbook-pro-16");
+  const [scale, setScale] = React.useState(1.00);
+  const [shadow, setShadow] = React.useState(true);
+  const [opacity, setOpacity] = React.useState(100);
+  const [exportScale, setExportScale] = React.useState(2);
+
+  const frames = {
+    device: [
+      { id: "macbook-pro-16", label: "MacBook Pro 16″" },
+      { id: "iphone-15", label: "iPhone 15" },
+    ],
+    browser: [
+      { id: "chrome-light", label: "Chrome" },
+      { id: "chrome-dark", label: "Chrome (다크)" },
+      { id: "safari-bigSur-light", label: "Safari Big Sur" },
+      { id: "safari-bigSur-dark", label: "Safari Big Sur 다크" },
+      { id: "safari-catalina-light", label: "Safari Catalina" },
+      { id: "safari-catalina-dark", label: "Safari Catalina 다크" },
+    ],
+  };
+
+  // ===== Reusable card components =====
+  // "A" style card: 20 radius, 16 padding, label + optional hint (for frame/adjust/shadow)
+  const CardA = ({ children, style, label, hint }) => (
+    <div style={{
+      background: T.card, borderRadius: 20, border: `1px solid ${T.border}`,
+      padding: 16, display: "flex", flexDirection: "column", ...style,
+    }}>
+      {label && (
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+          <div style={{ fontSize: 11, fontWeight: 600, color: T.soft, letterSpacing: ".04em", textTransform: "uppercase" }}>{label}</div>
+          {hint && <div style={{ fontSize: 11, color: T.muted }}>{hint}</div>}
+        </div>
+      )}
+      {children}
+    </div>
+  );
+
+  // ===== 1. Title bar (B style: dark strip) =====
+  const TitleCard = (
+    <div style={{
+      background: T.accentDark, borderRadius: 14, padding: "10px 12px",
+      display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8,
+      flexShrink: 0,
+    }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
+        <div style={{
+          width: 22, height: 22, borderRadius: 6, background: T.accent,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          fontSize: 11, fontWeight: 800, color: T.accentDark,
+        }}>▢</div>
+        <div style={{ fontSize: 12, fontWeight: 600, color: "#fff" }}>Screenshot Framer</div>
+      </div>
+      <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", fontFamily: "ui-monospace, monospace" }}>v0.3</div>
+    </div>
+  );
+
+  // ===== 2. File upload (B style: compact row) =====
+  const FileCard = (
+    <div style={{
+      background: T.cardDense, borderRadius: 14, padding: 10,
+      border: `1px solid ${T.border}`,
+    }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 6 }}>
+        <div style={{ fontSize: 9.5, fontWeight: 700, color: T.soft, letterSpacing: ".06em", textTransform: "uppercase" }}>파일</div>
+        <div style={{ fontSize: 10, color: T.muted, fontFamily: "ui-monospace, monospace" }}>1.4 MB</div>
+      </div>
+      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+        <div style={{
+          width: 40, height: 40, borderRadius: 8, flexShrink: 0,
+          background: `linear-gradient(135deg, #d7ff3a 0%, #8fa839 100%)`,
+          border: `1px solid ${T.border}`,
+        }}/>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 12, fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>dashboard-hero.png</div>
+          <div style={{ fontSize: 10, color: T.muted, marginTop: 1, fontFamily: "ui-monospace, monospace" }}>2880 × 1800</div>
+        </div>
+        <button style={{
+          width: 22, height: 22, borderRadius: 6, border: "none",
+          background: "transparent", color: T.soft, cursor: "pointer",
+          fontSize: 14, lineHeight: 1,
+        }}>✕</button>
+      </div>
+    </div>
+  );
+
+  // ===== 3. Frame picker (A style) =====
+  const FrameCard = (
+    <CardA label="프레임">
+      <div style={{
+        display: "flex", background: T.cardInner, padding: 3, borderRadius: 10,
+        border: `1px solid ${T.border}`, marginBottom: 10,
+      }}>
+        {["device", "browser"].map(cat => (
+          <button key={cat} onClick={() => setFrameTab(cat)} style={{
+            flex: 1, padding: "7px 0", fontSize: 12, fontWeight: 600,
+            border: "none", cursor: "pointer", borderRadius: 7,
+            background: frameTab === cat ? T.accentDark : "transparent",
+            color: frameTab === cat ? "#fff" : T.soft,
+            transition: "all .15s",
+          }}>
+            {cat === "device" ? "디바이스" : "브라우저"}
+          </button>
+        ))}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, maxHeight: 130, overflowY: "auto" }}>
+        {frames[frameTab].map(f => {
+          const active = selectedFrame === f.id;
+          return (
+            <button key={f.id} onClick={() => setSelectedFrame(f.id)} style={{
+              background: active ? T.accent : T.cardInner,
+              border: `1px solid ${active ? T.accent : T.border}`,
+              borderRadius: 10, padding: "10px 10px",
+              fontSize: 11.5, fontWeight: 600, color: T.text,
+              textAlign: "left", cursor: "pointer",
+              fontFamily: "inherit",
+              display: "flex", alignItems: "center", justifyContent: "space-between", gap: 4,
+              minHeight: 36,
+            }}>
+              <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.label}</span>
+              {active && <Icon name="check" size={12}/>}
+            </button>
+          );
+        })}
+      </div>
+    </CardA>
+  );
+
+  // ===== 4. Image adjust (A style) =====
+  const AdjustCard = (
+    <CardA label="이미지 조정" hint={`${scale.toFixed(2)}×`}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <Icon name="zoom" size={14}/>
+        <div style={{ flex: 1, position: "relative", height: 16, display: "flex", alignItems: "center" }}>
+          <div style={{ width: "100%", height: 4, background: T.cardInner, borderRadius: 4, border: `1px solid ${T.border}` }}/>
+          <div style={{ position: "absolute", left: 0, height: 4, background: T.accentDark, borderRadius: 4, width: `${((scale - 0.5) / 2.5) * 100}%` }}/>
+          <input type="range" min="0.5" max="3" step="0.01" value={scale} onChange={e => setScale(+e.target.value)} style={{
+            position: "absolute", inset: 0, width: "100%", opacity: 0, cursor: "pointer",
+          }}/>
+          <div style={{
+            position: "absolute", left: `calc(${((scale - 0.5) / 2.5) * 100}% - 7px)`,
+            width: 14, height: 14, borderRadius: 14, background: "#fff",
+            border: `2px solid ${T.accentDark}`,
+            boxShadow: "0 1px 3px rgba(0,0,0,0.15)", pointerEvents: "none",
+          }}/>
+        </div>
+      </div>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 10 }}>
+        <span style={{ fontSize: 10.5, color: T.muted }}>드래그로 위치 조절</span>
+        <button style={{
+          fontSize: 11, fontWeight: 600, color: T.soft,
+          background: "transparent", border: "none", cursor: "pointer",
+          display: "flex", alignItems: "center", gap: 4, padding: 0,
+          fontFamily: "inherit",
+        }}>
+          <Icon name="reset" size={11}/> 초기화
+        </button>
+      </div>
+    </CardA>
+  );
+
+  // ===== 5. Shadow (A style) =====
+  const ShadowCard = (
+    <CardA label="그림자" hint={shadow ? `${opacity}%` : "OFF"}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: shadow ? 12 : 0 }}>
+        <button onClick={() => setShadow(!shadow)} style={{
+          width: 32, height: 18, borderRadius: 18, border: "none",
+          background: shadow ? T.accentDark : "#d5d5d3",
+          position: "relative", cursor: "pointer", padding: 0,
+          transition: "background .15s",
+        }}>
+          <div style={{
+            position: "absolute", top: 2, left: shadow ? 16 : 2,
+            width: 14, height: 14, borderRadius: 14, background: "#fff",
+            transition: "left .15s",
+          }}/>
+        </button>
+        <span style={{ fontSize: 12, fontWeight: 500, color: shadow ? T.text : T.muted }}>그림자 활성화</span>
+      </div>
+      {shadow && (
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <Icon name="shadow" size={14}/>
+          <div style={{ flex: 1, position: "relative", height: 16, display: "flex", alignItems: "center" }}>
+            <div style={{ width: "100%", height: 4, background: T.cardInner, borderRadius: 4, border: `1px solid ${T.border}` }}/>
+            <div style={{ position: "absolute", left: 0, height: 4, background: T.accentDark, borderRadius: 4, width: `${opacity}%` }}/>
+            <input type="range" min="0" max="100" value={opacity} onChange={e => setOpacity(+e.target.value)} style={{
+              position: "absolute", inset: 0, width: "100%", opacity: 0, cursor: "pointer",
+            }}/>
+            <div style={{
+              position: "absolute", left: `calc(${opacity}% - 7px)`,
+              width: 14, height: 14, borderRadius: 14, background: "#fff",
+              border: `2px solid ${T.accentDark}`,
+              boxShadow: "0 1px 3px rgba(0,0,0,0.15)", pointerEvents: "none",
+            }}/>
+          </div>
+          <span style={{ width: 32, fontSize: 11, fontWeight: 600, textAlign: "right", color: T.text }}>{opacity}</span>
+        </div>
+      )}
+    </CardA>
+  );
+
+  // ===== 6. Export (B style: dark compact) =====
+  const ExportCard = (
+    <div style={{
+      background: T.accentDark, borderRadius: 14, padding: 12,
+      display: "flex", flexDirection: "column", gap: 8, marginTop: "auto",
+    }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div style={{ fontSize: 9.5, fontWeight: 700, color: "rgba(255,255,255,0.6)", letterSpacing: ".06em", textTransform: "uppercase" }}>내보내기</div>
+        <div style={{ fontSize: 10, color: "rgba(255,255,255,0.4)", fontFamily: "ui-monospace, monospace" }}>{exportScale}× scale</div>
+      </div>
+      <div style={{ display: "flex", gap: 4 }}>
+        {[1, 2, 3].map(s => (
+          <button key={s} onClick={() => setExportScale(s)} style={{
+            flex: 1, padding: "6px 0", fontSize: 11.5, fontWeight: 700,
+            borderRadius: 7, border: "1px solid rgba(255,255,255,0.1)",
+            background: exportScale === s ? T.accent : "rgba(255,255,255,0.06)",
+            color: exportScale === s ? T.accentDark : "#fff",
+            cursor: "pointer", fontFamily: "inherit",
+          }}>{s}×</button>
+        ))}
+      </div>
+      <button style={{
+        width: "100%", padding: "9px 12px", borderRadius: 9,
+        background: T.accent, color: T.accentDark,
+        border: "none", fontSize: 12.5, fontWeight: 700,
+        cursor: "pointer", fontFamily: "inherit",
+        display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+      }}>
+        <Icon name="download" size={13} strokeWidth={2.2}/> PNG 저장
+      </button>
+    </div>
+  );
+
+  return (
+    <div style={{
+      width: "100vw", height: "100vh",
+      background: T.pageBg, fontFamily: "'Pretendard', sans-serif",
+      color: T.text, padding: 14,
+      display: "grid", gridTemplateColumns: "360px 1fr", gap: 14,
+      boxSizing: "border-box",
+    }}>
+      <aside style={{ display: "flex", flexDirection: "column", gap: 12, overflow: "hidden" }}>
+        {TitleCard}
+        {FileCard}
+        {FrameCard}
+        {AdjustCard}
+        {ShadowCard}
+        {ExportCard}
+      </aside>
+
+      {/* Preview — simple, transparent checkerboard only */}
+      <main style={{
+        borderRadius: 20, overflow: "hidden",
+        background: `url(assets/checkerboard.svg)`,
+        backgroundRepeat: "repeat",
+        border: `1px solid ${T.border}`,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        padding: 40,
+      }}>
+        <div style={{ width: "min(100%, 860px)" }}>
+          <MockFramedShot tone="light"/>
+        </div>
+      </main>
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

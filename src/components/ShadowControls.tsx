@@ -1,4 +1,5 @@
 import type { ShadowConfig } from '../types/frame'
+import { Icon } from './Icon'
 
 type ShadowControlsProps = {
   value: ShadowConfig
@@ -7,34 +8,63 @@ type ShadowControlsProps = {
 
 export function ShadowControls({ value, onChange }: ShadowControlsProps) {
   const update = (partial: Partial<ShadowConfig>) => onChange({ ...value, ...partial })
+  const pct = value.opacity
 
   return (
-    <div className="space-y-3">
-      <label className="flex items-center gap-2 cursor-pointer select-none">
-        <input
-          type="checkbox"
-          checked={value.enabled}
-          onChange={e => update({ enabled: e.target.checked })}
-          className="rounded accent-lime-500 w-4 h-4"
-        />
-        <span className="text-sm font-medium text-[#222]">그림자</span>
-      </label>
-
-      <div className={`${value.enabled ? '' : 'opacity-30 pointer-events-none'}`}>
-        <div className="flex items-center gap-3">
-          <span className="w-12 text-xs font-medium text-[#222]">불투명도</span>
-          <input
-            type="range"
-            min={0}
-            max={100}
-            value={value.opacity}
-            disabled={!value.enabled}
-            onChange={e => update({ opacity: Number(e.target.value) })}
-            className="flex-1 accent-lime-500"
-          />
-          <span className="w-8 text-right text-xs font-medium text-[#222]">{value.opacity}</span>
-        </div>
+    <div className="bg-card rounded-card border border-black/[0.07] p-4 flex flex-col shrink-0">
+      {/* Label + hint */}
+      <div className="flex items-center justify-between mb-3">
+        <span className="text-[11px] font-semibold text-soft uppercase tracking-[0.04em]">그림자</span>
+        <span className="text-[11px] text-muted font-mono">{value.enabled ? `${pct}%` : 'OFF'}</span>
       </div>
+
+      {/* Toggle row */}
+      <div className={`flex items-center gap-[10px] ${value.enabled ? 'mb-3' : ''}`}>
+        <button
+          onClick={() => update({ enabled: !value.enabled })}
+          aria-label="그림자 활성화"
+          aria-pressed={value.enabled}
+          className={`relative w-[32px] h-[18px] rounded-full border-none cursor-pointer transition-colors shrink-0 ${
+            value.enabled ? 'bg-ink' : 'bg-[#d5d5d3]'
+          }`}
+        >
+          <div
+            className={`absolute top-[2px] w-[14px] h-[14px] rounded-full bg-white transition-all ${
+              value.enabled ? 'left-[16px]' : 'left-[2px]'
+            }`}
+          />
+        </button>
+        <span className={`text-[12px] font-medium transition-colors ${value.enabled ? 'text-ink' : 'text-muted'}`}>
+          그림자 활성화
+        </span>
+      </div>
+
+      {/* Opacity slider (only when enabled) */}
+      {value.enabled && (
+        <div className="flex items-center gap-[10px]">
+          <Icon name="shadow" size={14} className="text-muted shrink-0" />
+          <div className="flex-1 relative h-4 flex items-center">
+            <div className="w-full h-[4px] bg-card-inner rounded border border-black/[0.07]" />
+            <div
+              className="absolute left-0 h-[4px] bg-ink rounded"
+              style={{ width: `${pct}%` }}
+            />
+            <input
+              type="range"
+              min={0}
+              max={100}
+              value={pct}
+              onChange={e => update({ opacity: Number(e.target.value) })}
+              className="absolute inset-0 w-full opacity-0 cursor-pointer"
+            />
+            <div
+              className="absolute w-[14px] h-[14px] rounded-full bg-white border-2 border-ink shadow-[0_1px_3px_rgba(0,0,0,0.15)] pointer-events-none"
+              style={{ left: `calc(${pct}% - 7px)` }}
+            />
+          </div>
+          <span className="w-[32px] text-right text-[11px] font-semibold text-ink font-mono">{pct}</span>
+        </div>
+      )}
     </div>
   )
 }

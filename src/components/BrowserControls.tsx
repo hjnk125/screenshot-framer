@@ -15,12 +15,12 @@ export function BrowserControls({ frame, state }: BrowserControlsProps) {
     <div className="space-y-3">
       {/* URL 입력 */}
       <div>
-        <label className="block text-xs font-medium text-[#222] mb-1">주소</label>
+        <label className="block text-[11px] font-semibold text-soft mb-1">주소</label>
         <input
           type="text"
           value={state.url}
           onChange={e => state.setUrl(e.target.value)}
-          className="w-full rounded-lg border border-[#222] px-3 py-1.5 text-xs font-medium text-[#222] bg-white focus:outline-none focus:ring-1 focus:ring-lime-500 focus:border-lime-500"
+          className="w-full rounded-[10px] border border-black/[0.07] bg-card-inner px-3 py-1.5 text-[12px] font-medium text-ink focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent"
           placeholder="https://example.com"
         />
       </div>
@@ -28,12 +28,12 @@ export function BrowserControls({ frame, state }: BrowserControlsProps) {
       {/* 탭 타이틀 (Chrome만) */}
       {hasTabArea && (
         <div>
-          <label className="block text-xs font-medium text-[#222] mb-1">탭 제목</label>
+          <label className="block text-[11px] font-semibold text-soft mb-1">탭 제목</label>
           <input
             type="text"
             value={state.title}
             onChange={e => state.setTitle(e.target.value)}
-            className="w-full rounded-lg border border-[#222] px-3 py-1.5 text-xs font-medium text-[#222] bg-white focus:outline-none focus:ring-1 focus:ring-lime-500 focus:border-lime-500"
+            className="w-full rounded-[10px] border border-black/[0.07] bg-card-inner px-3 py-1.5 text-[12px] font-medium text-ink focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent"
             placeholder="페이지 제목"
           />
         </div>
@@ -42,11 +42,11 @@ export function BrowserControls({ frame, state }: BrowserControlsProps) {
       {/* Favicon 업로드 (탭이 있는 브라우저만) */}
       {hasTabArea && (
         <div>
-          <label className="block text-xs font-medium text-[#222] mb-1">Favicon</label>
+          <label className="block text-[11px] font-semibold text-soft mb-1">Favicon</label>
           <div className="flex items-center gap-2">
             <button
               onClick={() => faviconInputRef.current?.click()}
-              className="flex items-center gap-1.5 rounded-lg border border-[#222] px-2.5 py-1.5 text-xs font-medium text-[#222] hover:bg-lime-50 transition-colors"
+              className="flex items-center gap-1.5 rounded-[7px] border border-black/[0.07] bg-card-inner px-2.5 py-1.5 text-[11.5px] font-semibold text-ink hover:border-black/20 transition-colors"
             >
               {state.favicon ? (
                 <>
@@ -60,7 +60,7 @@ export function BrowserControls({ frame, state }: BrowserControlsProps) {
             {state.favicon && (
               <button
                 onClick={state.clearFavicon}
-                className="text-xs text-[#666] hover:text-[#222] font-medium"
+                className="text-[11.5px] text-muted hover:text-ink font-medium transition-colors"
               >
                 제거
               </button>
