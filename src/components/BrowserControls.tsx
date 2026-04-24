@@ -9,6 +9,7 @@ type BrowserControlsProps = {
 
 export function BrowserControls({ frame, state }: BrowserControlsProps) {
   const faviconInputRef = useRef<HTMLInputElement>(null)
+  const hasTabArea = !!frame.browserMeta?.tabArea
   const hasFaviconArea = !!frame.browserMeta?.faviconArea
 
   return (
@@ -24,6 +25,20 @@ export function BrowserControls({ frame, state }: BrowserControlsProps) {
           placeholder="https://example.com"
         />
       </div>
+
+      {/* 탭 타이틀 (Chrome만) */}
+      {hasTabArea && (
+        <div>
+          <label className="block text-xs font-medium text-[#222] mb-1">탭 제목</label>
+          <input
+            type="text"
+            value={state.title}
+            onChange={e => state.setTitle(e.target.value)}
+            className="w-full rounded-lg border border-[#222] px-3 py-1.5 text-xs font-medium text-[#222] bg-white focus:outline-none focus:ring-1 focus:ring-lime-500 focus:border-lime-500"
+            placeholder="페이지 제목"
+          />
+        </div>
+      )}
 
       {/* Favicon 업로드 (Chrome에만 해당) */}
       {hasFaviconArea && (

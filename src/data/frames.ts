@@ -27,8 +27,15 @@ export const FRAMES: Frame[] = [
     browserMeta: {
       contentBg: '#ffffff',
       contentRadius: 10,
-      urlBar: { x: 328, y: 143, width: 3380, height: 74, bgColor: '#f1f3f4', textColor: '#202124', fontSize: 28, align: 'left' },
-      faviconArea: { x: 358, y: 161, size: 36 },
+      urlBar: { x: 328, y: 143, width: 3378, height: 74, bgColor: '#f1f3f4', textColor: '#202124', fontSize: 28, align: 'left' },
+      faviconArea: { x: 358, y: 162, size: 36 },
+      tabArea: {
+        x: 234, y: 20, width: 720, height: 100,
+        bgColor: '#ffffff', textColor: '#202124', fontSize: 26,
+        faviconX: 32, faviconY: 36, faviconSize: 28,
+        textOffsetX: 72,
+      },
+      defaultFaviconPath: '/chrome-light-favicon.svg',
     },
   },
   {
@@ -41,8 +48,15 @@ export const FRAMES: Frame[] = [
     browserMeta: {
       contentBg: '#2a2a2a',
       contentRadius: 10,
-      urlBar: { x: 328, y: 143, width: 3380, height: 74, bgColor: '#292a2d', textColor: '#e8eaed', fontSize: 28, align: 'left' },
-      faviconArea: { x: 358, y: 161, size: 36 },
+      urlBar: { x: 328, y: 143, width: 3378, height: 74, bgColor: '#292a2d', textColor: '#e8eaed', fontSize: 28, align: 'left' },
+      faviconArea: { x: 358, y: 162, size: 36 },
+      tabArea: {
+        x: 234, y: 20, width: 720, height: 100,
+        bgColor: '#35363a', textColor: '#e8eaed', fontSize: 26,
+        faviconX: 32, faviconY: 36, faviconSize: 28,
+        textOffsetX: 72,
+      },
+      defaultFaviconPath: '/chrome-dark-favicon.svg',
     },
   },
   {
@@ -55,7 +69,7 @@ export const FRAMES: Frame[] = [
     browserMeta: {
       contentBg: '#ffffff',
       contentRadius: 10,
-      urlBar: { x: 1146, y: 39, width: 1548, height: 79, bgColor: '#e9e9e9', textColor: '#222222', fontSize: 28, align: 'center' },
+      urlBar: { x: 1146, y: 38, width: 1548, height: 79, bgColor: '#f2f2f2', textColor: '#222222', fontSize: 28, align: 'center' },
     },
   },
   {
@@ -68,7 +82,7 @@ export const FRAMES: Frame[] = [
     browserMeta: {
       contentBg: '#1c1c1e',
       contentRadius: 10,
-      urlBar: { x: 1146, y: 37, width: 1548, height: 79, bgColor: '#3a3a3c', textColor: '#e0e0e0', fontSize: 28, align: 'center' },
+      urlBar: { x: 1146, y: 38, width: 1548, height: 79, bgColor: '#3a3a3c', textColor: '#e0e0e0', fontSize: 28, align: 'center' },
     },
   },
   {
@@ -81,7 +95,7 @@ export const FRAMES: Frame[] = [
     browserMeta: {
       contentBg: '#ffffff',
       contentRadius: 10,
-      urlBar: { x: 1140, y: 23, width: 1560, height: 69, bgColor: '#f5f5f5', textColor: '#222222', fontSize: 28, align: 'center' },
+      urlBar: { x: 1140, y: 24, width: 1560, height: 67, bgColor: '#f8f8f8', textColor: '#222222', fontSize: 28, align: 'center' },
     },
   },
   {
@@ -94,7 +108,7 @@ export const FRAMES: Frame[] = [
     browserMeta: {
       contentBg: '#1c1c1e',
       contentRadius: 10,
-      urlBar: { x: 1140, y: 25, width: 1560, height: 65, bgColor: '#6d6d6d', textColor: '#ffffff', fontSize: 28, align: 'center' },
+      urlBar: { x: 1140, y: 24, width: 1560, height: 65, bgColor: '#6e6e6e', textColor: '#ffffff', fontSize: 28, align: 'center' },
     },
   },
 ]

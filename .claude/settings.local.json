@@ -14,7 +14,22 @@
       "Bash(/Users/gentlemonster/Desktop/screenshot-editor/node_modules/.bin/vitest run *)",
       "Bash(git init *)",
       "Bash(git -C /Users/gentlemonster/Desktop/screenshot-editor log --oneline)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(npm test *)",
+      "Bash(node -e ' *)",
+      "Bash(npx tsc *)",
+      "Bash(git filter-branch *)",
+      "Bash(git restore *)",
+      "Bash(FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch -f --msg-filter 'sed \"s/^기능: /feat: /\"' HEAD~5..HEAD)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(python3 -)",
+      "Bash(pip3 install *)",
+      "Bash(sips -g pixelWidth -g pixelHeight public/frames/iphone-15.png public/frames/macbook-pro-16.png)",
+      "Bash(convert --version)",
+      "Bash(python3 -m venv /tmp/pyvenv)",
+      "Bash(/tmp/pyvenv/bin/pip install *)",
+      "Bash(/tmp/pyvenv/bin/python3 -)",
+      "Bash(sips -g pixelWidth -g pixelHeight public/frames/chrome-dark-toolbar.png public/frames/chrome-light-toolbar.png public/frames/safari-bigSur-dark-toolbar.png public/frames/safari-bigSur-light-toolbar.png public/frames/safari-catalina-dark-toolbar.png public/frames/safari-catalina-light-toolbar.png)"
     ]
   }
 }

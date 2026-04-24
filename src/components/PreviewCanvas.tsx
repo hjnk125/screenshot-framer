@@ -9,11 +9,12 @@ type PreviewCanvasProps = {
   shadow: ShadowConfig
   onPan: (dx: number, dy: number) => void
   browserState?: BrowserState
+  defaultFavicon?: HTMLImageElement | null
 }
 
-export function PreviewCanvas({ screenshot, frame, transform, shadow, onPan, browserState }: PreviewCanvasProps) {
+export function PreviewCanvas({ screenshot, frame, transform, shadow, onPan, browserState, defaultFavicon }: PreviewCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const { renderToCanvas } = useCompositor({ screenshot, frame, transform, shadow, browserState })
+  const { renderToCanvas } = useCompositor({ screenshot, frame, transform, shadow, browserState, defaultFavicon })
   const dragStart = useRef<{ x: number; y: number } | null>(null)
 
   useEffect(() => {

@@ -1,5 +1,5 @@
 import { useCallback, useRef } from 'react'
-import type { Frame, ShadowConfig, ImageTransform, ExportScale } from '../types/frame'
+import type { Frame, ShadowConfig, ImageTransform, ExportScale, BrowserState } from '../types/frame'
 import { drawComposite } from '../utils/compositor'
 
 export type CompositorParams = {
@@ -7,6 +7,8 @@ export type CompositorParams = {
   frame: Frame | null
   transform: ImageTransform
   shadow: ShadowConfig
+  browserState?: BrowserState
+  defaultFavicon?: HTMLImageElement | null
 }
 
 export function useCompositor(params: CompositorParams) {
@@ -29,23 +31,23 @@ export function useCompositor(params: CompositorParams) {
 
   const renderToCanvas = useCallback(
     async (canvas: HTMLCanvasElement, scale: ExportScale = 1): Promise<void> => {
-      const { screenshot, frame, transform, shadow } = params
+      const { screenshot, frame, transform, shadow, browserState, defaultFavicon } = params
       if (!screenshot || !frame) return
 
       const frameImg = await loadFrameImage(frame.assetPath)
-      drawComposite({ canvas, screenshot, frameImg, frame, transform, shadow, scale })
+      drawComposite({ canvas, screenshot, frameImg, frame, transform, shadow, scale, browserState, defaultFavicon })
     },
     [params, loadFrameImage]
   )
 
   const exportPng = useCallback(
     async (scale: ExportScale): Promise<void> => {
-      const { screenshot, frame, transform, shadow } = params
+      const { screenshot, frame, transform, shadow, browserState, defaultFavicon } = params
       if (!screenshot || !frame) return
 
       const canvas = document.createElement('canvas')
       const frameImg = await loadFrameImage(frame.assetPath)
-      drawComposite({ canvas, screenshot, frameImg, frame, transform, shadow, scale })
+      drawComposite({ canvas, screenshot, frameImg, frame, transform, shadow, scale, browserState, defaultFavicon })
 
       canvas.toBlob(blob => {
         if (!blob) return

@@ -121,7 +121,7 @@ function drawDeviceComposite(params: DrawCompositeParams): void {
 }
 
 function drawBrowserComposite(params: DrawCompositeParams): void {
-  const { canvas, screenshot, frameImg, frame, transform, shadow, scale, browserState } = params
+  const { canvas, screenshot, frameImg, frame, transform, shadow, scale, browserState, defaultFavicon } = params
   const { browserMeta } = frame
   if (!browserMeta) return
 
@@ -182,10 +182,32 @@ function drawBrowserComposite(params: DrawCompositeParams): void {
     }
   }
 
-  // 5. Favicon overlay (Chrome only)
-  if (browserMeta.faviconArea && browserState?.favicon) {
-    const { x, y, size } = browserMeta.faviconArea
-    offCtx.drawImage(browserState.favicon, x, y, size, size)
+  // 5. Favicon overlay in URL bar (Chrome only) — user upload or default
+  if (browserMeta.faviconArea) {
+    const faviconImg = browserState?.favicon ?? defaultFavicon ?? null
+    if (faviconImg) {
+      const { x, y, size } = browserMeta.faviconArea
+      offCtx.drawImage(faviconImg, x, y, size, size)
+    }
+  }
+
+  // 6. Tab area overlay (Chrome only) — title + favicon in active tab
+  if (browserMeta.tabArea && browserState?.title) {
+    const tab = browserMeta.tabArea
+    offCtx.fillStyle = tab.bgColor
+    offCtx.fillRect(tab.x, tab.y, tab.width, tab.height)
+
+    const faviconImg = browserState?.favicon ?? defaultFavicon ?? null
+    if (faviconImg) {
+      offCtx.drawImage(faviconImg, tab.x + tab.faviconX, tab.y + tab.faviconY, tab.faviconSize, tab.faviconSize)
+    }
+
+    offCtx.fillStyle = tab.textColor
+    offCtx.font = `${tab.fontSize}px -apple-system, "Helvetica Neue", sans-serif`
+    offCtx.textBaseline = 'middle'
+    offCtx.textAlign = 'left'
+    const titleMaxW = tab.width - tab.textOffsetX - 20
+    offCtx.fillText(browserState.title, tab.x + tab.textOffsetX, tab.y + tab.height / 2, titleMaxW)
   }
 
   applyToMainCanvas(canvas, offscreen, shadow, scale)
@@ -200,6 +222,7 @@ export type DrawCompositeParams = {
   shadow: ShadowConfig
   scale: ExportScale
   browserState?: BrowserState
+  defaultFavicon?: HTMLImageElement | null
 }
 
 export function drawComposite(params: DrawCompositeParams): void {

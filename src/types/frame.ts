@@ -1,5 +1,19 @@
 export type FrameCategory = 'device' | 'browser'
 
+export type TabArea = {
+  x: number
+  y: number
+  width: number
+  height: number
+  bgColor: string
+  textColor: string
+  fontSize: number
+  faviconX: number  // favicon left edge relative to tab x
+  faviconY: number  // favicon top edge relative to tab y
+  faviconSize: number
+  textOffsetX: number  // text start relative to tab x (after favicon)
+}
+
 export type BrowserFrameMeta = {
   contentBg: string
   contentRadius: number
@@ -14,10 +28,13 @@ export type BrowserFrameMeta = {
     align: 'left' | 'center'
   }
   faviconArea?: { x: number; y: number; size: number }
+  tabArea?: TabArea
+  defaultFaviconPath?: string  // used when no user favicon uploaded
 }
 
 export type BrowserState = {
   url: string
+  title: string
   favicon: HTMLImageElement | null
 }
 
