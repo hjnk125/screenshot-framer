@@ -1,29 +1,37 @@
-import { Icon } from './Icon'
+import { Icon } from "./Icon";
 
 type ImageAdjustProps = {
-  scale: number
-  onScaleChange: (scale: number) => void
-  onReset: () => void
-}
+  scale: number;
+  onScaleChange: (scale: number) => void;
+  onReset: () => void;
+};
 
-export function ImageAdjust({ scale, onScaleChange, onReset }: ImageAdjustProps) {
-  const pct = ((scale - 0.5) / 2.5) * 100
+export function ImageAdjust({
+  scale,
+  onScaleChange,
+  onReset,
+}: ImageAdjustProps) {
+  const pct = ((scale - 0.5) / 2.5) * 100;
 
   return (
-    <div className="bg-card rounded-card-dense border border-black/[0.07] p-4 flex flex-col shrink-0">
+    <div className="flex shrink-0 flex-col rounded-card-dense border border-black/[0.07] bg-card p-4">
       {/* Label + hint */}
-      <div className="flex items-center justify-between mb-3">
-        <span className="text-[10px] font-semibold text-soft uppercase tracking-[0.05em]">Image</span>
-        <span className="text-[10px] text-muted font-mono">{scale.toFixed(2)}×</span>
+      <div className="mb-3 flex items-center justify-between">
+        <span className="text-[10px] font-semibold uppercase tracking-[0.05em] text-soft">
+          Image
+        </span>
+        <span className="font-mono text-[10px] text-muted">
+          {scale.toFixed(2)}×
+        </span>
       </div>
 
       {/* Slider row */}
       <div className="flex items-center gap-3">
-        <Icon name="zoom" size={14} className="text-muted shrink-0" />
-        <div className="flex-1 relative h-4 flex items-center">
-          <div className="w-full h-[4px] bg-card-inner rounded border border-black/[0.07]" />
+        <Icon name="zoom" size={14} className="shrink-0 text-muted" />
+        <div className="relative flex h-4 flex-1 items-center">
+          <div className="h-[4px] w-full rounded border border-black/[0.07] bg-card-inner" />
           <div
-            className="absolute left-0 h-[4px] bg-ink rounded"
+            className="absolute left-0 h-[4px] rounded bg-ink"
             style={{ width: `${pct}%` }}
           />
           <input
@@ -32,26 +40,26 @@ export function ImageAdjust({ scale, onScaleChange, onReset }: ImageAdjustProps)
             max={3}
             step={0.01}
             value={scale}
-            onChange={e => onScaleChange(Number(e.target.value))}
-            className="absolute inset-0 w-full opacity-0 cursor-pointer"
+            onChange={(e) => onScaleChange(Number(e.target.value))}
+            className="absolute inset-0 w-full cursor-pointer opacity-0"
           />
           <div
-            className="absolute w-[14px] h-[14px] rounded-full bg-white border-2 border-ink shadow-[0_1px_3px_rgba(0,0,0,0.15)] pointer-events-none"
+            className="pointer-events-none absolute h-[14px] w-[14px] rounded-full border-2 border-ink bg-white shadow-[0_1px_3px_rgba(0,0,0,0.15)]"
             style={{ left: `calc(${pct}% - 7px)` }}
           />
         </div>
       </div>
 
       {/* Bottom row */}
-      <div className="flex items-center justify-between mt-3">
+      <div className="mt-3 flex items-center justify-between">
         <span className="text-[11px] text-muted">Drag to reposition</span>
         <button
           onClick={onReset}
-          className="flex items-center gap-1 text-[11px] font-semibold text-soft bg-transparent border-none cursor-pointer hover:text-ink transition-colors"
+          className="flex cursor-pointer items-center gap-1 border-none bg-transparent text-[11px] font-semibold text-soft transition-colors hover:text-ink"
         >
           <Icon name="reset" size={11} /> Reset
         </button>
       </div>
     </div>
-  )
+  );
 }
