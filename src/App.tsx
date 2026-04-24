@@ -48,7 +48,7 @@ export default function App() {
     };
   }, [selectedFrame]);
 
-  const { renderToCanvas, exportPng } = useCompositor({
+  const { renderToCanvas, exportPng, getOutputSize } = useCompositor({
     screenshot: image,
     frame: selectedFrame,
     transform,
@@ -226,6 +226,7 @@ export default function App() {
       <ExportControls
         onExport={handleExport}
         disabled={!image || !selectedFrame}
+        getOutputSize={getOutputSize}
       />
 
       <Toast message={error} onClose={clearImage} />

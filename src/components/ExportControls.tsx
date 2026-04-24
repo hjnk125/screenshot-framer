@@ -1,16 +1,32 @@
 import { useState } from "react";
 import type { ExportScale } from "../types/frame";
+import type { CanvasSize } from "../utils/compositor";
 import { Icon } from "./Icon";
 
 type ExportControlsProps = {
   onExport: (scale: ExportScale) => void;
   disabled: boolean;
+  getOutputSize?: (scale: ExportScale) => CanvasSize | null;
 };
 
-const SCALES: ExportScale[] = [1, 2, 3];
+const SCALES: ExportScale[] = [1, 2];
 
-export function ExportControls({ onExport, disabled }: ExportControlsProps) {
+function formatFileSize(bytes: number): string {
+  if (bytes >= 1024 * 1024) return `~${(bytes / 1024 / 1024).toFixed(1)} MB`;
+  return `~${Math.round(bytes / 1024)} KB`;
+}
+
+export function ExportControls({
+  onExport,
+  disabled,
+  getOutputSize,
+}: ExportControlsProps) {
   const [scale, setScale] = useState<ExportScale>(1);
+
+  const outputSize = getOutputSize?.(scale) ?? null;
+  const estimatedBytes = outputSize
+    ? (outputSize.width * outputSize.height * 4) / 3
+    : null;
 
   return (
     <div className="flex flex-col gap-2 rounded-card-dense bg-ink p-4">
@@ -40,6 +56,19 @@ export function ExportControls({ onExport, disabled }: ExportControlsProps) {
           </button>
         ))}
       </div>
+
+      {/* Output size info */}
+      {outputSize && estimatedBytes !== null && (
+        <div className="flex items-center justify-between">
+          <span className="font-mono text-[10px] text-white/40">
+            {outputSize.width.toLocaleString()} ×{" "}
+            {outputSize.height.toLocaleString()} px
+          </span>
+          <span className="font-mono text-[10px] text-white/40">
+            {formatFileSize(estimatedBytes)}
+          </span>
+        </div>
+      )}
 
       {/* Export button */}
       <button

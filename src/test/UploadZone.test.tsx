@@ -6,7 +6,7 @@ import { describe, it, expect, vi } from "vitest";
 describe("UploadZone", () => {
   it("업로드 안내 텍스트를 렌더링한다", () => {
     render(<UploadZone onFile={() => {}} />);
-    expect(screen.getByText(/드래그|클릭/i)).toBeInTheDocument();
+    expect(screen.getByText(/drag|click/i)).toBeInTheDocument();
   });
 
   it("파일 선택 시 onFile 콜백을 호출한다", async () => {

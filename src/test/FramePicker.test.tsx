@@ -7,7 +7,7 @@ import { describe, it, expect, vi } from "vitest";
 describe("FramePicker", () => {
   it("디바이스 탭이 기본 선택되어 있다", () => {
     render(<FramePicker selectedId={null} onSelect={() => {}} />);
-    expect(screen.getByRole("button", { name: "디바이스" })).toHaveClass(
+    expect(screen.getByRole("button", { name: "Device" })).toHaveClass(
       "text-white",
     );
   });
@@ -22,7 +22,7 @@ describe("FramePicker", () => {
 
   it("브라우저 탭 클릭 시 브라우저 프레임을 보여준다", async () => {
     render(<FramePicker selectedId={null} onSelect={() => {}} />);
-    await userEvent.click(screen.getByRole("button", { name: "브라우저" }));
+    await userEvent.click(screen.getByRole("button", { name: "Browser" }));
     expect(screen.getByText("Chrome")).toBeInTheDocument();
   });
 

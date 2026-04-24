@@ -10,7 +10,7 @@ describe("ShadowControls", () => {
   it("그림자 토글 버튼을 렌더링한다", () => {
     render(<ShadowControls value={defaultShadow} onChange={() => {}} />);
     expect(
-      screen.getByRole("button", { name: "그림자 활성화" }),
+      screen.getByRole("button", { name: /toggle shadow/i }),
     ).toBeInTheDocument();
   });
 
@@ -30,7 +30,7 @@ describe("ShadowControls", () => {
     const onChange = vi.fn();
     render(<ShadowControls value={defaultShadow} onChange={onChange} />);
     await userEvent.click(
-      screen.getByRole("button", { name: "그림자 활성화" }),
+      screen.getByRole("button", { name: /toggle shadow/i }),
     );
     expect(onChange).toHaveBeenCalledWith({ ...defaultShadow, enabled: true });
   });

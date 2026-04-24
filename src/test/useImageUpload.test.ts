@@ -27,7 +27,7 @@ describe("useImageUpload", () => {
     expect(result.current.error).toBeNull();
   });
 
-  it("8000px 이하 이미지는 정상 로드된다", async () => {
+  it("4000px 이하 이미지는 정상 로드된다", async () => {
     mockImageLoad(1920, 1080);
     const { result } = renderHook(() => useImageUpload());
     const file = new File([""], "test.png", { type: "image/png" });
@@ -40,8 +40,8 @@ describe("useImageUpload", () => {
     expect(result.current.error).toBeNull();
   });
 
-  it("한 변이 8000px 초과 시 error가 설정되고 image는 null이다", async () => {
-    mockImageLoad(9000, 1080);
+  it("한 변이 4000px 초과 시 error가 설정되고 image는 null이다", async () => {
+    mockImageLoad(5000, 1080);
     const { result } = renderHook(() => useImageUpload());
     const file = new File([""], "test.png", { type: "image/png" });
 
@@ -50,7 +50,7 @@ describe("useImageUpload", () => {
       await new Promise((r) => setTimeout(r, 50));
     });
 
-    expect(result.current.error).toMatch(/8[,.]?000/);
+    expect(result.current.error).toMatch(/4[,.]?000/);
     expect(result.current.image).toBeNull();
   });
 

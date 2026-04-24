@@ -66,4 +66,4 @@ export type ImageTransform = {
   offsetY: number;
 };
 
-export type ExportScale = 1 | 2 | 3;
+export type ExportScale = 1 | 2;

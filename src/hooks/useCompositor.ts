@@ -1,4 +1,4 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import type {
   Frame,
   ShadowConfig,
@@ -6,7 +6,8 @@ import type {
   ExportScale,
   BrowserState,
 } from "../types/frame";
-import { drawComposite } from "../utils/compositor";
+import { drawComposite, calculateOutputSize } from "../utils/compositor";
+import type { CanvasSize } from "../utils/compositor";
 
 export type CompositorParams = {
   screenshot: HTMLImageElement | null;
@@ -26,6 +27,7 @@ export function useCompositor({
   defaultFavicon,
 }: CompositorParams) {
   const frameImgCache = useRef<Map<string, HTMLImageElement>>(new Map());
+  const [, setFrameCacheVersion] = useState(0);
 
   const loadFrameImage = useCallback(
     (assetPath: string): Promise<HTMLImageElement> => {
@@ -36,6 +38,7 @@ export function useCompositor({
         const img = new Image();
         img.onload = () => {
           frameImgCache.current.set(assetPath, img);
+          setFrameCacheVersion((v) => v + 1);
           resolve(img);
         };
         img.onerror = reject;
@@ -116,5 +119,15 @@ export function useCompositor({
     ],
   );
 
-  return { renderToCanvas, exportPng };
+  const getOutputSize = useCallback(
+    (scale: ExportScale): CanvasSize | null => {
+      if (!screenshot || !frame) return null;
+      const frameImg = frameImgCache.current.get(frame.assetPath);
+      if (!frameImg) return null;
+      return calculateOutputSize(screenshot, frame, frameImg, scale);
+    },
+    [screenshot, frame],
+  );
+
+  return { renderToCanvas, exportPng, getOutputSize };
 }

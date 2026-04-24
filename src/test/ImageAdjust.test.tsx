@@ -30,7 +30,7 @@ describe("ImageAdjust", () => {
     render(
       <ImageAdjust scale={1.5} onScaleChange={() => {}} onReset={onReset} />,
     );
-    await userEvent.click(screen.getByRole("button", { name: /초기화/ }));
+    await userEvent.click(screen.getByRole("button", { name: /reset/i }));
     expect(onReset).toHaveBeenCalled();
   });
 });

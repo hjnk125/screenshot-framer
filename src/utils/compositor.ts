@@ -9,6 +9,41 @@ import type {
 
 export type CanvasSize = { width: number; height: number };
 
+export function calculateOutputSize(
+  screenshot: HTMLImageElement,
+  frame: Frame,
+  frameImg: HTMLImageElement,
+  scale: ExportScale,
+): CanvasSize {
+  const assetW = frameImg.naturalWidth;
+  const pad = SHADOW_PADDING * 2;
+
+  if (frame.browserMeta) {
+    const toolbarH = frameImg.naturalHeight;
+    const contentH = Math.round(
+      (assetW * screenshot.naturalHeight) / screenshot.naturalWidth,
+    );
+    const naturalScale = screenshot.naturalWidth / assetW;
+    const effectiveScale = naturalScale * scale;
+    return {
+      width: Math.round((assetW + pad) * effectiveScale),
+      height: Math.round((toolbarH + contentH + pad) * effectiveScale),
+    };
+  }
+
+  const assetH = frameImg.naturalHeight;
+  const { width: sw, height: sh } = frame.screenArea;
+  const coverBase = Math.max(
+    sw / screenshot.naturalWidth,
+    sh / screenshot.naturalHeight,
+  );
+  const effectiveScale = (1 / coverBase) * scale;
+  return {
+    width: Math.round((assetW + pad) * effectiveScale),
+    height: Math.round((assetH + pad) * effectiveScale),
+  };
+}
+
 // Padding added around the frame to make shadows visible
 const SHADOW_PADDING = 80;
 
@@ -151,7 +186,15 @@ function drawDeviceComposite(params: DrawCompositeParams): void {
   drawScreenshot(offCtx, screenshot, frame.screenArea, transform, "cover");
   offCtx.drawImage(frameImg, 0, 0, assetW, assetH);
 
-  applyToMainCanvas(canvas, offscreen, shadow, scale);
+  // 1x = screenshot native pixels + frame proportional around it
+  const { width: sw, height: sh } = frame.screenArea;
+  const coverBase = Math.max(
+    sw / screenshot.naturalWidth,
+    sh / screenshot.naturalHeight,
+  );
+  const effectiveScale = (1 / coverBase) * scale;
+
+  applyToMainCanvas(canvas, offscreen, shadow, effectiveScale);
 }
 
 function drawBrowserComposite(params: DrawCompositeParams): void {
@@ -267,7 +310,11 @@ function drawBrowserComposite(params: DrawCompositeParams): void {
     offCtx.fillText(text, titleX, midY);
   }
 
-  applyToMainCanvas(canvas, offscreen, shadow, scale);
+  // 1x = screenshot native width + frame proportional around it
+  const naturalScale = screenshot.naturalWidth / assetW;
+  const effectiveScale = naturalScale * scale;
+
+  applyToMainCanvas(canvas, offscreen, shadow, effectiveScale);
 }
 
 export type DrawCompositeParams = {
