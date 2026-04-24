@@ -3,11 +3,13 @@ import type { Frame, ShadowConfig, ExportScale } from './types/frame'
 import { useImageUpload } from './hooks/useImageUpload'
 import { useImageTransform } from './hooks/useImageTransform'
 import { useCompositor } from './hooks/useCompositor'
+import { useBrowserState } from './hooks/useBrowserState'
 import { UploadZone } from './components/UploadZone'
 import { FramePicker } from './components/FramePicker'
 import { ImageAdjust } from './components/ImageAdjust'
 import { ShadowControls } from './components/ShadowControls'
 import { ExportControls } from './components/ExportControls'
+import { BrowserControls } from './components/BrowserControls'
 import { PreviewCanvas } from './components/PreviewCanvas'
 import { Toast } from './components/Toast'
 
@@ -23,12 +25,16 @@ export default function App() {
   const { transform, setScale, pan, reset: resetTransform } = useImageTransform()
   const [selectedFrame, setSelectedFrame] = useState<Frame | null>(null)
   const [shadow, setShadow] = useState<ShadowConfig>(DEFAULT_SHADOW)
+  const browserState = useBrowserState()
+
+  const isBrowser = !!selectedFrame?.browserMeta
 
   const { exportPng } = useCompositor({
     screenshot: image,
     frame: selectedFrame,
     transform,
     shadow,
+    browserState: isBrowser ? browserState : undefined,
   })
 
   const onFile = useCallback((file: File) => { handleFile(file) }, [handleFile])
@@ -95,6 +101,13 @@ export default function App() {
             </div>
           )}
 
+          {isBrowser && selectedFrame && (
+            <div className="border-b border-[#222] pb-5 mb-5">
+              <h2 className="mb-2 text-xs font-bold uppercase tracking-wider text-[#222]">브라우저</h2>
+              <BrowserControls frame={selectedFrame} state={browserState} />
+            </div>
+          )}
+
           <div className="border-b border-[#222] pb-5 mb-5">
             <h2 className="mb-2 text-xs font-bold uppercase tracking-wider text-[#222]">그림자</h2>
             <ShadowControls value={shadow} onChange={setShadow} />
@@ -114,6 +127,7 @@ export default function App() {
           transform={transform}
           shadow={shadow}
           onPan={pan}
+          browserState={isBrowser ? browserState : undefined}
         />
       </main>
 

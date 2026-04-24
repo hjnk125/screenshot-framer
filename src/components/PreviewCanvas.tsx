@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback } from 'react'
-import type { Frame, ShadowConfig, ImageTransform } from '../types/frame'
+import type { Frame, ShadowConfig, ImageTransform, BrowserState } from '../types/frame'
 import { useCompositor } from '../hooks/useCompositor'
 
 type PreviewCanvasProps = {
@@ -8,11 +8,12 @@ type PreviewCanvasProps = {
   transform: ImageTransform
   shadow: ShadowConfig
   onPan: (dx: number, dy: number) => void
+  browserState?: BrowserState
 }
 
-export function PreviewCanvas({ screenshot, frame, transform, shadow, onPan }: PreviewCanvasProps) {
+export function PreviewCanvas({ screenshot, frame, transform, shadow, onPan, browserState }: PreviewCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const { renderToCanvas } = useCompositor({ screenshot, frame, transform, shadow })
+  const { renderToCanvas } = useCompositor({ screenshot, frame, transform, shadow, browserState })
   const dragStart = useRef<{ x: number; y: number } | null>(null)
 
   useEffect(() => {

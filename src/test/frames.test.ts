@@ -1,19 +1,26 @@
 import { FRAMES, getFrameById } from '../data/frames'
 
 describe('FRAMES 메타데이터', () => {
-  it('4개 프레임이 정의되어 있다', () => {
-    expect(FRAMES.length).toBe(4)
+  it('8개 프레임이 정의되어 있다', () => {
+    expect(FRAMES.length).toBe(8)
   })
 
-  it('모든 프레임에 screenArea가 정의되어 있다', () => {
-    FRAMES.forEach(f => {
+  it('디바이스 프레임에 screenArea가 정의되어 있다', () => {
+    FRAMES.filter(f => f.category === 'device').forEach(f => {
       expect(f.screenArea.width).toBeGreaterThan(0)
       expect(f.screenArea.height).toBeGreaterThan(0)
     })
   })
 
-  it('aspectRatio가 screenArea와 일치한다', () => {
-    FRAMES.forEach(f => {
+  it('브라우저 프레임에 browserMeta가 정의되어 있다', () => {
+    FRAMES.filter(f => f.category === 'browser').forEach(f => {
+      expect(f.browserMeta).toBeDefined()
+      expect(f.browserMeta?.urlBar).toBeDefined()
+    })
+  })
+
+  it('디바이스 프레임 aspectRatio가 screenArea와 일치한다', () => {
+    FRAMES.filter(f => f.category === 'device').forEach(f => {
       const computed = f.screenArea.width / f.screenArea.height
       expect(f.aspectRatio).toBeCloseTo(computed, 2)
     })

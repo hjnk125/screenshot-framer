@@ -21,7 +21,7 @@ describe('FramePicker', () => {
   it('브라우저 탭 클릭 시 브라우저 프레임을 보여준다', async () => {
     render(<FramePicker selectedId={null} onSelect={() => {}} />)
     await userEvent.click(screen.getByRole('button', { name: '브라우저' }))
-    expect(screen.getByText('Chrome (Mac)')).toBeInTheDocument()
+    expect(screen.getByText('Chrome')).toBeInTheDocument()
   })
 
   it('프레임 선택 시 onSelect 콜백을 호출한다', async () => {
