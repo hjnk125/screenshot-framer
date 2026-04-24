@@ -1,20 +1,15 @@
 import { useEffect, useRef, useCallback } from 'react'
-import type { Frame, ShadowConfig, ImageTransform, BrowserState } from '../types/frame'
-import { useCompositor } from '../hooks/useCompositor'
+import type { Frame, ExportScale } from '../types/frame'
 
 type PreviewCanvasProps = {
   screenshot: HTMLImageElement | null
   frame: Frame | null
-  transform: ImageTransform
-  shadow: ShadowConfig
   onPan: (dx: number, dy: number) => void
-  browserState?: BrowserState
-  defaultFavicon?: HTMLImageElement | null
+  renderToCanvas: (canvas: HTMLCanvasElement, scale: ExportScale) => Promise<void>
 }
 
-export function PreviewCanvas({ screenshot, frame, transform, shadow, onPan, browserState, defaultFavicon }: PreviewCanvasProps) {
+export function PreviewCanvas({ screenshot, frame, onPan, renderToCanvas }: PreviewCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const { renderToCanvas } = useCompositor({ screenshot, frame, transform, shadow, browserState, defaultFavicon })
   const dragStart = useRef<{ x: number; y: number } | null>(null)
 
   useEffect(() => {
@@ -27,9 +22,12 @@ export function PreviewCanvas({ screenshot, frame, transform, shadow, onPan, bro
   }, [])
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!dragStart.current) return
-    const dx = e.clientX - dragStart.current.x
-    const dy = e.clientY - dragStart.current.y
+    if (!dragStart.current || !canvasRef.current) return
+    const rect = canvasRef.current.getBoundingClientRect()
+    const scaleX = rect.width > 0 ? canvasRef.current.width / rect.width : 1
+    const scaleY = rect.height > 0 ? canvasRef.current.height / rect.height : 1
+    const dx = (e.clientX - dragStart.current.x) * scaleX
+    const dy = (e.clientY - dragStart.current.y) * scaleY
     dragStart.current = { x: e.clientX, y: e.clientY }
     onPan(dx, dy)
   }, [onPan])

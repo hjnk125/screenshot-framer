@@ -25,9 +25,17 @@ export function useImageUpload(): ImageUploadState {
   const handleFile = (file: File): Promise<void> => {
     return new Promise(resolve => {
       const reader = new FileReader()
+      reader.onerror = () => {
+        setError('파일을 읽는 데 실패했습니다.')
+        resolve()
+      }
       reader.onload = e => {
         const url = e.target?.result as string
         const img = new Image()
+        img.onerror = () => {
+          setError('이미지를 불러오는 데 실패했습니다.')
+          resolve()
+        }
         img.onload = () => {
           if (img.naturalWidth > MAX_DIMENSION || img.naturalHeight > MAX_DIMENSION) {
             setError(

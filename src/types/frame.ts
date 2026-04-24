@@ -27,7 +27,6 @@ export type BrowserFrameMeta = {
     fontSize: number
     align: 'left' | 'center'
   }
-  faviconArea?: { x: number; y: number; size: number }
   tabArea?: TabArea
   defaultFaviconPath?: string  // used when no user favicon uploaded
 }

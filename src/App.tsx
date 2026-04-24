@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import type { Frame, ShadowConfig, ExportScale } from './types/frame'
 import { useImageUpload } from './hooks/useImageUpload'
 import { useImageTransform } from './hooks/useImageTransform'
@@ -24,25 +24,25 @@ export default function App() {
   const [selectedFrame, setSelectedFrame] = useState<Frame | null>(null)
   const [shadow, setShadow] = useState<ShadowConfig>(DEFAULT_SHADOW)
   const browserState = useBrowserState()
-  const defaultFaviconRef = useRef<HTMLImageElement | null>(null)
+  const [defaultFavicon, setDefaultFavicon] = useState<HTMLImageElement | null>(null)
 
   const isBrowser = !!selectedFrame?.browserMeta
 
   useEffect(() => {
     const path = selectedFrame?.browserMeta?.defaultFaviconPath
-    if (!path) { defaultFaviconRef.current = null; return }
+    if (!path) { setDefaultFavicon(null); return }
     const img = new Image()
-    img.onload = () => { defaultFaviconRef.current = img }
+    img.onload = () => setDefaultFavicon(img)
     img.src = path
   }, [selectedFrame])
 
-  const { exportPng } = useCompositor({
+  const { renderToCanvas, exportPng } = useCompositor({
     screenshot: image,
     frame: selectedFrame,
     transform,
     shadow,
     browserState: isBrowser ? browserState : undefined,
-    defaultFavicon: defaultFaviconRef.current,
+    defaultFavicon: isBrowser ? defaultFavicon : null,
   })
 
   const onFile = useCallback((file: File) => { handleFile(file) }, [handleFile])
@@ -132,11 +132,8 @@ export default function App() {
         <PreviewCanvas
           screenshot={image}
           frame={selectedFrame}
-          transform={transform}
-          shadow={shadow}
           onPan={pan}
-          browserState={isBrowser ? browserState : undefined}
-          defaultFavicon={isBrowser ? defaultFaviconRef.current : undefined}
+          renderToCanvas={renderToCanvas}
         />
       </main>
 

@@ -11,7 +11,7 @@ export type CompositorParams = {
   defaultFavicon?: HTMLImageElement | null
 }
 
-export function useCompositor(params: CompositorParams) {
+export function useCompositor({ screenshot, frame, transform, shadow, browserState, defaultFavicon }: CompositorParams) {
   const frameImgCache = useRef<Map<string, HTMLImageElement>>(new Map())
 
   const loadFrameImage = useCallback((assetPath: string): Promise<HTMLImageElement> => {
@@ -31,18 +31,15 @@ export function useCompositor(params: CompositorParams) {
 
   const renderToCanvas = useCallback(
     async (canvas: HTMLCanvasElement, scale: ExportScale = 1): Promise<void> => {
-      const { screenshot, frame, transform, shadow, browserState, defaultFavicon } = params
       if (!screenshot || !frame) return
-
       const frameImg = await loadFrameImage(frame.assetPath)
       drawComposite({ canvas, screenshot, frameImg, frame, transform, shadow, scale, browserState, defaultFavicon })
     },
-    [params, loadFrameImage]
+    [screenshot, frame, transform, shadow, browserState, defaultFavicon, loadFrameImage]
   )
 
   const exportPng = useCallback(
     async (scale: ExportScale): Promise<void> => {
-      const { screenshot, frame, transform, shadow, browserState, defaultFavicon } = params
       if (!screenshot || !frame) return
 
       const canvas = document.createElement('canvas')
@@ -55,11 +52,13 @@ export function useCompositor(params: CompositorParams) {
         const a = document.createElement('a')
         a.href = url
         a.download = `framed-${frame.id}-${scale}x.png`
+        document.body.appendChild(a)
         a.click()
+        document.body.removeChild(a)
         URL.revokeObjectURL(url)
       }, 'image/png')
     },
-    [params, loadFrameImage]
+    [screenshot, frame, transform, shadow, browserState, defaultFavicon, loadFrameImage]
   )
 
   return { renderToCanvas, exportPng }

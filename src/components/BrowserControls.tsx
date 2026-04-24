@@ -10,7 +10,6 @@ type BrowserControlsProps = {
 export function BrowserControls({ frame, state }: BrowserControlsProps) {
   const faviconInputRef = useRef<HTMLInputElement>(null)
   const hasTabArea = !!frame.browserMeta?.tabArea
-  const hasFaviconArea = !!frame.browserMeta?.faviconArea
 
   return (
     <div className="space-y-3">
@@ -40,8 +39,8 @@ export function BrowserControls({ frame, state }: BrowserControlsProps) {
         </div>
       )}
 
-      {/* Favicon 업로드 (Chrome에만 해당) */}
-      {hasFaviconArea && (
+      {/* Favicon 업로드 (탭이 있는 브라우저만) */}
+      {hasTabArea && (
         <div>
           <label className="block text-xs font-medium text-[#222] mb-1">Favicon</label>
           <div className="flex items-center gap-2">

@@ -28,7 +28,6 @@ export const FRAMES: Frame[] = [
       contentBg: '#ffffff',
       contentRadius: 10,
       urlBar: { x: 328, y: 143, width: 3378, height: 74, bgColor: '#f1f3f4', textColor: '#202124', fontSize: 28, align: 'left' },
-      faviconArea: { x: 358, y: 162, size: 36 },
       tabArea: {
         x: 234, y: 20, width: 720, height: 100,
         bgColor: '#ffffff', textColor: '#202124', fontSize: 26,
@@ -49,7 +48,6 @@ export const FRAMES: Frame[] = [
       contentBg: '#2a2a2a',
       contentRadius: 10,
       urlBar: { x: 328, y: 143, width: 3378, height: 74, bgColor: '#292a2d', textColor: '#e8eaed', fontSize: 28, align: 'left' },
-      faviconArea: { x: 358, y: 162, size: 36 },
       tabArea: {
         x: 234, y: 20, width: 720, height: 100,
         bgColor: '#35363a', textColor: '#e8eaed', fontSize: 26,
@@ -74,7 +72,7 @@ export const FRAMES: Frame[] = [
   },
   {
     id: 'safari-bigSur-dark',
-    label: 'Safari Big Sur (다크)',
+    label: 'Safari (Big Sur) (다크)',
     category: 'browser',
     assetPath: '/frames/browser/safari-bigSur-dark-toolbar.png',
     screenArea: { x: 0, y: 0, width: 3840, height: 0, radius: 10 },
@@ -100,7 +98,7 @@ export const FRAMES: Frame[] = [
   },
   {
     id: 'safari-catalina-dark',
-    label: 'Safari Catalina (다크)',
+    label: 'Safari (Catalina) (다크)',
     category: 'browser',
     assetPath: '/frames/browser/safari-catalina-dark-toolbar.png',
     screenArea: { x: 0, y: 0, width: 3840, height: 0, radius: 10 },
