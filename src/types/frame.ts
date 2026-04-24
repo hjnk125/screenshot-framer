@@ -12,6 +12,7 @@ export type TabArea = {
   faviconY: number; // favicon top edge relative to tab y
   faviconSize: number;
   textOffsetX: number; // text start relative to tab x (after favicon)
+  textOffsetY?: number; // vertical nudge from center (positive = down)
 };
 
 export type BrowserFrameMeta = {
@@ -53,6 +54,11 @@ export type Frame = {
   screenArea: ScreenArea; // browser frames: height=0 (dynamic), y=toolbarHeight
   aspectRatio: number;
   browserMeta?: BrowserFrameMeta;
+  // used when screenshot.naturalWidth < 800 (browser frames only)
+  shortToolbar?: {
+    assetPath: string;
+    browserMeta: BrowserFrameMeta;
+  };
 };
 
 export type ShadowConfig = {

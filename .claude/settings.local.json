@@ -30,7 +30,10 @@
       "Bash(/tmp/pyvenv/bin/pip install *)",
       "Bash(/tmp/pyvenv/bin/python3 -)",
       "Bash(sips -g pixelWidth -g pixelHeight public/frames/chrome-dark-toolbar.png public/frames/chrome-light-toolbar.png public/frames/safari-bigSur-dark-toolbar.png public/frames/safari-bigSur-light-toolbar.png public/frames/safari-catalina-dark-toolbar.png public/frames/safari-catalina-light-toolbar.png)",
-      "Bash(python3 -c ' *)"
+      "Bash(python3 -c ' *)",
+      "Bash(npm uninstall *)",
+      "Bash(npx prettier *)",
+      "Bash(read f *)"
     ]
   }
 }

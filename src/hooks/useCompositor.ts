@@ -23,6 +23,21 @@ export type CompositorParams = {
   deviceBg?: DeviceBgConfig;
 };
 
+function resolveFrame(
+  frame: Frame | null,
+  screenshot: HTMLImageElement | null,
+): Frame | null {
+  if (!frame) return null;
+  if (frame.shortToolbar && screenshot && screenshot.naturalWidth < 800) {
+    return {
+      ...frame,
+      assetPath: frame.shortToolbar.assetPath,
+      browserMeta: frame.shortToolbar.browserMeta,
+    };
+  }
+  return frame;
+}
+
 export function useCompositor({
   screenshot,
   frame,
@@ -57,12 +72,14 @@ export function useCompositor({
   const renderToCanvas = useCallback(
     async (canvas: HTMLCanvasElement): Promise<void> => {
       if (!screenshot || !frame) return;
-      const frameImg = await loadFrameImage(frame.assetPath);
+      const active = resolveFrame(frame, screenshot);
+      if (!active) return;
+      const frameImg = await loadFrameImage(active.assetPath);
       drawComposite({
         canvas,
         screenshot,
         frameImg,
-        frame,
+        frame: active,
         transform,
         shadow,
         scale: 1,
@@ -86,14 +103,16 @@ export function useCompositor({
   const exportPng = useCallback(async (): Promise<void> => {
     if (!screenshot || !frame) return;
 
+    const active = resolveFrame(frame, screenshot);
+    if (!active) return;
     const canvas = document.createElement("canvas");
-    const frameImg = await loadFrameImage(frame.assetPath);
-    const scale = computeEffectiveScale(screenshot, frame, frameImg);
+    const frameImg = await loadFrameImage(active.assetPath);
+    const scale = computeEffectiveScale(screenshot, active, frameImg);
     drawComposite({
       canvas,
       screenshot,
       frameImg,
-      frame,
+      frame: active,
       transform,
       shadow,
       scale,
@@ -126,9 +145,11 @@ export function useCompositor({
 
   const getOutputSize = useCallback((): CanvasSize | null => {
     if (!screenshot || !frame) return null;
-    const frameImg = frameImgCache.current.get(frame.assetPath);
+    const active = resolveFrame(frame, screenshot);
+    if (!active) return null;
+    const frameImg = frameImgCache.current.get(active.assetPath);
     if (!frameImg) return null;
-    return calculateOutputSize(screenshot, frame, frameImg, shadow);
+    return calculateOutputSize(screenshot, active, frameImg, shadow);
   }, [screenshot, frame, shadow]);
 
   return { renderToCanvas, exportPng, getOutputSize };

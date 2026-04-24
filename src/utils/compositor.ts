@@ -366,7 +366,7 @@ function drawBrowserComposite(params: DrawCompositeParams): void {
     offCtx.textAlign = "left";
     const titleX = tab.x + tab.textOffsetX;
     const titleMaxW = tab.width - tab.textOffsetX - 52;
-    const midY = tab.y + tab.height / 2;
+    const midY = tab.y + tab.height / 2 + (tab.textOffsetY ?? 0);
 
     // Ellipsis truncation
     let text = browserState.title;
