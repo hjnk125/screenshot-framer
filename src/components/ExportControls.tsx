@@ -13,7 +13,7 @@ export function ExportControls({ onExport, disabled }: ExportControlsProps) {
   const [scale, setScale] = useState<ExportScale>(2)
 
   return (
-    <div className="bg-ink rounded-card-dense p-3 flex flex-col gap-2">
+    <div className="bg-ink rounded-card-dense p-4 flex flex-col gap-2">
       {/* Header */}
       <div className="flex items-center justify-between">
         <span className="text-[9.5px] font-bold text-white/60 uppercase tracking-[0.06em]">Export</span>

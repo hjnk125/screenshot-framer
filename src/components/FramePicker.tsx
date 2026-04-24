@@ -21,9 +21,11 @@ function FrameHintTooltip({ cardRef }: { cardRef: React.RefObject<HTMLDivElement
       const isDesktop = window.innerWidth >= 1024
       setDesktop(isDesktop)
       if (isDesktop) {
+        // 데스크탑: 카드 우측, 세로 중앙
         setPos({ top: r.top + r.height / 2, left: r.right + 14 })
       } else {
-        setPos({ top: r.top - 14, left: r.left + r.width / 2 })
+        // 모바일: 카드 세로 중앙, 가로 중앙
+        setPos({ top: r.top + r.height / 2, left: r.left + r.width / 2 })
       }
     }
     update()
@@ -43,9 +45,9 @@ function FrameHintTooltip({ cardRef }: { cardRef: React.RefObject<HTMLDivElement
       style={{
         position: 'fixed',
         zIndex: 9999,
-        ...(desktop
-          ? { top: pos.top, left: pos.left, transform: 'translateY(-50%)' }
-          : { top: pos.top, left: pos.left, transform: 'translate(-50%, -100%)' }),
+        top: pos.top,
+        left: pos.left,
+        transform: desktop ? 'translateY(-50%)' : 'translate(-50%, -50%)',
       }}
     >
       {desktop ? (
@@ -62,17 +64,9 @@ function FrameHintTooltip({ cardRef }: { cardRef: React.RefObject<HTMLDivElement
           </div>
         </div>
       ) : (
-        /* 태블릿/모바일: 그리드 상단 — 하향 꼬리 */
-        <div className="flex flex-col items-center">
-          <div className="bg-black/[0.72] backdrop-blur-sm rounded-[9px] px-[11px] py-[7px] text-white text-[12.5px] font-semibold whitespace-nowrap">
-            Pick a frame
-          </div>
-          <div style={{
-            width: 0, height: 0,
-            borderLeft: '7px solid transparent',
-            borderRight: '7px solid transparent',
-            borderTop: '9px solid rgba(0,0,0,0.72)',
-          }} />
+        /* 모바일/태블릿: 카드 중앙 오버레이 */
+        <div className="bg-black/[0.72] backdrop-blur-sm rounded-[9px] px-[11px] py-[7px] text-white text-[12.5px] font-semibold whitespace-nowrap">
+          Pick a frame
         </div>
       )}
     </div>,
@@ -88,7 +82,7 @@ export function FramePicker({ selectedId, onSelect, showHint }: FramePickerProps
 
   return (
     <>
-      <div ref={cardRef} className="bg-card rounded-card border border-black/[0.07] p-3 flex flex-col shrink-0">
+      <div ref={cardRef} className="bg-card rounded-card border border-black/[0.07] p-4 flex flex-col shrink-0">
         <div className="flex items-center justify-between mb-3">
           <span className="text-[11px] font-semibold text-soft uppercase tracking-[0.04em]">Frame</span>
         </div>
