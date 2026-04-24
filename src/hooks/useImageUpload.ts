@@ -2,9 +2,15 @@ import { useState } from 'react'
 
 const MAX_DIMENSION = 8000
 
+export type FileInfo = {
+  name: string
+  size: number
+}
+
 export type ImageUploadState = {
   image: HTMLImageElement | null
   dataUrl: string | null
+  fileInfo: FileInfo | null
   error: string | null
   handleFile: (file: File) => Promise<void>
   clearImage: () => void
@@ -13,6 +19,7 @@ export type ImageUploadState = {
 export function useImageUpload(): ImageUploadState {
   const [image, setImage] = useState<HTMLImageElement | null>(null)
   const [dataUrl, setDataUrl] = useState<string | null>(null)
+  const [fileInfo, setFileInfo] = useState<FileInfo | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   const handleFile = (file: File): Promise<void> => {
@@ -28,10 +35,12 @@ export function useImageUpload(): ImageUploadState {
             )
             setImage(null)
             setDataUrl(null)
+            setFileInfo(null)
           } else {
             setError(null)
             setImage(img)
             setDataUrl(url)
+            setFileInfo({ name: file.name, size: file.size })
           }
           resolve()
         }
@@ -44,8 +53,9 @@ export function useImageUpload(): ImageUploadState {
   const clearImage = () => {
     setImage(null)
     setDataUrl(null)
+    setFileInfo(null)
     setError(null)
   }
 
-  return { image, dataUrl, error, handleFile, clearImage }
+  return { image, dataUrl, fileInfo, error, handleFile, clearImage }
 }

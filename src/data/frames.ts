@@ -22,7 +22,7 @@ export const FRAMES: Frame[] = [
     label: 'Chrome (Mac)',
     category: 'browser',
     assetPath: '/frames/chrome-mac.png',
-    screenArea: { x: 0, y: 88, width: 1440, height: 832 },
+    screenArea: { x: 0, y: 88, width: 1440, height: 832, radius: 0 },
     aspectRatio: 1440 / 832,
   },
   {
@@ -30,7 +30,7 @@ export const FRAMES: Frame[] = [
     label: 'Safari (Mac)',
     category: 'browser',
     assetPath: '/frames/safari-mac.png',
-    screenArea: { x: 0, y: 88, width: 1440, height: 832 },
+    screenArea: { x: 0, y: 88, width: 1440, height: 832, radius: 0 },
     aspectRatio: 1440 / 832,
   },
 ]

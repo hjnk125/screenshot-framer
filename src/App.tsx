@@ -19,7 +19,7 @@ const DEFAULT_SHADOW: ShadowConfig = {
 }
 
 export default function App() {
-  const { image, error, handleFile, clearImage } = useImageUpload()
+  const { image, fileInfo, error, handleFile, clearImage } = useImageUpload()
   const { transform, setScale, pan, reset: resetTransform } = useImageTransform()
   const [selectedFrame, setSelectedFrame] = useState<Frame | null>(null)
   const [shadow, setShadow] = useState<ShadowConfig>(DEFAULT_SHADOW)
@@ -49,10 +49,30 @@ export default function App() {
         <aside className="flex flex-col overflow-y-auto border-r border-[#222] pr-6">
           <div className="border-b border-[#222] pb-5 mb-5">
             <h2 className="mb-2 text-xs font-bold uppercase tracking-wider text-[#222]">스크린샷</h2>
-            {image ? (
-              <div className="flex items-center justify-between rounded-xl border border-[#222] px-3 py-2 text-sm">
-                <span className="text-[#222] truncate font-medium">업로드 완료</span>
-                <button onClick={clearImage} className="text-[#222] hover:text-red-600 ml-2 font-bold text-lg leading-none">×</button>
+            {image && fileInfo ? (
+              <div className="flex items-center gap-3 rounded-xl border border-[#222] p-2">
+                <div className="w-14 h-14 shrink-0 rounded-lg border border-[#222] overflow-hidden bg-[#f0f0f0]">
+                  <img
+                    src={image.src}
+                    alt="preview"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-semibold text-[#222] truncate">{fileInfo.name}</p>
+                  <p className="text-xs text-[#666] mt-0.5">
+                    {image.naturalWidth} × {image.naturalHeight}px
+                  </p>
+                  <p className="text-xs text-[#666]">
+                    {(fileInfo.size / 1024).toFixed(0)} KB
+                  </p>
+                </div>
+                <button
+                  onClick={clearImage}
+                  className="shrink-0 w-6 h-6 flex items-center justify-center rounded-full border border-[#222] text-[#222] hover:bg-red-600 hover:text-white hover:border-red-600 transition-colors text-sm font-bold leading-none"
+                >
+                  ×
+                </button>
               </div>
             ) : (
               <UploadZone onFile={onFile} />
