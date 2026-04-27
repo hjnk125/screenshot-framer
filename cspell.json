@@ -14,7 +14,9 @@
     "Crect",
     "changefreq",
     "sitemap",
-    "urlset"
+    "urlset",
+    "pricecurrency",
+    "priceCurrency"
   ],
   "ignorePaths": ["node_modules", "dist", "*.lock"]
 }
