@@ -90,7 +90,7 @@ export default function App() {
   );
 
   return (
-    <div className="h-screen bg-page">
+    <div className="h-[100dvh] bg-page">
       <div className="mx-auto flex h-full max-w-[1440px] flex-col gap-[14px] overflow-y-auto p-[14px] pb-[max(14px,_calc(14px_+_env(safe-area-inset-bottom)))] text-ink lg:grid lg:grid-cols-[360px_1fr] lg:grid-rows-[1fr_auto] lg:overflow-hidden lg:pb-[14px]">
         {/* Sidebar wrapper — relative for fade overlay */}
         <div className="relative flex flex-col lg:min-h-0">
