@@ -65,6 +65,12 @@ minWidth:
 
 스크린샷 가로 800px 미만이면 모든 브라우저 프레임이 자동으로 2328px short 툴바로 전환.
 
+## 브랜치 전략
+
+- **항상 `master`에서 브랜치를 따서 작업**
+- 브랜치명: `feat/기능명`, `fix/버그명` 등
+- 작업 완료 후 `master`로 머지
+
 ## 커밋 메시지 규칙
 
 - **prefix는 영어** (feat, fix, chore, docs, refactor, test 등)
