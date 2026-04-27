@@ -14,6 +14,7 @@ import { BrowserControls } from "./components/BrowserControls";
 import { DeviceControls } from "./components/DeviceControls";
 import { PreviewCanvas } from "./components/PreviewCanvas";
 import { Toast } from "./components/Toast";
+import { HelpModal } from "./components/HelpModal";
 
 const DEFAULT_SHADOW: ShadowConfig = {
   enabled: true,
@@ -37,6 +38,7 @@ export default function App() {
   );
   const asideRef = useRef<HTMLElement>(null);
   const [showFade, setShowFade] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
 
   const isBrowser = !!selectedFrame?.browserMeta;
 
@@ -89,7 +91,7 @@ export default function App() {
 
   return (
     <div className="h-screen bg-page">
-      <div className="mx-auto flex h-full max-w-[1440px] flex-col gap-[14px] overflow-y-auto p-[14px] text-ink lg:grid lg:grid-cols-[360px_1fr] lg:grid-rows-[1fr_auto] lg:overflow-hidden">
+      <div className="mx-auto flex h-full max-w-[1440px] flex-col gap-[14px] overflow-y-auto p-[14px] pb-[max(14px,_calc(14px_+_env(safe-area-inset-bottom)))] text-ink lg:grid lg:grid-cols-[360px_1fr] lg:grid-rows-[1fr_auto] lg:overflow-hidden lg:pb-[14px]">
         {/* Sidebar wrapper — relative for fade overlay */}
         <div className="relative flex flex-col lg:min-h-0">
           <aside
@@ -242,6 +244,17 @@ export default function App() {
 
         <Toast message={error} onClose={clearImage} />
       </div>
+
+      {/* Floating help button */}
+      <button
+        onClick={() => setShowHelp(true)}
+        className="fixed right-5 z-40 flex h-8 w-8 items-center justify-center rounded-full bg-ink text-[16px] font-extrabold text-white/60 shadow-[0_2px_12px_rgba(0,0,0,0.2)] transition-colors hover:text-white" style={{ bottom: 'max(20px, calc(20px + env(safe-area-inset-bottom)))' }}
+        aria-label="Help"
+      >
+        ?
+      </button>
+
+      {showHelp && <HelpModal onClose={() => setShowHelp(false)} />}
     </div>
   );
 }
