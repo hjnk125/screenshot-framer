@@ -112,9 +112,9 @@ export default function App() {
                 <div className="flex h-[22px] w-[22px] select-none items-center justify-center rounded-[6px] bg-accent">
                   <img src="/logo.svg" alt="" className="h-[14px] w-[14px]" />
                 </div>
-                <span className="text-[12px] font-semibold text-white">
+                <h1 className="text-[12px] font-semibold text-white" aria-hidden="true">
                   Screenshot Framer
-                </span>
+                </h1>
               </div>
               <span className="font-mono text-[10px] text-white/50">v0.1</span>
             </div>
