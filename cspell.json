@@ -11,7 +11,10 @@
     "vitest",
     "tailwindcss",
     "Csvg",
-    "Crect"
+    "Crect",
+    "changefreq",
+    "sitemap",
+    "urlset"
   ],
   "ignorePaths": ["node_modules", "dist", "*.lock"]
 }
