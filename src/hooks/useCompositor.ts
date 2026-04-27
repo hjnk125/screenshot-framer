@@ -49,6 +49,8 @@ export function useCompositor({
 }: CompositorParams) {
   const frameImgCache = useRef<Map<string, HTMLImageElement>>(new Map());
   const [, setFrameCacheVersion] = useState(0);
+  const [isRendering, setIsRendering] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
 
   const loadFrameImage = useCallback(
     (assetPath: string): Promise<HTMLImageElement> => {
@@ -72,21 +74,26 @@ export function useCompositor({
   const renderToCanvas = useCallback(
     async (canvas: HTMLCanvasElement): Promise<void> => {
       if (!screenshot || !frame) return;
-      const active = resolveFrame(frame, screenshot);
-      if (!active) return;
-      const frameImg = await loadFrameImage(active.assetPath);
-      drawComposite({
-        canvas,
-        screenshot,
-        frameImg,
-        frame: active,
-        transform,
-        shadow,
-        scale: 1,
-        browserState,
-        defaultFavicon,
-        deviceBg,
-      });
+      setIsRendering(true);
+      try {
+        const active = resolveFrame(frame, screenshot);
+        if (!active) return;
+        const frameImg = await loadFrameImage(active.assetPath);
+        drawComposite({
+          canvas,
+          screenshot,
+          frameImg,
+          frame: active,
+          transform,
+          shadow,
+          scale: 1,
+          browserState,
+          defaultFavicon,
+          deviceBg,
+        });
+      } finally {
+        setIsRendering(false);
+      }
     },
     [
       screenshot,
@@ -102,9 +109,14 @@ export function useCompositor({
 
   const exportPng = useCallback(async (): Promise<void> => {
     if (!screenshot || !frame) return;
+    setIsExporting(true);
 
     const active = resolveFrame(frame, screenshot);
-    if (!active) return;
+    if (!active) {
+      setIsExporting(false);
+      return;
+    }
+
     const canvas = document.createElement("canvas");
     const frameImg = await loadFrameImage(active.assetPath);
     const scale = computeEffectiveScale(screenshot, active, frameImg);
@@ -122,7 +134,10 @@ export function useCompositor({
     });
 
     canvas.toBlob((blob) => {
-      if (!blob) return;
+      if (!blob) {
+        setIsExporting(false);
+        return;
+      }
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -131,6 +146,7 @@ export function useCompositor({
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+      setIsExporting(false);
     }, "image/png");
   }, [
     screenshot,
@@ -152,5 +168,5 @@ export function useCompositor({
     return calculateOutputSize(screenshot, active, frameImg, shadow);
   }, [screenshot, frame, shadow]);
 
-  return { renderToCanvas, exportPng, getOutputSize };
+  return { renderToCanvas, exportPng, getOutputSize, isRendering, isExporting };
 }
