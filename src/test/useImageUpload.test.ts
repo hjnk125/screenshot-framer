@@ -1,23 +1,22 @@
 import { renderHook, act } from "@testing-library/react";
+import { vi } from "vitest";
 import { useImageUpload } from "../hooks/useImageUpload";
 
 function mockImageLoad(width: number, height: number) {
-  Object.defineProperty(global.Image.prototype, "src", {
-    set(_src: string) {
+  const MockImage = class {
+    naturalWidth = 0;
+    naturalHeight = 0;
+    onload: (() => void) | null = null;
+    onerror: (() => void) | null = null;
+    set src(_url: string) {
       setTimeout(() => {
-        Object.defineProperty(this, "naturalWidth", {
-          value: width,
-          configurable: true,
-        });
-        Object.defineProperty(this, "naturalHeight", {
-          value: height,
-          configurable: true,
-        });
+        this.naturalWidth = width;
+        this.naturalHeight = height;
         this.onload?.();
       }, 0);
-    },
-    configurable: true,
-  });
+    }
+  };
+  vi.stubGlobal("Image", MockImage);
 }
 
 describe("useImageUpload", () => {

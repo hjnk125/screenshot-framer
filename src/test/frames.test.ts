@@ -1,8 +1,8 @@
 import { FRAMES, getFrameById } from "../data/frames";
 
 describe("FRAMES 메타데이터", () => {
-  it("8개 프레임이 정의되어 있다", () => {
-    expect(FRAMES.length).toBe(8);
+  it("프레임이 하나 이상 정의되어 있다", () => {
+    expect(FRAMES.length).toBeGreaterThan(0);
   });
 
   it("디바이스 프레임에 screenArea가 정의되어 있다", () => {

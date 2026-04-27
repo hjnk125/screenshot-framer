@@ -33,6 +33,9 @@ function stepDown(
 
 export type CanvasSize = { width: number; height: number };
 
+// Padding added around the frame to make shadows visible
+const SHADOW_PADDING = 80;
+
 // naturalScale: match scale so screenshot pixels map 1:1 in the screen area.
 // Use screenArea.width (not frameImg.naturalWidth) so device bezels don't shrink content.
 // Cap at 1.0: never upscale the frame asset above its native resolution.
@@ -78,9 +81,6 @@ export function calculateOutputSize(
     height: Math.round((assetH + pad) * s),
   };
 }
-
-// Padding added around the frame to make shadows visible
-const SHADOW_PADDING = 80;
 
 type ShadowLayer = {
   color: string;
@@ -151,9 +151,11 @@ function drawScreenshot(
   ctx.beginPath();
   if (radius > 0 && ctx.roundRect) {
     const radii =
-      roundCorners === "BOTTOM" ? [0, 0, radius, radius] :
-      roundCorners === "TOP"    ? [radius, radius, 0, 0] :
-                                  radius;
+      roundCorners === "BOTTOM"
+        ? [0, 0, radius, radius]
+        : roundCorners === "TOP"
+          ? [radius, radius, 0, 0]
+          : radius;
     ctx.roundRect(x, y, sw, sh, radii);
   } else {
     ctx.rect(x, y, sw, sh);
@@ -220,7 +222,11 @@ function drawDeviceBg(
   ctx.beginPath();
   if (radius > 0 && ctx.roundRect) {
     const radii =
-      roundCorners === "TOP" ? [radius, radius, 0, 0] : radius;
+      roundCorners === "TOP"
+        ? [radius, radius, 0, 0]
+        : roundCorners === "BOTTOM"
+          ? [0, 0, radius, radius]
+          : radius;
     ctx.roundRect(x, y, w, h, radii);
   } else {
     ctx.rect(x, y, w, h);
@@ -305,7 +311,7 @@ function drawBrowserComposite(params: DrawCompositeParams): void {
   const r = browserMeta.contentRadius;
   offCtx.fillStyle = browserMeta.contentBg;
   offCtx.beginPath();
-  if (offCtx.roundRect) {
+  if (r > 0 && offCtx.roundRect) {
     offCtx.roundRect(0, toolbarH, contentW, contentH, [0, 0, r, r]);
   } else {
     offCtx.rect(0, toolbarH, contentW, contentH);

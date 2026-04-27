@@ -7,7 +7,14 @@ describe("타입 구조 검증", () => {
       label: "MacBook Pro 16",
       category: "device",
       assetPath: "/frames/macbook-pro-16.png",
-      screenArea: { x: 100, y: 80, width: 1200, height: 750, radius: 0 },
+      screenArea: {
+        x: 100,
+        y: 80,
+        width: 1200,
+        height: 750,
+        radius: 0,
+        roundCorners: "ALL" as const,
+      },
       aspectRatio: 1.6,
     };
     expect(frame.id).toBe("macbook-pro-16");

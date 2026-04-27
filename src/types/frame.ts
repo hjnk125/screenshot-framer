@@ -73,7 +73,7 @@ export type ImageTransform = {
   offsetY: number;
 };
 
-export type ExportScale = 1;
+export type ExportScale = number;
 
 export type DeviceBgType = "transparent" | "white" | "black" | "image";
 

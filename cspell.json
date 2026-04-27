@@ -1,0 +1,17 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "macbook",
+    "imac",
+    "iphone",
+    "ipad",
+    "bezels",
+    "bezel",
+    "vitest",
+    "tailwindcss",
+    "Csvg",
+    "Crect"
+  ],
+  "ignorePaths": ["node_modules", "dist", "*.lock"]
+}

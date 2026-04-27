@@ -52,7 +52,9 @@ export function BrowserControls({ frame, state }: BrowserControlsProps) {
           <div className="flex items-center gap-2">
             {(state.favicon || frame.browserMeta?.defaultFaviconPath) && (
               <img
-                src={state.favicon?.src ?? frame.browserMeta?.defaultFaviconPath}
+                src={
+                  state.favicon?.src ?? frame.browserMeta?.defaultFaviconPath
+                }
                 className="aspect-square h-[30px] rounded-[7px] border border-black/[0.07] object-cover"
               />
             )}
@@ -79,6 +81,7 @@ export function BrowserControls({ frame, state }: BrowserControlsProps) {
             onChange={(e) => {
               const file = e.target.files?.[0];
               if (file) state.handleFavicon(file);
+              e.target.value = "";
             }}
           />
         </div>

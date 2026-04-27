@@ -43,10 +43,14 @@ export default function App() {
   useEffect(() => {
     const path = selectedFrame?.browserMeta?.defaultFaviconPath;
     if (!path) return;
+    let cancelled = false;
     const img = new Image();
-    img.onload = () => setDefaultFavicon(img);
+    img.onload = () => {
+      if (!cancelled) setDefaultFavicon(img);
+    };
     img.src = path;
     return () => {
+      cancelled = true;
       setDefaultFavicon(null);
     };
   }, [selectedFrame]);
@@ -75,16 +79,6 @@ export default function App() {
     checkFade();
   }, [image, selectedFrame, isBrowser, checkFade]);
 
-  const onFile = useCallback(
-    (file: File) => {
-      handleFile(file);
-    },
-    [handleFile],
-  );
-  const handleExport = useCallback(() => {
-    exportPng();
-  }, [exportPng]);
-
   const handleFrameSelect = useCallback(
     (frame: Frame) => {
       setSelectedFrame(frame);
@@ -95,156 +89,156 @@ export default function App() {
 
   return (
     <div className="h-screen bg-page">
-    <div className="mx-auto flex h-full max-w-[1440px] flex-col gap-[14px] overflow-y-auto p-[14px] text-ink lg:grid lg:grid-cols-[360px_1fr] lg:grid-rows-[1fr_auto] lg:overflow-hidden">
-      {/* Sidebar wrapper — relative for fade overlay */}
-      <div className="relative flex flex-col lg:min-h-0">
-        <aside
-          ref={asideRef}
-          onScroll={checkFade}
-          className="hide-scrollbar flex flex-col gap-3 lg:min-h-0 lg:flex-1 lg:overflow-y-auto"
-        >
-          {/* 1. Title card */}
-          <div className="flex shrink-0 items-center justify-between gap-2 rounded-card-dense bg-ink px-3 py-[10px]">
-            <div className="flex items-center gap-[9px]">
-              <div className="flex h-[22px] w-[22px] select-none items-center justify-center rounded-[6px] bg-accent">
-                <img src="/logo.svg" alt="" className="h-[14px] w-[14px]" />
+      <div className="mx-auto flex h-full max-w-[1440px] flex-col gap-[14px] overflow-y-auto p-[14px] text-ink lg:grid lg:grid-cols-[360px_1fr] lg:grid-rows-[1fr_auto] lg:overflow-hidden">
+        {/* Sidebar wrapper — relative for fade overlay */}
+        <div className="relative flex flex-col lg:min-h-0">
+          <aside
+            ref={asideRef}
+            onScroll={checkFade}
+            className="hide-scrollbar flex flex-col gap-3 lg:min-h-0 lg:flex-1 lg:overflow-y-auto"
+          >
+            {/* 1. Title card */}
+            <div className="flex shrink-0 items-center justify-between gap-2 rounded-card-dense bg-ink px-3 py-[10px]">
+              <div className="flex items-center gap-[9px]">
+                <div className="flex h-[22px] w-[22px] select-none items-center justify-center rounded-[6px] bg-accent">
+                  <img src="/logo.svg" alt="" className="h-[14px] w-[14px]" />
+                </div>
+                <span className="text-[12px] font-semibold text-white">
+                  Screenshot Framer
+                </span>
               </div>
-              <span className="text-[12px] font-semibold text-white">
-                Screenshot Framer
-              </span>
+              <span className="font-mono text-[10px] text-white/50">v0.1</span>
             </div>
-            <span className="font-mono text-[10px] text-white/50">v0.1</span>
-          </div>
 
-          {/* 2. File card */}
-          <div className="shrink-0 rounded-card-dense border border-black/[0.07] bg-card-dense p-4">
-            {image && fileInfo ? (
-              <>
+            {/* 2. File card */}
+            <div className="shrink-0 rounded-card-dense border border-black/[0.07] bg-card-dense p-4">
+              {image && fileInfo ? (
+                <>
+                  <div className="mb-3 flex items-center justify-between">
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.05em] text-soft">
+                      File
+                    </span>
+                    <span className="font-mono text-[10px] text-muted">
+                      {fileInfo.size >= 1024 * 1024
+                        ? `${(fileInfo.size / 1024 / 1024).toFixed(1)} MB`
+                        : `${(fileInfo.size / 1024).toFixed(0)} KB`}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="h-10 w-10 shrink-0 overflow-hidden rounded-[8px] border border-black/[0.07] bg-[#f0f0ef]">
+                      <img
+                        src={image.src}
+                        alt="preview"
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-[12px] font-semibold text-ink">
+                        {fileInfo.name}
+                      </p>
+                      <p className="mt-[1px] font-mono text-[10px] text-muted">
+                        {image.naturalWidth} × {image.naturalHeight}
+                      </p>
+                    </div>
+                    <button
+                      onClick={clearImage}
+                      className="flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-[6px] text-[14px] leading-none text-soft transition-colors hover:bg-red-500 hover:text-white"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="mb-3 flex items-center justify-between">
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.05em] text-soft">
+                      File
+                    </span>
+                  </div>
+                  <UploadZone onFile={handleFile} />
+                </>
+              )}
+            </div>
+
+            {/* 3. Frame picker */}
+            <FramePicker
+              selectedId={selectedFrame?.id ?? null}
+              onSelect={handleFrameSelect}
+              showHint={!!image && !selectedFrame}
+            />
+
+            {/* 4a. Browser controls — conditional */}
+            {isBrowser && selectedFrame && (
+              <div className="shrink-0 rounded-card-dense border border-black/[0.07] bg-card p-4">
                 <div className="mb-3 flex items-center justify-between">
                   <span className="text-[10px] font-semibold uppercase tracking-[0.05em] text-soft">
-                    File
-                  </span>
-                  <span className="font-mono text-[10px] text-muted">
-                    {fileInfo.size >= 1024 * 1024
-                      ? `${(fileInfo.size / 1024 / 1024).toFixed(1)} MB`
-                      : `${(fileInfo.size / 1024).toFixed(0)} KB`}
+                    Browser
                   </span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="h-10 w-10 shrink-0 overflow-hidden rounded-[8px] border border-black/[0.07] bg-[#f0f0ef]">
-                    <img
-                      src={image.src}
-                      alt="preview"
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-[12px] font-semibold text-ink">
-                      {fileInfo.name}
-                    </p>
-                    <p className="mt-[1px] font-mono text-[10px] text-muted">
-                      {image.naturalWidth} × {image.naturalHeight}
-                    </p>
-                  </div>
-                  <button
-                    onClick={clearImage}
-                    className="flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-[6px] text-[14px] leading-none text-soft transition-colors hover:bg-red-500 hover:text-white"
-                  >
-                    ✕
-                  </button>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="mb-3 flex items-center justify-between">
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.05em] text-soft">
-                    File
-                  </span>
-                </div>
-                <UploadZone onFile={onFile} />
-              </>
+                <BrowserControls frame={selectedFrame} state={browserState} />
+              </div>
             )}
-          </div>
 
-          {/* 3. Frame picker */}
-          <FramePicker
-            selectedId={selectedFrame?.id ?? null}
-            onSelect={handleFrameSelect}
-            showHint={!!image && !selectedFrame}
+            {/* 4b. Device controls — conditional */}
+            {!isBrowser && selectedFrame && (
+              <div className="shrink-0 rounded-card-dense border border-black/[0.07] bg-card p-4">
+                <div className="mb-3 flex items-center justify-between">
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.05em] text-soft">
+                    Device
+                  </span>
+                </div>
+                <DeviceControls state={deviceBgState} />
+              </div>
+            )}
+
+            {/* Mobile/tablet preview — between Frame and ImageAdjust */}
+            <div className="h-[260px] shrink-0 lg:hidden">
+              <PreviewCanvas
+                screenshot={image}
+                frame={selectedFrame}
+                onPan={pan}
+                renderToCanvas={renderToCanvas}
+              />
+            </div>
+
+            {/* 5. Image adjust — conditional */}
+            {image && selectedFrame && (
+              <ImageAdjust
+                scale={transform.scale}
+                onScaleChange={setScale}
+                onReset={resetTransform}
+              />
+            )}
+
+            {/* 6. Shadow */}
+            <ShadowControls value={shadow} onChange={setShadow} />
+          </aside>
+
+          {/* Bottom fade — desktop only, fades when scrollable content remains */}
+          {showFade && (
+            <div className="pointer-events-none absolute bottom-0 left-0 right-0 hidden h-14 bg-gradient-to-t from-page to-transparent lg:block" />
+          )}
+        </div>
+
+        {/* Desktop-only preview */}
+        <div className="hidden lg:row-span-2 lg:block lg:min-h-0 lg:overflow-hidden">
+          <PreviewCanvas
+            screenshot={image}
+            frame={selectedFrame}
+            onPan={pan}
+            renderToCanvas={renderToCanvas}
           />
+        </div>
 
-          {/* 4a. Browser controls — conditional */}
-          {isBrowser && selectedFrame && (
-            <div className="shrink-0 rounded-card-dense border border-black/[0.07] bg-card p-4">
-              <div className="mb-3 flex items-center justify-between">
-                <span className="text-[10px] font-semibold uppercase tracking-[0.05em] text-soft">
-                  Browser
-                </span>
-              </div>
-              <BrowserControls frame={selectedFrame} state={browserState} />
-            </div>
-          )}
-
-          {/* 4b. Device controls — conditional */}
-          {!isBrowser && selectedFrame && (
-            <div className="shrink-0 rounded-card-dense border border-black/[0.07] bg-card p-4">
-              <div className="mb-3 flex items-center justify-between">
-                <span className="text-[10px] font-semibold uppercase tracking-[0.05em] text-soft">
-                  Device
-                </span>
-              </div>
-              <DeviceControls state={deviceBgState} />
-            </div>
-          )}
-
-          {/* Mobile/tablet preview — between Frame and ImageAdjust */}
-          <div className="h-[260px] shrink-0 lg:hidden">
-            <PreviewCanvas
-              screenshot={image}
-              frame={selectedFrame}
-              onPan={pan}
-              renderToCanvas={renderToCanvas}
-            />
-          </div>
-
-          {/* 5. Image adjust — conditional */}
-          {image && selectedFrame && (
-            <ImageAdjust
-              scale={transform.scale}
-              onScaleChange={setScale}
-              onReset={resetTransform}
-            />
-          )}
-
-          {/* 6. Shadow */}
-          <ShadowControls value={shadow} onChange={setShadow} />
-        </aside>
-
-        {/* Bottom fade — desktop only, fades when scrollable content remains */}
-        {showFade && (
-          <div className="pointer-events-none absolute bottom-0 left-0 right-0 hidden h-14 bg-gradient-to-t from-page to-transparent lg:block" />
-        )}
-      </div>
-
-      {/* Desktop-only preview */}
-      <div className="hidden lg:row-span-2 lg:block lg:min-h-0 lg:overflow-hidden">
-        <PreviewCanvas
-          screenshot={image}
-          frame={selectedFrame}
-          onPan={pan}
-          renderToCanvas={renderToCanvas}
+        {/* Export */}
+        <ExportControls
+          onExport={exportPng}
+          disabled={!image || !selectedFrame}
+          getOutputSize={getOutputSize}
         />
+
+        <Toast message={error} onClose={clearImage} />
       </div>
-
-      {/* Export */}
-      <ExportControls
-        onExport={handleExport}
-        disabled={!image || !selectedFrame}
-        getOutputSize={getOutputSize}
-      />
-
-      <Toast message={error} onClose={clearImage} />
-    </div>
     </div>
   );
 }

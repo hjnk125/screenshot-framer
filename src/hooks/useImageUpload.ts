@@ -9,7 +9,6 @@ export type FileInfo = {
 
 export type ImageUploadState = {
   image: HTMLImageElement | null;
-  dataUrl: string | null;
   fileInfo: FileInfo | null;
   error: string | null;
   handleFile: (file: File) => Promise<void>;
@@ -18,7 +17,6 @@ export type ImageUploadState = {
 
 export function useImageUpload(): ImageUploadState {
   const [image, setImage] = useState<HTMLImageElement | null>(null);
-  const [dataUrl, setDataUrl] = useState<string | null>(null);
   const [fileInfo, setFileInfo] = useState<FileInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -45,12 +43,10 @@ export function useImageUpload(): ImageUploadState {
               `이미지 크기가 너무 큽니다. 한 변이 4,000px를 초과할 수 없습니다. (현재: ${img.naturalWidth}×${img.naturalHeight}px)`,
             );
             setImage(null);
-            setDataUrl(null);
             setFileInfo(null);
           } else {
             setError(null);
             setImage(img);
-            setDataUrl(url);
             setFileInfo({ name: file.name, size: file.size });
           }
           resolve();
@@ -63,10 +59,9 @@ export function useImageUpload(): ImageUploadState {
 
   const clearImage = () => {
     setImage(null);
-    setDataUrl(null);
     setFileInfo(null);
     setError(null);
   };
 
-  return { image, dataUrl, fileInfo, error, handleFile, clearImage };
+  return { image, fileInfo, error, handleFile, clearImage };
 }
