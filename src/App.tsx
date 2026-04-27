@@ -55,7 +55,7 @@ export default function App() {
     };
   }, [selectedFrame]);
 
-  const { renderToCanvas, exportPng, getOutputSize } = useCompositor({
+  const { renderToCanvas, exportPng, getOutputSize, isRendering, isExporting } = useCompositor({
     screenshot: image,
     frame: selectedFrame,
     transform,
@@ -198,6 +198,7 @@ export default function App() {
                 frame={selectedFrame}
                 onPan={pan}
                 renderToCanvas={renderToCanvas}
+                isRendering={isRendering}
               />
             </div>
 
@@ -227,6 +228,7 @@ export default function App() {
             frame={selectedFrame}
             onPan={pan}
             renderToCanvas={renderToCanvas}
+            isRendering={isRendering}
           />
         </div>
 
@@ -234,6 +236,7 @@ export default function App() {
         <ExportControls
           onExport={exportPng}
           disabled={!image || !selectedFrame}
+          isExporting={isExporting}
           getOutputSize={getOutputSize}
         />
 
