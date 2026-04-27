@@ -121,7 +121,7 @@ export function FramePicker({
         </div>
 
         {/* Frame grid */}
-        <div className="grid max-h-[130px] grid-cols-2 gap-[6px] overflow-y-auto">
+        <div className="grid grid-cols-2 gap-[6px]">
           {filtered.map((frame) => {
             const active = selectedId === frame.id;
             return (

@@ -1,13 +1,139 @@
 import type { Frame } from "../types/frame";
 
 export const FRAMES: Frame[] = [
+  // ── MacBook Air ───────────────────────────────────────────────────────────
+  {
+    id: "macbook-air-13",
+    label: "MacBook Air 13",
+    category: "device",
+    assetPath: "/frames/device/macbook-air-13.png",
+    screenArea: { x: 420, y: 288, width: 2560, height: 1664, radius: 0 },
+    aspectRatio: 2560 / 1664,
+  },
+  {
+    id: "macbook-air-15",
+    label: "MacBook Air 15",
+    category: "device",
+    assetPath: "/frames/device/macbook-air-15.png",
+    screenArea: { x: 330, y: 218, width: 2880, height: 1864, radius: 0 },
+    aspectRatio: 2880 / 1864,
+  },
+  // ── MacBook Pro ───────────────────────────────────────────────────────────
+  {
+    id: "macbook-pro-14",
+    label: "MacBook Pro 14",
+    category: "device",
+    assetPath: "/frames/device/macbook-pro-14.png",
+    screenArea: { x: 418, y: 288, width: 3024, height: 1964, radius: 0 },
+    aspectRatio: 3024 / 1964,
+  },
   {
     id: "macbook-pro-16",
     label: "MacBook Pro 16",
     category: "device",
     assetPath: "/frames/device/macbook-pro-16.png",
-    screenArea: { x: 443, y: 295, width: 3456, height: 2250, radius: 0 },
-    aspectRatio: 3456 / 2250,
+    screenArea: { x: 402, y: 303, width: 3456, height: 2234, radius: 0 },
+    aspectRatio: 3456 / 2234,
+  },
+  {
+    id: "macbook-neo",
+    label: "MacBook Neo",
+    category: "device",
+    assetPath: "/frames/device/macbook-neo.png",
+    screenArea: { x: 330, y: 218, width: 2560, height: 1664, radius: 0 },
+    aspectRatio: 2560 / 1664,
+  },
+  // ── iMac ──────────────────────────────────────────────────────────────────
+  {
+    id: "imac-24",
+    label: "iMac 24",
+    category: "device",
+    assetPath: "/frames/device/imac-24.png",
+    screenArea: { x: 140, y: 140, width: 4480, height: 2520, radius: 8 },
+    aspectRatio: 4480 / 2520,
+  },
+  // ── iPhone 17 ─────────────────────────────────────────────────────────────
+  {
+    id: "iphone-17-pro-max",
+    label: "iPhone 17 Pro Max",
+    category: "device",
+    assetPath: "/frames/device/iphone-17-pro-max.png",
+    screenArea: { x: 75, y: 66, width: 1320, height: 2868, radius: 190 },
+    aspectRatio: 1320 / 2868,
+  },
+  {
+    id: "iphone-17-pro",
+    label: "iPhone 17 Pro",
+    category: "device",
+    assetPath: "/frames/device/iphone-17-pro.png",
+    screenArea: { x: 72, y: 69, width: 1206, height: 2622, radius: 174 },
+    aspectRatio: 1206 / 2622,
+  },
+  {
+    id: "iphone-17",
+    label: "iPhone 17",
+    category: "device",
+    assetPath: "/frames/device/iphone-17.png",
+    screenArea: { x: 72, y: 69, width: 1206, height: 2622, radius: 174 },
+    aspectRatio: 1206 / 2622,
+  },
+  // ── iPhone 16 ─────────────────────────────────────────────────────────────
+  {
+    id: "iphone-16-pro-max",
+    label: "iPhone 16 Pro Max",
+    category: "device",
+    assetPath: "/frames/device/iphone-16-pro-max.png",
+    screenArea: { x: 75, y: 66, width: 1320, height: 2868, radius: 190 },
+    aspectRatio: 1320 / 2868,
+  },
+  {
+    id: "iphone-16-pro",
+    label: "iPhone 16 Pro",
+    category: "device",
+    assetPath: "/frames/device/iphone-16-pro.png",
+    screenArea: { x: 72, y: 69, width: 1206, height: 2622, radius: 174 },
+    aspectRatio: 1206 / 2622,
+  },
+  {
+    id: "iphone-16-plus",
+    label: "iPhone 16 Plus",
+    category: "device",
+    assetPath: "/frames/device/iphone-16-plus.png",
+    screenArea: { x: 90, y: 87, width: 1290, height: 2796, radius: 186 },
+    aspectRatio: 1290 / 2796,
+  },
+  {
+    id: "iphone-16",
+    label: "iPhone 16",
+    category: "device",
+    assetPath: "/frames/device/iphone-16.png",
+    screenArea: { x: 90, y: 90, width: 1179, height: 2556, radius: 170 },
+    aspectRatio: 1179 / 2556,
+  },
+  // ── iPhone 15 ─────────────────────────────────────────────────────────────
+  {
+    id: "iphone-15-pro-max",
+    label: "iPhone 15 Pro Max",
+    category: "device",
+    assetPath: "/frames/device/iphone-15-pro-max.png",
+    screenArea: { x: 120, y: 120, width: 1290, height: 2796, radius: 186 },
+    aspectRatio: 1290 / 2796,
+  },
+  {
+    id: "iphone-15-pro",
+    label: "iPhone 15 Pro",
+    category: "device",
+    assetPath: "/frames/device/iphone-15-pro.png",
+    screenArea: { x: 120, y: 120, width: 1179, height: 2556, radius: 170 },
+    aspectRatio: 1179 / 2556,
+  },
+  {
+    id: "iphone-15-plus",
+    label: "iPhone 15 Plus",
+    category: "device",
+    assetPath: "/frames/device/iphone-15-plus.png",
+    screenArea: { x: 120, y: 120, width: 1290, height: 2796, radius: 186 },
+    aspectRatio: 1290 / 2796,
   },
   {
     id: "iphone-15",
@@ -16,6 +142,15 @@ export const FRAMES: Frame[] = [
     assetPath: "/frames/device/iphone-15.png",
     screenArea: { x: 120, y: 120, width: 1179, height: 2556, radius: 170 },
     aspectRatio: 1179 / 2556,
+  },
+  // ── iPhone Air ────────────────────────────────────────────────────────────
+  {
+    id: "iphone-air",
+    label: "iPhone Air",
+    category: "device",
+    assetPath: "/frames/device/iphone-air.png",
+    screenArea: { x: 45, y: 42, width: 1290, height: 2796, radius: 186 },
+    aspectRatio: 1290 / 2796,
   },
   {
     id: "chrome-light",
