@@ -38,7 +38,14 @@ export default function App() {
   );
   const asideRef = useRef<HTMLElement>(null);
   const [showFade, setShowFade] = useState(false);
-  const [showHelp, setShowHelp] = useState(false);
+  const [showHelp, setShowHelp] = useState(
+    () => !localStorage.getItem("help-seen"),
+  );
+
+  const closeHelp = () => {
+    localStorage.setItem("help-seen", "1");
+    setShowHelp(false);
+  };
 
   const isBrowser = !!selectedFrame?.browserMeta;
 
@@ -254,7 +261,7 @@ export default function App() {
         ?
       </button>
 
-      {showHelp && <HelpModal onClose={() => setShowHelp(false)} />}
+      {showHelp && <HelpModal onClose={closeHelp} />}
     </div>
   );
 }
