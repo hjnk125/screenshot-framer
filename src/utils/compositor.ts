@@ -131,7 +131,7 @@ function drawScreenshot(
   transform: ImageTransform,
   fitMode: "cover" | "width" = "cover",
 ): void {
-  const { x, y, width: sw, height: sh, radius = 0 } = screenArea;
+  const { x, y, width: sw, height: sh, radius = 0, roundCorners } = screenArea;
   const { scale, offsetX, offsetY } = transform;
 
   const imgW = screenshot.naturalWidth;
@@ -150,8 +150,10 @@ function drawScreenshot(
   ctx.imageSmoothingQuality = "high";
   ctx.beginPath();
   if (radius > 0 && ctx.roundRect) {
-    // browser frames: top corners stay square, only bottom corners are rounded
-    const radii = fitMode === "width" ? [0, 0, radius, radius] : radius;
+    const radii =
+      roundCorners === "BOTTOM" ? [0, 0, radius, radius] :
+      roundCorners === "TOP"    ? [radius, radius, 0, 0] :
+                                  radius;
     ctx.roundRect(x, y, sw, sh, radii);
   } else {
     ctx.rect(x, y, sw, sh);
@@ -212,12 +214,14 @@ function drawDeviceBg(
   screenArea: ScreenArea,
 ): void {
   if (bg.type === "transparent") return;
-  const { x, y, width: w, height: h, radius } = screenArea;
+  const { x, y, width: w, height: h, radius, roundCorners } = screenArea;
 
   ctx.save();
   ctx.beginPath();
   if (radius > 0 && ctx.roundRect) {
-    ctx.roundRect(x, y, w, h, radius);
+    const radii =
+      roundCorners === "TOP" ? [radius, radius, 0, 0] : radius;
+    ctx.roundRect(x, y, w, h, radii);
   } else {
     ctx.rect(x, y, w, h);
   }

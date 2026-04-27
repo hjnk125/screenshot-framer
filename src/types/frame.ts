@@ -44,6 +44,7 @@ export type ScreenArea = {
   width: number;
   height: number;
   radius: number;
+  roundCorners: "TOP" | "BOTTOM" | "ALL";
 };
 
 export type Frame = {
