@@ -1,11 +1,13 @@
 import { useEffect, useRef, useCallback } from "react";
 import type { Frame } from "../types/frame";
+import { Spinner } from "./Spinner";
 
 type PreviewCanvasProps = {
   screenshot: HTMLImageElement | null;
   frame: Frame | null;
   onPan: (dx: number, dy: number) => void;
   renderToCanvas: (canvas: HTMLCanvasElement) => Promise<void>;
+  isRendering: boolean;
 };
 
 export function PreviewCanvas({
@@ -13,6 +15,7 @@ export function PreviewCanvas({
   frame,
   onPan,
   renderToCanvas,
+  isRendering,
 }: PreviewCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dragStart = useRef<{ x: number; y: number } | null>(null);
@@ -94,7 +97,7 @@ export function PreviewCanvas({
   }
 
   return (
-    <div className="flex h-full items-center justify-center overflow-hidden rounded-card-dense border border-black/[0.07] bg-[url('/checkerboard.svg')] bg-repeat p-10">
+    <div className="relative flex h-full items-center justify-center overflow-hidden rounded-card-dense border border-black/[0.07] bg-[url('/checkerboard.svg')] bg-repeat p-10">
       <canvas
         ref={canvasRef}
         className="max-h-full max-w-full cursor-grab touch-none object-contain active:cursor-grabbing"
@@ -103,6 +106,11 @@ export function PreviewCanvas({
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
       />
+      {isRendering && (
+        <div className="absolute inset-0 flex items-center justify-center rounded-card-dense bg-black/10">
+          <Spinner size={24} />
+        </div>
+      )}
     </div>
   );
 }
