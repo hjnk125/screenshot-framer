@@ -22,26 +22,49 @@ export function PreviewCanvas({
     renderToCanvas(canvasRef.current);
   }, [renderToCanvas]);
 
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    dragStart.current = { x: e.clientX, y: e.clientY };
-  }, []);
-
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent) => {
+  const applyPan = useCallback(
+    (clientX: number, clientY: number) => {
       if (!dragStart.current || !canvasRef.current) return;
       const rect = canvasRef.current.getBoundingClientRect();
       const scaleX = rect.width > 0 ? canvasRef.current.width / rect.width : 1;
       const scaleY =
         rect.height > 0 ? canvasRef.current.height / rect.height : 1;
-      const dx = (e.clientX - dragStart.current.x) * scaleX;
-      const dy = (e.clientY - dragStart.current.y) * scaleY;
-      dragStart.current = { x: e.clientX, y: e.clientY };
+      const dx = (clientX - dragStart.current.x) * scaleX;
+      const dy = (clientY - dragStart.current.y) * scaleY;
+      dragStart.current = { x: clientX, y: clientY };
       onPan(dx, dy);
     },
     [onPan],
   );
 
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    dragStart.current = { x: e.clientX, y: e.clientY };
+  }, []);
+
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent) => applyPan(e.clientX, e.clientY),
+    [applyPan],
+  );
+
   const handleMouseUp = useCallback(() => {
+    dragStart.current = null;
+  }, []);
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    const t = e.touches[0];
+    dragStart.current = { x: t.clientX, y: t.clientY };
+  }, []);
+
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      e.preventDefault();
+      const t = e.touches[0];
+      applyPan(t.clientX, t.clientY);
+    },
+    [applyPan],
+  );
+
+  const handleTouchEnd = useCallback(() => {
     dragStart.current = null;
   }, []);
 
@@ -59,11 +82,14 @@ export function PreviewCanvas({
     <div className="flex h-full items-center justify-center overflow-hidden rounded-card-dense border border-black/[0.07] bg-[url('/checkerboard.svg')] bg-repeat p-10">
       <canvas
         ref={canvasRef}
-        className="max-h-full max-w-full cursor-grab object-contain active:cursor-grabbing"
+        className="max-h-full max-w-full cursor-grab touch-none object-contain active:cursor-grabbing"
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       />
     </div>
   );

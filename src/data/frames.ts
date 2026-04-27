@@ -273,7 +273,7 @@ export const FRAMES: Frame[] = [
       y: 120,
       width: 1290,
       height: 2796,
-      radius: 174,
+      radius: 164,
       roundCorners: "ALL",
     },
     aspectRatio: 1290 / 2796,

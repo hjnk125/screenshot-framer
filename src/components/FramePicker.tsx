@@ -15,7 +15,11 @@ function FrameHintTooltip({
 }: {
   cardRef: React.RefObject<HTMLDivElement | null>;
 }) {
-  const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
+  const [pos, setPos] = useState<{
+    top: number;
+    left: number;
+    width?: number;
+  } | null>(null);
   const [desktop, setDesktop] = useState(false);
 
   useEffect(() => {
@@ -28,8 +32,8 @@ function FrameHintTooltip({
         // 데스크탑: 카드 우측, 세로 중앙
         setPos({ top: r.top + r.height / 2, left: r.right + 14 });
       } else {
-        // 모바일: 카드 세로 중앙, 가로 중앙
-        setPos({ top: r.top + r.height / 2, left: r.left + r.width / 2 });
+        // 모바일: 카드 왼쪽 가장자리 + 카드 너비를 그대로 사용 → flexbox로 중앙 정렬
+        setPos({ top: r.top - 8, left: r.left, width: r.width });
       }
     };
     update();
@@ -46,13 +50,26 @@ function FrameHintTooltip({
   return createPortal(
     <div
       className="pointer-events-none animate-bounce"
-      style={{
-        position: "fixed",
-        zIndex: 9999,
-        top: pos.top,
-        left: pos.left,
-        transform: desktop ? "translateY(-50%)" : "translate(-50%, -50%)",
-      }}
+      style={
+        desktop
+          ? {
+              position: "fixed",
+              zIndex: 9999,
+              top: pos.top,
+              left: pos.left,
+              transform: "translateY(-50%)",
+            }
+          : {
+              position: "fixed",
+              zIndex: 9999,
+              top: pos.top,
+              left: pos.left,
+              width: pos.width,
+              transform: "translateY(-100%)",
+              display: "flex",
+              justifyContent: "center",
+            }
+      }
     >
       {desktop ? (
         /* 데스크탑: 그리드 우측 — 좌향 꼬리 */
@@ -71,9 +88,21 @@ function FrameHintTooltip({
           </div>
         </div>
       ) : (
-        /* 모바일/태블릿: 카드 중앙 오버레이 */
-        <div className="whitespace-nowrap rounded-[9px] bg-black/[0.72] px-[11px] py-[7px] text-[12.5px] font-semibold text-white backdrop-blur-sm">
-          Pick a frame
+        /* 모바일: 탭 위 — 아래향 꼬리 */
+        <div className="flex flex-col items-center">
+          <div className="whitespace-nowrap rounded-[9px] bg-black/[0.72] px-[11px] py-[7px] text-[12.5px] font-semibold text-white backdrop-blur-sm">
+            Pick a frame
+          </div>
+          <div
+            style={{
+              width: 0,
+              height: 0,
+              marginTop: -1,
+              borderLeft: "7px solid transparent",
+              borderRight: "7px solid transparent",
+              borderTop: "8px solid rgba(0,0,0,0.72)",
+            }}
+          />
         </div>
       )}
     </div>,
