@@ -319,6 +319,7 @@ function drawBrowserComposite(params: DrawCompositeParams): void {
     width: contentW,
     height: contentH,
     radius: r,
+    roundCorners: "BOTTOM",
   };
   drawScreenshot(offCtx, screenshot, screenAreaForBrowser, transform, "width");
 
