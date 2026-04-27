@@ -1,9 +1,11 @@
 import type { CanvasSize } from "../utils/compositor";
 import { Icon } from "./Icon";
+import { Spinner } from "./Spinner";
 
 type ExportControlsProps = {
   onExport: () => void;
   disabled: boolean;
+  isExporting?: boolean;
   getOutputSize?: () => CanvasSize | null;
 };
 
@@ -15,6 +17,7 @@ function formatFileSize(bytes: number): string {
 export function ExportControls({
   onExport,
   disabled,
+  isExporting = false,
   getOutputSize,
 }: ExportControlsProps) {
   const outputSize = getOutputSize?.() ?? null;
@@ -32,11 +35,17 @@ export function ExportControls({
 
       <button
         onClick={onExport}
-        disabled={disabled}
+        disabled={disabled || isExporting}
         className="flex w-full items-center justify-center gap-[6px] rounded-[9px] bg-accent px-3 py-[9px] text-[12.5px] font-bold text-ink transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-30"
       >
-        <Icon name="download" size={13} strokeWidth={2.2} />
-        Export PNG
+        {isExporting ? (
+          <Spinner size={13} />
+        ) : (
+          <>
+            <Icon name="download" size={13} strokeWidth={2.2} />
+            Export PNG
+          </>
+        )}
       </button>
 
       {outputSize && estimatedBytes !== null && (

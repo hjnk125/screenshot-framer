@@ -24,4 +24,20 @@ describe("ExportControls", () => {
       screen.getByRole("button", { name: /export png/i }),
     ).toBeDisabled();
   });
+
+  it("isExporting=true이면 버튼에 spinner가 표시되고 텍스트가 없다", () => {
+    render(<ExportControls onExport={() => {}} disabled={false} isExporting={true} />);
+    expect(screen.getByTestId("spinner")).toBeInTheDocument();
+    expect(screen.queryByText(/export png/i)).not.toBeInTheDocument();
+  });
+
+  it("isExporting=true이면 버튼이 비활성화된다", () => {
+    render(<ExportControls onExport={() => {}} disabled={false} isExporting={true} />);
+    expect(screen.getByRole("button")).toBeDisabled();
+  });
+
+  it("isExporting=false이면 Export PNG 텍스트가 표시된다", () => {
+    render(<ExportControls onExport={() => {}} disabled={false} isExporting={false} />);
+    expect(screen.getByRole("button", { name: /export png/i })).toBeInTheDocument();
+  });
 });
