@@ -11,39 +11,43 @@ type FramePickerProps = {
 };
 
 function FrameHintTooltip({
-  cardRef,
+  tabRef,
 }: {
-  cardRef: React.RefObject<HTMLDivElement | null>;
+  tabRef: React.RefObject<HTMLDivElement | null>;
 }) {
   const [pos, setPos] = useState<{
     top: number;
     left: number;
     width?: number;
+    desktop: boolean;
   } | null>(null);
-  const [desktop, setDesktop] = useState(false);
 
   useEffect(() => {
-    const update = () => {
-      if (!cardRef.current) return;
-      const r = cardRef.current.getBoundingClientRect();
-      const isDesktop = window.innerWidth >= 1024;
-      setDesktop(isDesktop);
-      if (isDesktop) {
-        // 데스크탑: 카드 우측, 세로 중앙
-        setPos({ top: r.top + r.height / 2, left: r.right + 14 });
-      } else {
-        // 모바일: 카드 왼쪽 가장자리 + 카드 너비를 그대로 사용 → flexbox로 중앙 정렬
-        setPos({ top: r.top - 8, left: r.left, width: r.width });
+    let rafId: number;
+    let lastKey = "";
+
+    const loop = () => {
+      if (tabRef.current) {
+        const tab = tabRef.current.getBoundingClientRect();
+        const isDesktop = window.innerWidth >= 1024;
+        const top = isDesktop ? tab.top + tab.height / 2 : tab.top - 8;
+        const left = isDesktop ? tab.right + 14 : tab.left;
+        const key = `${isDesktop}|${top}|${left}`;
+        if (key !== lastKey) {
+          lastKey = key;
+          setPos(
+            isDesktop
+              ? { top, left, desktop: true }
+              : { top, left, width: tab.width, desktop: false },
+          );
+        }
       }
+      rafId = requestAnimationFrame(loop);
     };
-    update();
-    window.addEventListener("resize", update);
-    window.addEventListener("scroll", update, true);
-    return () => {
-      window.removeEventListener("resize", update);
-      window.removeEventListener("scroll", update, true);
-    };
-  }, [cardRef]);
+
+    rafId = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(rafId);
+  }, [tabRef]);
 
   if (!pos) return null;
 
@@ -51,29 +55,22 @@ function FrameHintTooltip({
     <div
       className="pointer-events-none animate-bounce"
       style={
-        desktop
-          ? {
-              position: "fixed",
-              zIndex: 9999,
-              top: pos.top,
-              left: pos.left,
-              transform: "translateY(-50%)",
-            }
+        pos.desktop
+          ? { position: "fixed", zIndex: 9999, top: pos.top, left: pos.left }
           : {
               position: "fixed",
               zIndex: 9999,
               top: pos.top,
               left: pos.left,
               width: pos.width,
-              transform: "translateY(-100%)",
               display: "flex",
               justifyContent: "center",
             }
       }
     >
-      {desktop ? (
-        /* 데스크탑: 그리드 우측 — 좌향 꼬리 */
-        <div className="flex items-center">
+      {pos.desktop ? (
+        /* 데스크탑: 탭 우측 — 좌향 꼬리 */
+        <div className="flex items-center" style={{ transform: "translateY(-50%)" }}>
           <div
             style={{
               width: 0,
@@ -89,7 +86,7 @@ function FrameHintTooltip({
         </div>
       ) : (
         /* 모바일: 탭 위 — 아래향 꼬리 */
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center" style={{ transform: "translateY(-100%)" }}>
           <div className="whitespace-nowrap rounded-[9px] bg-black/[0.72] px-[11px] py-[7px] text-[12.5px] font-semibold text-white backdrop-blur-sm">
             Pick a frame
           </div>
@@ -116,16 +113,13 @@ export function FramePicker({
   showHint,
 }: FramePickerProps) {
   const [tab, setTab] = useState<FrameCategory>("device");
-  const cardRef = useRef<HTMLDivElement>(null);
+  const tabRef = useRef<HTMLDivElement>(null);
 
   const filtered = FRAMES.filter((f) => f.category === tab);
 
   return (
     <>
-      <div
-        ref={cardRef}
-        className="flex shrink-0 flex-col rounded-card-dense border border-black/[0.07] bg-card p-4"
-      >
+      <div className="flex shrink-0 flex-col rounded-card-dense border border-black/[0.07] bg-card p-4">
         <div className="mb-3 flex items-center justify-between">
           <span className="text-[10px] font-semibold uppercase tracking-[0.05em] text-soft">
             Frame
@@ -133,7 +127,7 @@ export function FramePicker({
         </div>
 
         {/* Segment control */}
-        <div className="mb-[10px] flex rounded-[10px] border border-black/[0.07] bg-card-inner p-[3px]">
+        <div ref={tabRef} className="mb-[10px] flex rounded-[10px] border border-black/[0.07] bg-card-inner p-[3px]">
           {(["device", "browser"] as FrameCategory[]).map((cat) => (
             <button
               key={cat}
@@ -173,7 +167,7 @@ export function FramePicker({
         </div>
       </div>
 
-      {showHint && <FrameHintTooltip cardRef={cardRef} />}
+      {showHint && <FrameHintTooltip tabRef={tabRef} />}
     </>
   );
 }
