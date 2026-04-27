@@ -50,23 +50,38 @@ export function PreviewCanvas({
     dragStart.current = null;
   }, []);
 
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    const t = e.touches[0];
-    dragStart.current = { x: t.clientX, y: t.clientY };
-  }, []);
+  // touchmove에 preventDefault가 필요해 native 리스너로 { passive: false } 등록.
+  // canvas는 screenshot+frame 있을 때만 렌더되므로 deps에 포함해 재실행 보장.
+  const canvasVisible = !!screenshot && !!frame;
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-  const handleTouchMove = useCallback(
-    (e: React.TouchEvent) => {
+    const onTouchStart = (e: TouchEvent) => {
+      const t = e.touches[0];
+      dragStart.current = { x: t.clientX, y: t.clientY };
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
       e.preventDefault();
       const t = e.touches[0];
       applyPan(t.clientX, t.clientY);
-    },
-    [applyPan],
-  );
+    };
 
-  const handleTouchEnd = useCallback(() => {
-    dragStart.current = null;
-  }, []);
+    const onTouchEnd = () => {
+      dragStart.current = null;
+    };
+
+    canvas.addEventListener("touchstart", onTouchStart, { passive: true });
+    canvas.addEventListener("touchmove", onTouchMove, { passive: false });
+    canvas.addEventListener("touchend", onTouchEnd, { passive: true });
+
+    return () => {
+      canvas.removeEventListener("touchstart", onTouchStart);
+      canvas.removeEventListener("touchmove", onTouchMove);
+      canvas.removeEventListener("touchend", onTouchEnd);
+    };
+  }, [applyPan, canvasVisible]);
 
   if (!screenshot || !frame) {
     return (
@@ -87,9 +102,6 @@ export function PreviewCanvas({
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
       />
     </div>
   );
