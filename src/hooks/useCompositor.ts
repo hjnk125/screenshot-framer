@@ -117,37 +117,41 @@ export function useCompositor({
       return;
     }
 
-    const canvas = document.createElement("canvas");
-    const frameImg = await loadFrameImage(active.assetPath);
-    const scale = computeEffectiveScale(screenshot, active, frameImg);
-    drawComposite({
-      canvas,
-      screenshot,
-      frameImg,
-      frame: active,
-      transform,
-      shadow,
-      scale,
-      browserState,
-      defaultFavicon,
-      deviceBg,
-    });
+    try {
+      const canvas = document.createElement("canvas");
+      const frameImg = await loadFrameImage(active.assetPath);
+      const scale = computeEffectiveScale(screenshot, active, frameImg);
+      drawComposite({
+        canvas,
+        screenshot,
+        frameImg,
+        frame: active,
+        transform,
+        shadow,
+        scale,
+        browserState,
+        defaultFavicon,
+        deviceBg,
+      });
 
-    canvas.toBlob((blob) => {
-      if (!blob) {
-        setIsExporting(false);
-        return;
-      }
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `framed-${frame.id}.png`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      canvas.toBlob((blob) => {
+        try {
+          if (!blob) return;
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `framed-${frame.id}.png`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        } finally {
+          setIsExporting(false);
+        }
+      }, "image/png");
+    } catch {
       setIsExporting(false);
-    }, "image/png");
+    }
   }, [
     screenshot,
     frame,
