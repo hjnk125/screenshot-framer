@@ -38,7 +38,7 @@ const SHADOW_PADDING = 80;
 
 // naturalScale: match scale so screenshot pixels map 1:1 in the screen area.
 // Use screenArea.width (not frameImg.naturalWidth) so device bezels don't shrink content.
-// Cap at 1.0: never upscale the frame asset above its native resolution.
+// maxScale: portrait (aspectRatio < 1) → 1.0x (never upscale), landscape/browser → 2.0x
 // portrait (aspectRatio < 1) → 800px min output width, landscape/browser → 1500px min.
 export function computeEffectiveScale(
   screenshot: HTMLImageElement,
@@ -51,7 +51,7 @@ export function computeEffectiveScale(
   const naturalScale = screenshot.naturalWidth / screenW;
   const minWidth = frame.aspectRatio < 1 ? 800 : 1500;
   const minScale = minWidth / frameImg.naturalWidth;
-  return Math.min(Math.max(naturalScale, minScale), 1);
+  return Math.min(Math.max(naturalScale, minScale), 1.0);
 }
 
 export function calculateOutputSize(
