@@ -40,10 +40,8 @@ export type CanvasSize = { width: number; height: number };
 // Padding added around the frame to make shadows visible
 const SHADOW_PADDING = 80;
 
-// naturalScale: match scale so screenshot pixels map 1:1 in the screen area.
-// Use screenArea.width (not frameImg.naturalWidth) so device bezels don't shrink content.
-// maxScale: portrait (aspectRatio < 1) → 1.0x (never upscale), landscape/browser → 2.0x
-// portrait (aspectRatio < 1) → 800px min output width, landscape/browser → 1500px min.
+// Scale the frame so screenshot pixels map 1:1 in the screen area.
+// noUpscale frames (e.g. iPhones) cap at 1.0 so the frame is never upscaled.
 export function computeEffectiveScale(
   screenshot: HTMLImageElement,
   frame: Frame,
@@ -53,9 +51,7 @@ export function computeEffectiveScale(
     ? frameImg.naturalWidth
     : frame.screenArea.width;
   const naturalScale = screenshot.naturalWidth / screenW;
-  const minWidth = frame.aspectRatio < 1 ? 800 : 1500;
-  const minScale = minWidth / frameImg.naturalWidth;
-  return Math.min(Math.max(naturalScale, minScale), 1.0);
+  return frame.noUpscale ? Math.min(naturalScale, 1.0) : naturalScale;
 }
 
 export function calculateOutputSize(

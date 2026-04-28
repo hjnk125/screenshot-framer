@@ -115,6 +115,7 @@ export const FRAMES: Frame[] = [
       roundCorners: "ALL",
     },
     aspectRatio: 1206 / 2622,
+    noUpscale: true,
   },
   {
     id: "iphone-17-pro",
@@ -130,6 +131,7 @@ export const FRAMES: Frame[] = [
       roundCorners: "ALL",
     },
     aspectRatio: 1206 / 2622,
+    noUpscale: true,
   },
   {
     id: "iphone-17-pro-max",
@@ -145,6 +147,7 @@ export const FRAMES: Frame[] = [
       roundCorners: "ALL",
     },
     aspectRatio: 1320 / 2868,
+    noUpscale: true,
   },
   // ── iPhone Air ────────────────────────────────────────────────────────────
   {
@@ -161,6 +164,7 @@ export const FRAMES: Frame[] = [
       roundCorners: "ALL",
     },
     aspectRatio: 1260 / 2736,
+    noUpscale: true,
   },
   // ── iPhone 16 ─────────────────────────────────────────────────────────────
   {
@@ -177,6 +181,7 @@ export const FRAMES: Frame[] = [
       roundCorners: "ALL",
     },
     aspectRatio: 1179 / 2556,
+    noUpscale: true,
   },
   {
     id: "iphone-16-plus",
@@ -192,6 +197,7 @@ export const FRAMES: Frame[] = [
       roundCorners: "ALL",
     },
     aspectRatio: 1290 / 2796,
+    noUpscale: true,
   },
   {
     id: "iphone-16-pro",
@@ -207,6 +213,7 @@ export const FRAMES: Frame[] = [
       roundCorners: "ALL",
     },
     aspectRatio: 1206 / 2622,
+    noUpscale: true,
   },
   {
     id: "iphone-16-pro-max",
@@ -222,6 +229,7 @@ export const FRAMES: Frame[] = [
       roundCorners: "ALL",
     },
     aspectRatio: 1320 / 2868,
+    noUpscale: true,
   },
   // ── iPhone 15 ─────────────────────────────────────────────────────────────
   {
@@ -238,6 +246,7 @@ export const FRAMES: Frame[] = [
       roundCorners: "ALL",
     },
     aspectRatio: 1179 / 2556,
+    noUpscale: true,
   },
   {
     id: "iphone-15-plus",
@@ -253,6 +262,7 @@ export const FRAMES: Frame[] = [
       roundCorners: "ALL",
     },
     aspectRatio: 1290 / 2796,
+    noUpscale: true,
   },
   {
     id: "iphone-15-pro",
@@ -268,6 +278,7 @@ export const FRAMES: Frame[] = [
       roundCorners: "ALL",
     },
     aspectRatio: 1179 / 2556,
+    noUpscale: true,
   },
   {
     id: "iphone-15-pro-max",
@@ -283,6 +294,7 @@ export const FRAMES: Frame[] = [
       roundCorners: "ALL",
     },
     aspectRatio: 1290 / 2796,
+    noUpscale: true,
   },
   {
     id: "chrome-light",

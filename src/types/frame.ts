@@ -55,6 +55,7 @@ export type Frame = {
   assetPath2x?: string; // optional @2x asset for high-res exports
   screenArea: ScreenArea; // browser frames: height=0 (dynamic), y=toolbarHeight
   aspectRatio: number;
+  noUpscale?: boolean; // cap effectiveScale at 1.0 — frame never upscales
   browserMeta?: BrowserFrameMeta;
   // used when screenshot.naturalWidth < 800 (browser frames only)
   shortToolbar?: {
