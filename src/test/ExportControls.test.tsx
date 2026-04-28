@@ -40,4 +40,39 @@ describe("ExportControls", () => {
     render(<ExportControls onExport={() => {}} disabled={false} isExporting={false} />);
     expect(screen.getByRole("button", { name: /export png/i })).toBeInTheDocument();
   });
+
+  it("outputSize가 uploadSize보다 작으면 리사이즈 안내 표시", () => {
+    render(
+      <ExportControls
+        onExport={() => {}}
+        disabled={false}
+        getOutputSize={() => ({ width: 1300, height: 2800 })}
+        uploadSize={{ width: 8000, height: 17000 }}
+      />,
+    );
+    expect(screen.getByText(/Resized to.*1,300/s)).toBeInTheDocument();
+  });
+
+  it("outputSize가 uploadSize와 같으면 리사이즈 안내 미표시", () => {
+    render(
+      <ExportControls
+        onExport={() => {}}
+        disabled={false}
+        getOutputSize={() => ({ width: 2560, height: 1664 })}
+        uploadSize={{ width: 2560, height: 1664 }}
+      />,
+    );
+    expect(screen.queryByText(/Resized to/i)).not.toBeInTheDocument();
+  });
+
+  it("uploadSize 없으면 리사이즈 안내 미표시", () => {
+    render(
+      <ExportControls
+        onExport={() => {}}
+        disabled={false}
+        getOutputSize={() => ({ width: 1300, height: 2800 })}
+      />,
+    );
+    expect(screen.queryByText(/Resized to/i)).not.toBeInTheDocument();
+  });
 });

@@ -207,7 +207,6 @@ export default function App() {
                 frame={selectedFrame}
                 onPan={pan}
                 renderToCanvas={renderToCanvas}
-                isRendering={isRendering}
               />
             </div>
 
@@ -247,6 +246,7 @@ export default function App() {
           disabled={!image || !selectedFrame}
           isExporting={isExporting}
           getOutputSize={getOutputSize}
+          uploadSize={image ? { width: image.naturalWidth, height: image.naturalHeight } : null}
         />
 
         <Toast message={error} onClose={clearImage} />
