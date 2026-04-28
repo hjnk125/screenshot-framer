@@ -56,7 +56,7 @@ export function ExportControls({
       </button>
 
       {outputSize && estimatedBytes !== null && (
-        <p className="text-center font-mono text-[10px] text-white/30">
+        <p className="text-center font-mono text-[10px] text-white/50">
           {outputSize.width.toLocaleString()} ×{" "}
           {outputSize.height.toLocaleString()} px ∙{" "}
           {formatFileSize(estimatedBytes)}
@@ -64,7 +64,7 @@ export function ExportControls({
       )}
 
       {isResized && outputSize && (
-        <p className="text-center text-[10px] text-yellow-400/70">
+        <p className="text-center text-[10px] text-accent/70">
           Resized to {outputSize.width.toLocaleString()} ×{" "}
           {outputSize.height.toLocaleString()} px
           <br />
