@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const MAX_DIMENSION = 4000;
+const MAX_DIMENSION = 8000;
 
 export type FileInfo = {
   name: string;
@@ -24,14 +24,14 @@ export function useImageUpload(): ImageUploadState {
     return new Promise((resolve) => {
       const reader = new FileReader();
       reader.onerror = () => {
-        setError("파일을 읽는 데 실패했습니다.");
+        setError("Failed to read file.");
         resolve();
       };
       reader.onload = (e) => {
         const url = e.target?.result as string;
         const img = new Image();
         img.onerror = () => {
-          setError("이미지를 불러오는 데 실패했습니다.");
+          setError("Failed to load image.");
           resolve();
         };
         img.onload = () => {
@@ -40,7 +40,7 @@ export function useImageUpload(): ImageUploadState {
             img.naturalHeight > MAX_DIMENSION
           ) {
             setError(
-              `이미지 크기가 너무 큽니다. 한 변이 4,000px를 초과할 수 없습니다. (현재: ${img.naturalWidth}×${img.naturalHeight}px)`,
+              `Image too large. Maximum dimension is 8,000px. (Current: ${img.naturalWidth}×${img.naturalHeight}px)`,
             );
             setImage(null);
             setFileInfo(null);

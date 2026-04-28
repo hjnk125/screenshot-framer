@@ -38,7 +38,7 @@ export function UploadZone({ onFile }: UploadZoneProps) {
       <p className="text-center text-[12px] font-semibold text-ink">
         Click or drag to upload screenshot
       </p>
-      <p className="mt-1 text-[10px] text-muted">PNG · JPG · max 4,000px</p>
+      <p className="mt-1 text-[10px] text-muted">PNG · JPG · max 8,000px</p>
       <input
         ref={inputRef}
         type="file"
