@@ -67,7 +67,8 @@ minWidth:
 
 ## 브랜치 전략
 
-- **항상 `master`에서 브랜치를 따서 작업**
+- **절대 `master`에 직접 커밋하지 않는다**
+- 항상 `master`에서 브랜치를 따서 작업
 - 브랜치명: `feat/기능명`, `fix/버그명` 등
 - 작업 완료 후 `master`로 머지
 
@@ -76,6 +77,7 @@ minWidth:
 - **prefix는 영어** (feat, fix, chore, docs, refactor, test 등)
 - **내용은 한국어**
 - 형식: `feat: 한국어로 작업 내용 설명`
+- **`Co-Authored-By:` 줄을 절대 추가하지 않는다**
 
 ### 예시
 ```
