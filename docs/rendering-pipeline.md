@@ -25,14 +25,21 @@ applyToMainCanvas(effectiveScale)
 ## effectiveScale 계산
 
 ```
-effectiveScale = clamp(naturalScale, minScale, 1.0)
+Device (noUpscale: true, iPhone 등):
+  effectiveScale = min(naturalScale, 1.0)
 
-naturalScale = screenshot.naturalWidth / screenArea.width
-minScale     = minWidth / frameImg.naturalWidth
-minWidth     = aspectRatio < 1 (세로형) ? 800 : 1500  (px)
+Device (noUpscale 없음, MacBook·iMac):
+  effectiveScale = naturalScale  (상한 없음)
+
+Browser:
+  effectiveScale = naturalScale  (상한 없음)
+
+naturalScale:
+  Device  → screenshot.naturalWidth / screenArea.width
+  Browser → screenshot.naturalWidth / frameImg.naturalWidth
 ```
 
-### 왜 `screenArea.width`를 쓰는가
+### 왜 Device에서 `screenArea.width`를 쓰는가
 
 프레임 에셋 전체 폭(`frameImg.naturalWidth`)을 분모로 쓰면 베젤 영역이 scale에 영향을 준다.
 
@@ -46,22 +53,13 @@ minWidth     = aspectRatio < 1 (세로형) ? 800 : 1500  (px)
 | `frameImg.naturalWidth` (4340) | 0.796 | ~2751px ← 원본 대비 20% 손실 |
 | `screenArea.width` (3456) | **1.0** | **3456px ← 1:1 완벽** |
 
-### 왜 cap = 1.0인가
+### noUpscale 프레임의 cap = 1.0
 
-`naturalScale > 1.0` (스크린샷이 screenArea보다 넓은 경우) 이면 프레임 에셋을 원본보다 크게 업스케일해야 한다. 래스터 이미지를 업스케일하면 프레임 자체가 뭉개지므로 상한을 1.0으로 고정한다.
+iPhone 등 `noUpscale: true` 프레임은 래스터 에셋을 업스케일하면 품질이 저하되므로 상한을 1.0으로 고정한다.
 
-4000px 스크린샷 + MacBook 프레임(screenArea=3456):
-→ `naturalScale = 4000/3456 = 1.157` → cap → `effectiveScale = 1.0`
-→ 프레임 선명, 스크린샷은 cover 모드로 3456px에 맞춰 단일 패스 고품질 축소
+### Mac/Browser 프레임은 상한 없음
 
-### 최소 크기 보장
-
-스크린샷이 매우 작을 때 출력물이 너무 작아지지 않도록 minScale로 하한 보정.
-
-| 프레임 종류 | 최소 출력 폭 |
-|---|---|
-| 세로형 (iPhone 등, aspectRatio < 1) | 800px |
-| 가로형 / 브라우저 | 1500px |
+Mac·iMac·Browser 프레임은 @2x AVIF 에셋이 존재하거나 스크린샷 비례 출력이 유리하므로, naturalScale을 그대로 사용한다. 8,000px 스크린샷 + MacBook 프레임(screenArea=3456)이면 `effectiveScale ≈ 2.31`이 되어 프레임 에셋 너비의 약 2.3배로 export된다.
 
 ---
 

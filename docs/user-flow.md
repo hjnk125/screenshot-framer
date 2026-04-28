@@ -33,23 +33,33 @@
 
 - 드래그 앤 드롭 또는 클릭으로 파일 선택
 - 지원 형식: PNG, JPG
-- 제한: 가로 또는 세로 **최대 4,000px**
+- 제한: 가로 또는 세로 **최대 8,000px**
 - 업로드 후: 파일명 · 해상도 · 용량 카드 표시, X 버튼으로 제거
 
 ### 2. 프레임 선택
 
 **Device 탭:**
-| 프레임 | 에셋 크기 | 화면 영역 |
-|---|---|---|
-| MacBook Pro 16 | 4340×2860px | 3456×2250px |
-| iPhone 15 | 1419×2796px | 1179×2556px |
+| 프레임 | 화면 영역 |
+|---|---|
+| MacBook Air 13 | 2560 × 1664 |
+| MacBook Air 15 | 2880 × 1864 |
+| MacBook Pro 14 | 3024 × 1964 |
+| MacBook Pro 16 | 3456 × 2235 |
+| MacBook Neo | 2408 × 1506 |
+| iMac 24 | 4480 × 2520 |
+| iPhone 17 / 17 Pro / 17 Pro Max | 1206 × 2622 / 1320 × 2868 |
+| iPhone Air | 1260 × 2736 |
+| iPhone 16 / 16 Plus / 16 Pro / 16 Pro Max | — |
+| iPhone 15 / 15 Plus / 15 Pro / 15 Pro Max | — |
 
-**Browser 탭:**
-| 프레임 | 에셋 너비 | 종류 |
-|---|---|---|
-| Chrome (Light / Dark) | 3840px | 탭바 + URL바 |
-| Safari Big Sur (Light / Dark) | 3840px | URL바만 (중앙 정렬) |
-| Safari Catalina (Light / Dark) | 3840px | URL바만 (중앙 정렬) |
+프레임 에셋은 AVIF 포맷, Mac/iMac은 @2x 에셋 자동 선택 지원.
+
+**Browser 탭:** (모두 3840px 너비)
+| 프레임 | 종류 |
+|---|---|
+| Chrome (Light / Dark) | 탭바 + URL바 |
+| Safari Big Sur (Light / Dark) | URL바만 (중앙 정렬) |
+| Safari Catalina (Light / Dark) | URL바만 (중앙 정렬) |
 
 프레임 선택 시 이미지 transform 초기화.
 
@@ -96,19 +106,23 @@ Chrome 기본 파비콘: `/chrome-light-favicon.svg`, `/chrome-dark-favicon.svg`
 ## Export 해상도 결정 규칙
 
 ```
-effectiveScale = clamp(naturalScale, minScale, 1.0)
+Device (noUpscale: true, iPhone 등):
+  effectiveScale = min(naturalScale, 1.0)
 
-naturalScale = screenshot.naturalWidth / screenArea.width
-minScale     = minWidth / frameImg.naturalWidth
+Device (noUpscale 없음, MacBook·iMac):
+  effectiveScale = naturalScale  (상한 없음, 스크린샷 비례)
 
-minWidth:
-  세로형 (iPhone 등, aspectRatio < 1) → 800px
-  가로형 / 브라우저                   → 1500px
+Browser:
+  effectiveScale = naturalScale  (상한 없음, 스크린샷 비례)
+
+naturalScale:
+  Device  → screenshot.naturalWidth / screenArea.width
+  Browser → screenshot.naturalWidth / frameImg.naturalWidth
 ```
 
-- 스크린샷이 크면 → naturalScale이 높아지며 scale=1.0에 수렴 (프레임 원본 해상도)
-- 스크린샷이 작으면 → minScale로 하한 보정
-- 프레임 에셋은 절대 업스케일하지 않음 (cap=1.0)
+- noUpscale 프레임(iPhone)은 프레임 에셋을 절대 업스케일하지 않음 (cap=1.0)
+- Mac/Browser 프레임은 스크린샷 크기에 비례하여 export (상한 없음)
+- export 크기가 업로드 이미지보다 작을 때 리사이즈 안내 메시지 표시
 
 **Preview는 항상 scale=1** (사이드바 선택 즉시 전체 해상도 프리뷰).
 
