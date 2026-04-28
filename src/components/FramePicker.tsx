@@ -23,30 +23,36 @@ function FrameHintTooltip({
   } | null>(null);
 
   useEffect(() => {
-    let rafId: number;
     let lastKey = "";
 
-    const loop = () => {
-      if (tabRef.current) {
-        const tab = tabRef.current.getBoundingClientRect();
-        const isDesktop = window.innerWidth >= 1024;
-        const top = isDesktop ? tab.top + tab.height / 2 : tab.top - 8;
-        const left = isDesktop ? tab.right + 14 : tab.left;
-        const key = `${isDesktop}|${top}|${left}`;
-        if (key !== lastKey) {
-          lastKey = key;
-          setPos(
-            isDesktop
-              ? { top, left, desktop: true }
-              : { top, left, width: tab.width, desktop: false },
-          );
-        }
-      }
-      rafId = requestAnimationFrame(loop);
+    const update = () => {
+      if (!tabRef.current) return;
+      const tab = tabRef.current.getBoundingClientRect();
+      const isDesktop = window.innerWidth >= 1024;
+      const top = isDesktop ? tab.top + tab.height / 2 : tab.top - 8;
+      const left = isDesktop ? tab.right + 14 : tab.left;
+      const key = `${isDesktop}|${top}|${left}`;
+      if (key === lastKey) return;
+      lastKey = key;
+      setPos(
+        isDesktop
+          ? { top, left, desktop: true }
+          : { top, left, width: tab.width, desktop: false },
+      );
     };
 
-    rafId = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(rafId);
+    update();
+
+    const ro = new ResizeObserver(update);
+    if (tabRef.current) ro.observe(tabRef.current);
+    window.addEventListener("resize", update);
+    window.addEventListener("scroll", update, true);
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", update);
+      window.removeEventListener("scroll", update, true);
+    };
   }, [tabRef]);
 
   if (!pos) return null;

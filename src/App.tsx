@@ -207,6 +207,7 @@ export default function App() {
                 frame={selectedFrame}
                 onPan={pan}
                 renderToCanvas={renderToCanvas}
+                isRendering={isRendering}
               />
             </div>
 

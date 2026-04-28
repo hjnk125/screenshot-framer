@@ -12,7 +12,7 @@ export function UploadZone({ onFile }: UploadZoneProps) {
     e.preventDefault();
     setDragging(false);
     const file = e.dataTransfer.files[0];
-    if (file) onFile(file);
+    if (file && file.type.startsWith("image/")) onFile(file);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import type { DeviceBgConfig, DeviceBgType } from "../types/frame";
 
 export type UseDeviceBgReturn = {
@@ -13,15 +13,15 @@ const DEFAULT: DeviceBgConfig = { type: "transparent", image: null };
 export function useDeviceBg(): UseDeviceBgReturn {
   const [deviceBg, setDeviceBg] = useState<DeviceBgConfig>(DEFAULT);
 
-  const setType = (type: DeviceBgType) => {
+  const setType = useCallback((type: DeviceBgType) => {
     setDeviceBg((prev) => ({
       ...prev,
       type,
       image: type === "image" ? prev.image : null,
     }));
-  };
+  }, []);
 
-  const handleImage = (file: File) => {
+  const handleImage = useCallback((file: File) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       const url = e.target?.result as string;
@@ -31,9 +31,9 @@ export function useDeviceBg(): UseDeviceBgReturn {
       img.src = url;
     };
     reader.readAsDataURL(file);
-  };
+  }, []);
 
-  const clearImage = () => setDeviceBg(DEFAULT);
+  const clearImage = useCallback(() => setDeviceBg(DEFAULT), []);
 
   return { deviceBg, setType, handleImage, clearImage };
 }

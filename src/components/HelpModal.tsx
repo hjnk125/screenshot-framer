@@ -46,7 +46,7 @@ export function HelpModal({ onClose }: HelpModalProps) {
         </h2>
         <ol className="mb-6 flex flex-col gap-[10px]">
           {[
-            "Upload a screenshot (PNG or JPG, up to 4000 px)",
+            "Upload a screenshot (PNG or JPG, up to 8,000 px)",
             "Pick a device or browser frame",
             "Adjust scale, pan, and shadow as needed",
             "Hit Export PNG to save",

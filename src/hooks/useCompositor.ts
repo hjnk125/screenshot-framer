@@ -58,6 +58,7 @@ export function useCompositor({
   deviceBg,
 }: CompositorParams) {
   const frameImgCache = useRef<Map<string, HTMLImageElement>>(new Map());
+  const scaledFrameRef = useRef<{ key: string; frame: Frame } | null>(null);
   const [, setFrameCacheVersion] = useState(0);
   const [isRendering, setIsRendering] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
@@ -119,6 +120,7 @@ export function useCompositor({
         if (!active) return;
         const frameImg = await loadFrameImage(active.assetPath);
         const scaledFrame = await applyAssetScale(active, frame);
+        scaledFrameRef.current = { key: active.assetPath, frame: scaledFrame };
         drawComposite({
           canvas,
           screenshot,
@@ -162,6 +164,7 @@ export function useCompositor({
       const canvas = document.createElement("canvas");
       const frameImg = await loadFrameImage(active.assetPath);
       const scaledFrame = await applyAssetScale(active, frame);
+      scaledFrameRef.current = { key: active.assetPath, frame: scaledFrame };
       const scale = computeEffectiveScale(screenshot, scaledFrame, frameImg);
       drawComposite({
         canvas,
@@ -176,22 +179,20 @@ export function useCompositor({
         deviceBg,
       });
 
-      canvas.toBlob((blob) => {
-        try {
-          if (!blob) return;
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = `framed-${frame.id}.png`;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-        } finally {
-          setIsExporting(false);
-        }
-      }, "image/png");
-    } catch {
+      const blob = await new Promise<Blob | null>((resolve) => {
+        canvas.toBlob(resolve, "image/png");
+      });
+      if (blob) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `framed-${frame.id}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+    } finally {
       setIsExporting(false);
     }
   }, [
@@ -212,7 +213,11 @@ export function useCompositor({
     if (!active) return null;
     const frameImg = frameImgCache.current.get(active.assetPath);
     if (!frameImg) return null;
-    return calculateOutputSize(screenshot, active, frameImg, shadow);
+    const effectiveFrame =
+      scaledFrameRef.current?.key === active.assetPath
+        ? scaledFrameRef.current.frame
+        : active;
+    return calculateOutputSize(screenshot, effectiveFrame, frameImg, shadow);
   }, [screenshot, frame, shadow]);
 
   return { renderToCanvas, exportPng, getOutputSize, isRendering, isExporting };

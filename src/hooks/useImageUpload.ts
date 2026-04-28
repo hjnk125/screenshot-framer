@@ -22,38 +22,32 @@ export function useImageUpload(): ImageUploadState {
 
   const handleFile = (file: File): Promise<void> => {
     return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onerror = () => {
-        setError("Failed to read file.");
+      const objectUrl = URL.createObjectURL(file);
+      const img = new Image();
+      img.onerror = () => {
+        URL.revokeObjectURL(objectUrl);
+        setError("Failed to load image.");
         resolve();
       };
-      reader.onload = (e) => {
-        const url = e.target?.result as string;
-        const img = new Image();
-        img.onerror = () => {
-          setError("Failed to load image.");
-          resolve();
-        };
-        img.onload = () => {
-          if (
-            img.naturalWidth > MAX_DIMENSION ||
-            img.naturalHeight > MAX_DIMENSION
-          ) {
-            setError(
-              `Image too large. Maximum dimension is 8,000px. (Current: ${img.naturalWidth}×${img.naturalHeight}px)`,
-            );
-            setImage(null);
-            setFileInfo(null);
-          } else {
-            setError(null);
-            setImage(img);
-            setFileInfo({ name: file.name, size: file.size });
-          }
-          resolve();
-        };
-        img.src = url;
+      img.onload = () => {
+        URL.revokeObjectURL(objectUrl);
+        if (
+          img.naturalWidth > MAX_DIMENSION ||
+          img.naturalHeight > MAX_DIMENSION
+        ) {
+          setError(
+            `Image too large. Maximum dimension is 8,000px. (Current: ${img.naturalWidth}×${img.naturalHeight}px)`,
+          );
+          setImage(null);
+          setFileInfo(null);
+        } else {
+          setError(null);
+          setImage(img);
+          setFileInfo({ name: file.name, size: file.size });
+        }
+        resolve();
       };
-      reader.readAsDataURL(file);
+      img.src = objectUrl;
     });
   };
 

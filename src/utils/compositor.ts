@@ -26,6 +26,10 @@ function stepDown(
     sCtx.imageSmoothingEnabled = true;
     sCtx.imageSmoothingQuality = "high";
     sCtx.drawImage(cur, 0, 0, nextW, nextH);
+    if (cur !== src) {
+      cur.width = 0;
+      cur.height = 0;
+    }
     cur = step;
   }
   return cur;
