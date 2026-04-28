@@ -22,7 +22,7 @@ const DEFAULT_SHADOW: ShadowConfig = {
 };
 
 export default function App() {
-  const { image, fileInfo, error, handleFile, clearImage } = useImageUpload();
+  const { image, previewUrl, fileInfo, error, handleFile, clearImage } = useImageUpload();
   const {
     transform,
     setScale,
@@ -136,7 +136,7 @@ export default function App() {
                   <div className="flex items-center gap-2">
                     <div className="h-10 w-10 shrink-0 overflow-hidden rounded-[8px] border border-black/[0.07] bg-[#f0f0ef]">
                       <img
-                        src={image.src}
+                        src={previewUrl ?? undefined}
                         alt="preview"
                         className="h-full w-full object-cover"
                       />

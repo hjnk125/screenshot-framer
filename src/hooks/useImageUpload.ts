@@ -9,6 +9,7 @@ export type FileInfo = {
 
 export type ImageUploadState = {
   image: HTMLImageElement | null;
+  previewUrl: string | null;
   fileInfo: FileInfo | null;
   error: string | null;
   handleFile: (file: File) => Promise<void>;
@@ -17,6 +18,7 @@ export type ImageUploadState = {
 
 export function useImageUpload(): ImageUploadState {
   const [image, setImage] = useState<HTMLImageElement | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [fileInfo, setFileInfo] = useState<FileInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,19 +32,24 @@ export function useImageUpload(): ImageUploadState {
         resolve();
       };
       img.onload = () => {
-        URL.revokeObjectURL(objectUrl);
         if (
           img.naturalWidth > MAX_DIMENSION ||
           img.naturalHeight > MAX_DIMENSION
         ) {
+          URL.revokeObjectURL(objectUrl);
           setError(
             `Image too large. Maximum dimension is 8,000px. (Current: ${img.naturalWidth}×${img.naturalHeight}px)`,
           );
           setImage(null);
+          setPreviewUrl(null);
           setFileInfo(null);
         } else {
           setError(null);
           setImage(img);
+          setPreviewUrl((prev) => {
+            if (prev) URL.revokeObjectURL(prev);
+            return objectUrl;
+          });
           setFileInfo({ name: file.name, size: file.size });
         }
         resolve();
@@ -52,10 +59,14 @@ export function useImageUpload(): ImageUploadState {
   };
 
   const clearImage = () => {
+    setPreviewUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
     setImage(null);
     setFileInfo(null);
     setError(null);
   };
 
-  return { image, fileInfo, error, handleFile, clearImage };
+  return { image, previewUrl, fileInfo, error, handleFile, clearImage };
 }
