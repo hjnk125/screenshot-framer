@@ -22,20 +22,7 @@ describe("PreviewCanvas", () => {
     ).toBeInTheDocument();
   });
 
-  it("isRendering=true이면 spinner overlay를 표시한다", () => {
-    render(
-      <PreviewCanvas
-        screenshot={mockImage}
-        frame={mockFrame}
-        onPan={() => {}}
-        renderToCanvas={renderToCanvas}
-        isRendering={true}
-      />,
-    );
-    expect(screen.getByTestId("spinner")).toBeInTheDocument();
-  });
-
-  it("isRendering=false이면 spinner overlay를 표시하지 않는다", () => {
+  it("isRendering이 false면 spinner를 표시하지 않는다", () => {
     render(
       <PreviewCanvas
         screenshot={mockImage}

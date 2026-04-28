@@ -107,7 +107,7 @@ export function PreviewCanvas({
         onMouseLeave={handleMouseUp}
       />
       {isRendering && (
-        <div className="absolute inset-0 flex items-center justify-center rounded-card-dense bg-black/10">
+        <div className="absolute inset-0 flex items-center justify-center">
           <Spinner size={24} />
         </div>
       )}
