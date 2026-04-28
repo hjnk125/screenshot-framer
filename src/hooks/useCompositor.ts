@@ -35,6 +35,16 @@ function resolveFrame(
       browserMeta: frame.shortToolbar.browserMeta,
     };
   }
+  // Use @2x asset when screenshot is larger than the screen area.
+  // screenArea scaling is deferred to renderToCanvas/exportPng after loading
+  // the actual image, so we can compute the true ratio regardless of the exact
+  // pixel dimensions of the @2x file.
+  if (frame.assetPath2x && screenshot && !frame.browserMeta) {
+    const naturalScale = screenshot.naturalWidth / frame.screenArea.width;
+    if (naturalScale > 1.0) {
+      return { ...frame, assetPath: frame.assetPath2x };
+    }
+  }
   return frame;
 }
 
@@ -71,6 +81,35 @@ export function useCompositor({
     [],
   );
 
+  // When resolveFrame switches to the @2x asset, screenArea is still in 1x coords.
+  // After loading the actual @2x image we know its true width, so we compute the
+  // exact ratio (which may differ from exactly ×2) and apply it to screenArea.
+  const applyAssetScale = useCallback(
+    async (active: Frame, original: Frame): Promise<Frame> => {
+      if (!original.assetPath2x || active.assetPath !== original.assetPath2x) {
+        return active;
+      }
+      const [img2x, img1x] = await Promise.all([
+        loadFrameImage(original.assetPath2x),
+        loadFrameImage(original.assetPath),
+      ]);
+      const ratio = img2x.naturalWidth / img1x.naturalWidth;
+      const sa = original.screenArea;
+      return {
+        ...active,
+        screenArea: {
+          ...sa,
+          x: Math.round(sa.x * ratio),
+          y: Math.round(sa.y * ratio),
+          width: Math.round(sa.width * ratio),
+          height: Math.round(sa.height * ratio),
+          radius: Math.round(sa.radius * ratio),
+        },
+      };
+    },
+    [loadFrameImage],
+  );
+
   const renderToCanvas = useCallback(
     async (canvas: HTMLCanvasElement): Promise<void> => {
       if (!screenshot || !frame) return;
@@ -79,11 +118,12 @@ export function useCompositor({
         const active = resolveFrame(frame, screenshot);
         if (!active) return;
         const frameImg = await loadFrameImage(active.assetPath);
+        const scaledFrame = await applyAssetScale(active, frame);
         drawComposite({
           canvas,
           screenshot,
           frameImg,
-          frame: active,
+          frame: scaledFrame,
           transform,
           shadow,
           scale: 1,
@@ -104,6 +144,7 @@ export function useCompositor({
       defaultFavicon,
       deviceBg,
       loadFrameImage,
+      applyAssetScale,
     ],
   );
 
@@ -120,12 +161,13 @@ export function useCompositor({
     try {
       const canvas = document.createElement("canvas");
       const frameImg = await loadFrameImage(active.assetPath);
-      const scale = computeEffectiveScale(screenshot, active, frameImg);
+      const scaledFrame = await applyAssetScale(active, frame);
+      const scale = computeEffectiveScale(screenshot, scaledFrame, frameImg);
       drawComposite({
         canvas,
         screenshot,
         frameImg,
-        frame: active,
+        frame: scaledFrame,
         transform,
         shadow,
         scale,
@@ -161,6 +203,7 @@ export function useCompositor({
     defaultFavicon,
     deviceBg,
     loadFrameImage,
+    applyAssetScale,
   ]);
 
   const getOutputSize = useCallback((): CanvasSize | null => {

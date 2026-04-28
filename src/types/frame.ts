@@ -52,6 +52,7 @@ export type Frame = {
   label: string;
   category: FrameCategory;
   assetPath: string;
+  assetPath2x?: string; // optional @2x asset for high-res exports
   screenArea: ScreenArea; // browser frames: height=0 (dynamic), y=toolbarHeight
   aspectRatio: number;
   browserMeta?: BrowserFrameMeta;

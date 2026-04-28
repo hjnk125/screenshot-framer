@@ -6,7 +6,8 @@ export const FRAMES: Frame[] = [
     id: "macbook-air-13",
     label: "MacBook Air 13",
     category: "device",
-    assetPath: "/frames/device/macbook-air-13.png",
+    assetPath: "/frames/device/macbook-air-13.avif",
+    assetPath2x: "/frames/device/macbook-air-13@2x.avif",
     screenArea: {
       x: 420,
       y: 288,
@@ -21,7 +22,8 @@ export const FRAMES: Frame[] = [
     id: "macbook-air-15",
     label: "MacBook Air 15",
     category: "device",
-    assetPath: "/frames/device/macbook-air-15.png",
+    assetPath: "/frames/device/macbook-air-15.avif",
+    assetPath2x: "/frames/device/macbook-air-15@2x.avif",
     screenArea: {
       x: 330,
       y: 218,
@@ -37,7 +39,8 @@ export const FRAMES: Frame[] = [
     id: "macbook-pro-14",
     label: "MacBook Pro 14",
     category: "device",
-    assetPath: "/frames/device/macbook-pro-14.png",
+    assetPath: "/frames/device/macbook-pro-14.avif",
+    assetPath2x: "/frames/device/macbook-pro-14@2x.avif",
     screenArea: {
       x: 418,
       y: 288,
@@ -52,7 +55,8 @@ export const FRAMES: Frame[] = [
     id: "macbook-pro-16",
     label: "MacBook Pro 16",
     category: "device",
-    assetPath: "/frames/device/macbook-pro-16.png",
+    assetPath: "/frames/device/macbook-pro-16.avif",
+    assetPath2x: "/frames/device/macbook-pro-16@2x.avif",
     screenArea: {
       x: 402,
       y: 302,
@@ -67,7 +71,8 @@ export const FRAMES: Frame[] = [
     id: "macbook-neo",
     label: "MacBook Neo",
     category: "device",
-    assetPath: "/frames/device/macbook-neo.png",
+    assetPath: "/frames/device/macbook-neo.avif",
+    assetPath2x: "/frames/device/macbook-neo@2x.avif",
     screenArea: {
       x: 406,
       y: 297,
@@ -83,7 +88,8 @@ export const FRAMES: Frame[] = [
     id: "imac-24",
     label: "iMac 24",
     category: "device",
-    assetPath: "/frames/device/imac-24.png",
+    assetPath: "/frames/device/imac-24.avif",
+    assetPath2x: "/frames/device/imac-24@2x.avif",
     screenArea: {
       x: 140,
       y: 150,
@@ -99,7 +105,7 @@ export const FRAMES: Frame[] = [
     id: "iphone-17",
     label: "iPhone 17",
     category: "device",
-    assetPath: "/frames/device/iphone-17.png",
+    assetPath: "/frames/device/iphone-17.avif",
     screenArea: {
       x: 72,
       y: 69,
@@ -114,7 +120,7 @@ export const FRAMES: Frame[] = [
     id: "iphone-17-pro",
     label: "iPhone 17 Pro",
     category: "device",
-    assetPath: "/frames/device/iphone-17-pro.png",
+    assetPath: "/frames/device/iphone-17-pro.avif",
     screenArea: {
       x: 72,
       y: 69,
@@ -129,7 +135,7 @@ export const FRAMES: Frame[] = [
     id: "iphone-17-pro-max",
     label: "iPhone 17 Pro Max",
     category: "device",
-    assetPath: "/frames/device/iphone-17-pro-max.png",
+    assetPath: "/frames/device/iphone-17-pro-max.avif",
     screenArea: {
       x: 75,
       y: 66,
@@ -145,7 +151,7 @@ export const FRAMES: Frame[] = [
     id: "iphone-air",
     label: "iPhone Air",
     category: "device",
-    assetPath: "/frames/device/iphone-air.png",
+    assetPath: "/frames/device/iphone-air.avif",
     screenArea: {
       x: 60,
       y: 72,
@@ -161,7 +167,7 @@ export const FRAMES: Frame[] = [
     id: "iphone-16",
     label: "iPhone 16",
     category: "device",
-    assetPath: "/frames/device/iphone-16.png",
+    assetPath: "/frames/device/iphone-16.avif",
     screenArea: {
       x: 90,
       y: 90,
@@ -176,7 +182,7 @@ export const FRAMES: Frame[] = [
     id: "iphone-16-plus",
     label: "iPhone 16 Plus",
     category: "device",
-    assetPath: "/frames/device/iphone-16-plus.png",
+    assetPath: "/frames/device/iphone-16-plus.avif",
     screenArea: {
       x: 90,
       y: 87,
@@ -191,7 +197,7 @@ export const FRAMES: Frame[] = [
     id: "iphone-16-pro",
     label: "iPhone 16 Pro",
     category: "device",
-    assetPath: "/frames/device/iphone-16-pro.png",
+    assetPath: "/frames/device/iphone-16-pro.avif",
     screenArea: {
       x: 72,
       y: 69,
@@ -206,7 +212,7 @@ export const FRAMES: Frame[] = [
     id: "iphone-16-pro-max",
     label: "iPhone 16 Pro Max",
     category: "device",
-    assetPath: "/frames/device/iphone-16-pro-max.png",
+    assetPath: "/frames/device/iphone-16-pro-max.avif",
     screenArea: {
       x: 75,
       y: 66,
@@ -222,7 +228,7 @@ export const FRAMES: Frame[] = [
     id: "iphone-15",
     label: "iPhone 15",
     category: "device",
-    assetPath: "/frames/device/iphone-15.png",
+    assetPath: "/frames/device/iphone-15.avif",
     screenArea: {
       x: 120,
       y: 120,
@@ -237,7 +243,7 @@ export const FRAMES: Frame[] = [
     id: "iphone-15-plus",
     label: "iPhone 15 Plus",
     category: "device",
-    assetPath: "/frames/device/iphone-15-plus.png",
+    assetPath: "/frames/device/iphone-15-plus.avif",
     screenArea: {
       x: 120,
       y: 120,
@@ -252,7 +258,7 @@ export const FRAMES: Frame[] = [
     id: "iphone-15-pro",
     label: "iPhone 15 Pro",
     category: "device",
-    assetPath: "/frames/device/iphone-15-pro.png",
+    assetPath: "/frames/device/iphone-15-pro.avif",
     screenArea: {
       x: 120,
       y: 120,
@@ -267,7 +273,7 @@ export const FRAMES: Frame[] = [
     id: "iphone-15-pro-max",
     label: "iPhone 15 Pro Max",
     category: "device",
-    assetPath: "/frames/device/iphone-15-pro-max.png",
+    assetPath: "/frames/device/iphone-15-pro-max.avif",
     screenArea: {
       x: 120,
       y: 120,
@@ -282,7 +288,7 @@ export const FRAMES: Frame[] = [
     id: "chrome-light",
     label: "Chrome",
     category: "browser",
-    assetPath: "/frames/browser/chrome-light-toolbar.png",
+    assetPath: "/frames/browser/chrome-light-toolbar.avif",
     screenArea: {
       x: 0,
       y: 0,
@@ -322,7 +328,7 @@ export const FRAMES: Frame[] = [
       defaultFaviconPath: "/chrome-light-favicon.svg",
     },
     shortToolbar: {
-      assetPath: "/frames/browser/chrome-light-toolbar-short.png",
+      assetPath: "/frames/browser/chrome-light-toolbar-short.avif",
       browserMeta: {
         contentBg: "#ffffff",
         contentRadius: 10,
@@ -358,7 +364,7 @@ export const FRAMES: Frame[] = [
     id: "chrome-dark",
     label: "Chrome (Dark)",
     category: "browser",
-    assetPath: "/frames/browser/chrome-dark-toolbar.png",
+    assetPath: "/frames/browser/chrome-dark-toolbar.avif",
     screenArea: {
       x: 0,
       y: 0,
@@ -398,7 +404,7 @@ export const FRAMES: Frame[] = [
       defaultFaviconPath: "/chrome-dark-favicon.svg",
     },
     shortToolbar: {
-      assetPath: "/frames/browser/chrome-dark-toolbar-short.png",
+      assetPath: "/frames/browser/chrome-dark-toolbar-short.avif",
       browserMeta: {
         contentBg: "#2a2a2a",
         contentRadius: 10,
@@ -434,7 +440,7 @@ export const FRAMES: Frame[] = [
     id: "safari-bigSur-light",
     label: "Safari (Big Sur)",
     category: "browser",
-    assetPath: "/frames/browser/safari-bigSur-light-toolbar.png",
+    assetPath: "/frames/browser/safari-bigSur-light-toolbar.avif",
     screenArea: {
       x: 0,
       y: 0,
@@ -459,7 +465,7 @@ export const FRAMES: Frame[] = [
       },
     },
     shortToolbar: {
-      assetPath: "/frames/browser/safari-bigSur-light-toolbar-short.png",
+      assetPath: "/frames/browser/safari-bigSur-light-toolbar-short.avif",
       browserMeta: {
         contentBg: "#ffffff",
         contentRadius: 10,
@@ -480,7 +486,7 @@ export const FRAMES: Frame[] = [
     id: "safari-bigSur-dark",
     label: "Safari (Big Sur) (Dark)",
     category: "browser",
-    assetPath: "/frames/browser/safari-bigSur-dark-toolbar.png",
+    assetPath: "/frames/browser/safari-bigSur-dark-toolbar.avif",
     screenArea: {
       x: 0,
       y: 0,
@@ -505,7 +511,7 @@ export const FRAMES: Frame[] = [
       },
     },
     shortToolbar: {
-      assetPath: "/frames/browser/safari-bigSur-dark-toolbar-short.png",
+      assetPath: "/frames/browser/safari-bigSur-dark-toolbar-short.avif",
       browserMeta: {
         contentBg: "#1c1c1e",
         contentRadius: 10,
@@ -526,7 +532,7 @@ export const FRAMES: Frame[] = [
     id: "safari-catalina-light",
     label: "Safari (Catalina)",
     category: "browser",
-    assetPath: "/frames/browser/safari-catalina-light-toolbar.png",
+    assetPath: "/frames/browser/safari-catalina-light-toolbar.avif",
     screenArea: {
       x: 0,
       y: 0,
@@ -551,7 +557,7 @@ export const FRAMES: Frame[] = [
       },
     },
     shortToolbar: {
-      assetPath: "/frames/browser/safari-catalina-light-toolbar-short.png",
+      assetPath: "/frames/browser/safari-catalina-light-toolbar-short.avif",
       browserMeta: {
         contentBg: "#ffffff",
         contentRadius: 10,
@@ -572,7 +578,7 @@ export const FRAMES: Frame[] = [
     id: "safari-catalina-dark",
     label: "Safari (Catalina) (Dark)",
     category: "browser",
-    assetPath: "/frames/browser/safari-catalina-dark-toolbar.png",
+    assetPath: "/frames/browser/safari-catalina-dark-toolbar.avif",
     screenArea: {
       x: 0,
       y: 0,
@@ -597,7 +603,7 @@ export const FRAMES: Frame[] = [
       },
     },
     shortToolbar: {
-      assetPath: "/frames/browser/safari-catalina-dark-toolbar-short.png",
+      assetPath: "/frames/browser/safari-catalina-dark-toolbar-short.avif",
       browserMeta: {
         contentBg: "#1c1c1e",
         contentRadius: 10,
