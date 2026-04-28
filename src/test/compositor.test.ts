@@ -32,7 +32,7 @@ function makeFrame(overrides: Partial<Frame>): Frame {
     label: "Test",
     category: "device",
     assetPath: "/test.png",
-    screenArea: { x: 0, y: 0, width: 2560, height: 1664, radius: 0 },
+    screenArea: { x: 0, y: 0, width: 2560, height: 1664, radius: 0, roundCorners: "ALL" },
     aspectRatio: 2560 / 1664, // 가로형
     ...overrides,
   } as Frame;
@@ -63,7 +63,7 @@ describe("computeEffectiveScale", () => {
     // iPhone류 프레임: 화면 영역 1206px, 프레임 에셋 1300px
     const frame = makeFrame({
       aspectRatio: 1206 / 2622, // 세로형
-      screenArea: { x: 0, y: 0, width: 1206, height: 2622, radius: 0 },
+      screenArea: { x: 0, y: 0, width: 1206, height: 2622, radius: 0, roundCorners: "ALL" },
     });
     const frameImg = makeFrameImg(1300, 2800);
     const screenshot = makeScreenshot(8000, 17000);
@@ -75,7 +75,7 @@ describe("computeEffectiveScale", () => {
   it("세로형 프레임: minScale 하한 적용 확인", () => {
     const frame = makeFrame({
       aspectRatio: 1206 / 2622,
-      screenArea: { x: 0, y: 0, width: 1206, height: 2622, radius: 0 },
+      screenArea: { x: 0, y: 0, width: 1206, height: 2622, radius: 0, roundCorners: "ALL" },
     });
     const frameImg = makeFrameImg(1300, 2800);
     const screenshot = makeScreenshot(100, 200); // 매우 작은 스크린샷
