@@ -92,8 +92,12 @@ export default function App() {
     (frame: Frame) => {
       setSelectedFrame(frame);
       resetTransform();
+      // appstore 프레임은 투명 배경을 허용하지 않으므로 transparent → white로 전환
+      if (frame.category === "appstore" && deviceBgState.deviceBg.type === "transparent") {
+        deviceBgState.setType("white");
+      }
     },
-    [resetTransform],
+    [resetTransform, deviceBgState],
   );
 
   return (
@@ -193,10 +197,10 @@ export default function App() {
               <div className="shrink-0 rounded-card-dense border border-black/[0.07] bg-card p-4">
                 <div className="mb-3 flex items-center justify-between">
                   <span className="text-[10px] font-semibold uppercase tracking-[0.05em] text-soft">
-                    Device
+                    {selectedFrame.category === "appstore" ? "Background" : "Device"}
                   </span>
                 </div>
-                <DeviceControls state={deviceBgState} />
+                <DeviceControls state={deviceBgState} hideTransparent={selectedFrame?.category === "appstore"} />
               </div>
             )}
 

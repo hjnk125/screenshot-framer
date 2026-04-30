@@ -1,5 +1,5 @@
-import { calculateCanvasSize, computeEffectiveScale } from "../utils/compositor";
-import type { Frame } from "../types/frame";
+import { calculateCanvasSize, computeEffectiveScale, calculateOutputSize } from "../utils/compositor";
+import type { Frame, ShadowConfig } from "../types/frame";
 
 describe("calculateCanvasSize", () => {
   it("1x 스케일에서 에셋 기준 캔버스 크기를 반환한다", () => {
@@ -91,5 +91,52 @@ describe("computeEffectiveScale", () => {
     const scale = computeEffectiveScale(screenshot, frame, frameImg);
     // naturalScale = 600/1206 ≈ 0.497 — 축소는 허용
     expect(scale).toBeCloseTo(600 / 1206);
+  });
+});
+
+function makeAppStoreFrame(overrides: Partial<Frame> = {}): Frame {
+  return {
+    id: "appstore-67-full",
+    label: "6.7\" Full",
+    category: "appstore",
+    assetPath: "/frames/appstore/appstore-67-full.png",
+    screenArea: { x: 170, y: 518, width: 950, height: 2064, radius: 100, roundCorners: "ALL" },
+    aspectRatio: 1290 / 2796,
+    appstoreMeta: { canvasWidth: 1290, canvasHeight: 2796 },
+    ...overrides,
+  } as Frame;
+}
+
+describe("computeEffectiveScale — appstore", () => {
+  it("appstore 프레임은 스크린샷 크기에 관계없이 1.0을 반환한다", () => {
+    const frame = makeAppStoreFrame();
+    const frameImg = makeFrameImg(1290, 2796);
+    expect(computeEffectiveScale(makeScreenshot(950, 2064), frame, frameImg)).toBe(1.0);
+    expect(computeEffectiveScale(makeScreenshot(500, 1000), frame, frameImg)).toBe(1.0);
+    expect(computeEffectiveScale(makeScreenshot(5000, 10000), frame, frameImg)).toBe(1.0);
+  });
+});
+
+describe("calculateOutputSize — appstore", () => {
+  it("appstore 프레임은 항상 canvasWidth×canvasHeight를 반환한다", () => {
+    const frame = makeAppStoreFrame();
+    const frameImg = makeFrameImg(1290, 2796);
+    const screenshot = makeScreenshot(950, 2064);
+    const shadow: ShadowConfig = { enabled: false, opacity: 100 };
+    expect(calculateOutputSize(screenshot, frame, frameImg, shadow)).toEqual({
+      width: 1290,
+      height: 2796,
+    });
+  });
+
+  it("shadow enabled여도 appstore는 크기가 고정된다", () => {
+    const frame = makeAppStoreFrame();
+    const frameImg = makeFrameImg(1290, 2796);
+    const screenshot = makeScreenshot(950, 2064);
+    const shadow: ShadowConfig = { enabled: true, opacity: 100 };
+    expect(calculateOutputSize(screenshot, frame, frameImg, shadow)).toEqual({
+      width: 1290,
+      height: 2796,
+    });
   });
 });

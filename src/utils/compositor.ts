@@ -47,6 +47,7 @@ export function computeEffectiveScale(
   frame: Frame,
   frameImg: HTMLImageElement,
 ): number {
+  if (frame.appstoreMeta) return 1.0;
   const screenW = frame.browserMeta
     ? frameImg.naturalWidth
     : frame.screenArea.width;
@@ -60,6 +61,12 @@ export function calculateOutputSize(
   frameImg: HTMLImageElement,
   shadow: ShadowConfig,
 ): CanvasSize {
+  if (frame.appstoreMeta) {
+    return {
+      width: frame.appstoreMeta.canvasWidth,
+      height: frame.appstoreMeta.canvasHeight,
+    };
+  }
   const assetW = frameImg.naturalWidth;
   const assetH = frameImg.naturalHeight;
   const s = computeEffectiveScale(screenshot, frame, frameImg);
@@ -131,7 +138,7 @@ function drawScreenshot(
   transform: ImageTransform,
   fitMode: "cover" | "width" = "cover",
 ): void {
-  const { x, y, width: sw, height: sh, radius = 0, roundCorners } = screenArea;
+  const { x, y, width: sw, height: sh, radius = 0, roundCorners, rotation = 0 } = screenArea;
   const { scale, offsetX, offsetY } = transform;
 
   const imgW = screenshot.naturalWidth;
@@ -142,26 +149,55 @@ function drawScreenshot(
 
   const drawW = imgW * baseScale * scale;
   const drawH = imgH * baseScale * scale;
-  const drawX = x + (sw - drawW) / 2 + offsetX;
-  const drawY = y + (sh - drawH) / 2 + offsetY;
+
+  const radii =
+    roundCorners === "BOTTOM"
+      ? [0, 0, radius, radius]
+      : roundCorners === "TOP"
+        ? [radius, radius, 0, 0]
+        : radius;
 
   ctx.save();
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = "high";
-  ctx.beginPath();
-  if (radius > 0 && ctx.roundRect) {
-    const radii =
-      roundCorners === "BOTTOM"
-        ? [0, 0, radius, radius]
-        : roundCorners === "TOP"
-          ? [radius, radius, 0, 0]
-          : radius;
-    ctx.roundRect(x, y, sw, sh, radii);
+
+  if (rotation !== 0) {
+    // Rotate around the center of the screen area
+    ctx.translate(x + sw / 2, y + sh / 2);
+    ctx.rotate((rotation * Math.PI) / 180);
+    ctx.translate(-sw / 2, -sh / 2);
+    // Origin is now at top-left of the (unrotated) screen area
+    ctx.beginPath();
+    if (radius > 0 && ctx.roundRect) {
+      ctx.roundRect(0, 0, sw, sh, radii);
+    } else {
+      ctx.rect(0, 0, sw, sh);
+    }
+    ctx.clip();
+    ctx.drawImage(
+      screenshot,
+      (sw - drawW) / 2 + offsetX,
+      (sh - drawH) / 2 + offsetY,
+      drawW,
+      drawH,
+    );
   } else {
-    ctx.rect(x, y, sw, sh);
+    ctx.beginPath();
+    if (radius > 0 && ctx.roundRect) {
+      ctx.roundRect(x, y, sw, sh, radii);
+    } else {
+      ctx.rect(x, y, sw, sh);
+    }
+    ctx.clip();
+    ctx.drawImage(
+      screenshot,
+      x + (sw - drawW) / 2 + offsetX,
+      y + (sh - drawH) / 2 + offsetY,
+      drawW,
+      drawH,
+    );
   }
-  ctx.clip();
-  ctx.drawImage(screenshot, drawX, drawY, drawW, drawH);
+
   ctx.restore();
 }
 
@@ -277,6 +313,127 @@ function drawDeviceComposite(params: DrawCompositeParams): void {
   offCtx.drawImage(frameImg, 0, 0, assetW, assetH);
 
   applyToMainCanvas(canvas, offscreen, shadow, scale);
+}
+
+function drawAppStoreBg(
+  ctx: CanvasRenderingContext2D,
+  bg: DeviceBgConfig,
+  w: number,
+  h: number,
+): void {
+  if (bg.type === "transparent") return;
+  if (bg.type === "white") {
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, w, h);
+  } else if (bg.type === "black") {
+    ctx.fillStyle = "#000000";
+    ctx.fillRect(0, 0, w, h);
+  } else if (bg.type === "image" && bg.image) {
+    const { naturalWidth: iw, naturalHeight: ih } = bg.image;
+    const bgScale = Math.max(w / iw, h / ih);
+    const dw = iw * bgScale;
+    const dh = ih * bgScale;
+    ctx.save();
+    ctx.drawImage(bg.image, (w - dw) / 2, (h - dh) / 2, dw, dh);
+    ctx.restore();
+  }
+}
+
+// Builds a fully-opaque phone silhouette by filling the screen area (plugging
+// the transparent hole in frameImg) then drawing the frame on top.
+// Used as the shadow source so the shadow is cast by the entire phone body,
+// not just the bezels — which would let shadow bleed through the screen hole.
+function buildPhoneSilhouette(
+  w: number,
+  h: number,
+  frameImg: HTMLImageElement,
+  screenArea: ScreenArea,
+): HTMLCanvasElement {
+  const silhouette = document.createElement("canvas");
+  silhouette.width = w;
+  silhouette.height = h;
+  const sCtx = silhouette.getContext("2d")!;
+
+  const { x, y, width: sw, height: sh, radius = 0, roundCorners, rotation = 0 } = screenArea;
+  const radii =
+    roundCorners === "BOTTOM"
+      ? [0, 0, radius, radius]
+      : roundCorners === "TOP"
+        ? [radius, radius, 0, 0]
+        : radius;
+
+  // Fill screen area shape to plug the transparent hole
+  sCtx.fillStyle = "#000000";
+  sCtx.save();
+  if (rotation !== 0) {
+    sCtx.translate(x + sw / 2, y + sh / 2);
+    sCtx.rotate((rotation * Math.PI) / 180);
+    sCtx.translate(-sw / 2, -sh / 2);
+    sCtx.beginPath();
+    if (radius > 0 && sCtx.roundRect) sCtx.roundRect(0, 0, sw, sh, radii);
+    else sCtx.rect(0, 0, sw, sh);
+  } else {
+    sCtx.beginPath();
+    if (radius > 0 && sCtx.roundRect) sCtx.roundRect(x, y, sw, sh, radii);
+    else sCtx.rect(x, y, sw, sh);
+  }
+  sCtx.fill();
+  sCtx.restore();
+
+  // Draw frame on top to complete the phone silhouette
+  sCtx.drawImage(frameImg, 0, 0, w, h);
+
+  return silhouette;
+}
+
+function drawAppStoreComposite(params: DrawCompositeParams): void {
+  const { canvas, screenshot, frameImg, frame, transform, shadow, deviceBg } = params;
+  const { appstoreMeta } = frame;
+  if (!appstoreMeta) return;
+
+  const { canvasWidth: w, canvasHeight: h } = appstoreMeta;
+
+  canvas.width = w;
+  canvas.height = h;
+
+  const ctx = canvas.getContext("2d")!;
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+  ctx.clearRect(0, 0, w, h);
+
+  // 1. Background — fills entire canvas
+  if (deviceBg) {
+    drawAppStoreBg(ctx, deviceBg, w, h);
+  }
+
+  // 2. Shadow — drawn BEFORE screenshot so it appears behind the phone.
+  // Uses a solid silhouette (screen hole plugged) as the shadow source so
+  // shadow doesn't bleed inward through the transparent screen area.
+  // Blur values are raw (not scaled) because appstore renders at final resolution (1:1).
+  if (shadow.enabled) {
+    const silhouette = buildPhoneSilhouette(w, h, frameImg, frame.screenArea);
+    const layers = buildShadowLayers(shadow);
+    const shadowCanvas = document.createElement("canvas");
+    shadowCanvas.width = w;
+    shadowCanvas.height = h;
+    const sCtx = shadowCanvas.getContext("2d")!;
+    for (const layer of layers) {
+      sCtx.save();
+      sCtx.shadowColor = layer.color;
+      sCtx.shadowBlur = layer.blur;
+      sCtx.shadowOffsetX = layer.offsetX;
+      sCtx.shadowOffsetY = layer.offsetY;
+      sCtx.drawImage(silhouette, 0, 0);
+      sCtx.restore();
+    }
+    ctx.drawImage(shadowCanvas, 0, 0);
+  }
+
+  // 3. Screenshot — drawn on top of shadow
+  drawScreenshot(ctx, screenshot, frame.screenArea, transform, "cover");
+
+  // 4. Frame overlay at 1:1 (same size as canvas)
+  ctx.drawImage(frameImg, 0, 0, w, h);
 }
 
 function drawBrowserComposite(params: DrawCompositeParams): void {
@@ -410,7 +567,9 @@ export type DrawCompositeParams = {
 };
 
 export function drawComposite(params: DrawCompositeParams): void {
-  if (params.frame.browserMeta) {
+  if (params.frame.appstoreMeta) {
+    drawAppStoreComposite(params);
+  } else if (params.frame.browserMeta) {
     drawBrowserComposite(params);
   } else {
     drawDeviceComposite(params);

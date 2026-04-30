@@ -134,7 +134,7 @@ export function FramePicker({
 
         {/* Segment control */}
         <div ref={tabRef} className="mb-[10px] flex rounded-[10px] border border-black/[0.07] bg-card-inner p-[3px]">
-          {(["device", "browser"] as FrameCategory[]).map((cat) => (
+          {(["device", "browser", "appstore"] as FrameCategory[]).map((cat) => (
             <button
               key={cat}
               onClick={() => setTab(cat)}
@@ -144,7 +144,7 @@ export function FramePicker({
                   : "bg-transparent text-soft hover:text-ink"
               }`}
             >
-              {cat === "device" ? "Device" : "Browser"}
+              {cat === "device" ? "Device" : cat === "browser" ? "Browser" : "App Store"}
             </button>
           ))}
         </div>

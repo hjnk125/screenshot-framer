@@ -4,6 +4,7 @@ import type { UseDeviceBgReturn } from "../hooks/useDeviceBg";
 
 type DeviceControlsProps = {
   state: UseDeviceBgReturn;
+  hideTransparent?: boolean;
 };
 
 const PRESETS: { type: DeviceBgType; label: string }[] = [
@@ -15,8 +16,9 @@ const PRESETS: { type: DeviceBgType; label: string }[] = [
 const CHECKER =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Crect width='4' height='4' fill='%23ccc'/%3E%3Crect x='4' y='4' width='4' height='4' fill='%23ccc'/%3E%3C/svg%3E\")";
 
-export function DeviceControls({ state }: DeviceControlsProps) {
+export function DeviceControls({ state, hideTransparent = false }: DeviceControlsProps) {
   const { deviceBg, setType, handleImage, clearImage } = state;
+  const presets = hideTransparent ? PRESETS.filter((p) => p.type !== "transparent") : PRESETS;
   const inputRef = useRef<HTMLInputElement>(null);
 
   const swatchBase =
@@ -33,7 +35,7 @@ export function DeviceControls({ state }: DeviceControlsProps) {
 
         <div className="flex items-center gap-2">
           {/* Preset swatches */}
-          {PRESETS.map(({ type, label }) => (
+          {presets.map(({ type, label }) => (
             <button
               key={type}
               title={label}
