@@ -5,6 +5,7 @@ import type {
   ImageTransform,
   BrowserState,
   BackgroundConfig,
+  AppStoreTextState,
 } from "../types/frame";
 import {
   drawComposite,
@@ -21,6 +22,7 @@ export type CompositorParams = {
   browserState?: BrowserState;
   defaultFavicon?: HTMLImageElement | null;
   background?: BackgroundConfig;
+  appStoreText?: AppStoreTextState;
 };
 
 function resolveFrame(
@@ -56,6 +58,7 @@ export function useCompositor({
   browserState,
   defaultFavicon,
   background,
+  appStoreText,
 }: CompositorParams) {
   const frameImgCache = useRef<Map<string, HTMLImageElement>>(new Map());
   const [, setFrameCacheVersion] = useState(0);
@@ -130,6 +133,7 @@ export function useCompositor({
           browserState,
           defaultFavicon,
           background,
+          appStoreText,
         });
       } finally {
         setIsRendering(false);
@@ -143,6 +147,7 @@ export function useCompositor({
       browserState,
       defaultFavicon,
       background,
+      appStoreText,
       loadFrameImage,
       applyAssetScale,
     ],
@@ -174,6 +179,7 @@ export function useCompositor({
         browserState,
         defaultFavicon,
         background,
+        appStoreText,
       });
 
       const blob = await new Promise<Blob | null>((resolve) => {
@@ -200,6 +206,7 @@ export function useCompositor({
     browserState,
     defaultFavicon,
     background,
+    appStoreText,
     loadFrameImage,
     applyAssetScale,
   ]);
