@@ -8,6 +8,7 @@ type Props = {
   state: UseAppStoreTextReturn;
 };
 
+// frame is reserved for future per-frame coordinate/style customization
 export default function AppStoreTextCard({ frame: _frame, state }: Props) {
   return (
     <div className="shrink-0 rounded-card-dense border border-black/[0.07] bg-card p-4">

@@ -451,7 +451,7 @@ function drawAppStoreComposite(params: DrawCompositeParams): void {
     }
 
     if (appStoreText.description) {
-      const descY = y + Math.round(92 * 1.2) + 24;
+      const descY = y + Math.round(92 * 1.2 + 24);
       ctx.font = "500 56px 'Pretendard', sans-serif";
       ctx.fillStyle = appStoreText.descriptionColor;
       ctx.fillText(appStoreText.description, textX, descY);
