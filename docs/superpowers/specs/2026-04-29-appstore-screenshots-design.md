@@ -52,8 +52,8 @@ type ScreenArea = {
 
 ```typescript
 type AppStoreMeta = {
-  canvasWidth: number;   // 1242
-  canvasHeight: number;  // 2688
+  canvasWidth: number;   // 1290
+  canvasHeight: number;  // 2796
 };
 ```
 

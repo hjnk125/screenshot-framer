@@ -12,11 +12,12 @@
 ```
 1. 이미지 업로드
       ↓
-2. 프레임 선택 (Device / Browser)
+2. 프레임 선택 (Device / Browser / App Store)
       ↓
 3. 프레임별 세부 설정
-   ├─ Device → 배경 선택
-   └─ Browser → URL / 탭 타이틀 / Favicon 입력
+   ├─ Device   → 배경 선택 (None / White / Black / Color / Image)
+   ├─ Browser  → URL / 탭 타이틀 / Favicon 입력
+   └─ App Store→ 배경 선택 (White / Black / Color / Image, None 숨김)
       ↓
 4. 이미지 위치·크기 조정
       ↓
@@ -61,6 +62,18 @@
 | Safari Big Sur (Light / Dark) | URL바만 (중앙 정렬) |
 | Safari Catalina (Light / Dark) | URL바만 (중앙 정렬) |
 
+**App Store 탭:** (모두 1290×2796)
+| 프레임 ID | 레이아웃 |
+|---|---|
+| appstore-67-full | 정면 전체 — 폰이 캔버스 대부분 차지 |
+| appstore-67-offset | 정면 오프셋 — 폰이 아래쪽, 위에 여백 |
+| appstore-67-tilt-a1 | 기울어짐 A, 오른쪽 방향 |
+| appstore-67-tilt-a2 | 기울어짐 A, 왼쪽 방향 |
+| appstore-67-tilt-b1 | 기울어짐 B, 오른쪽 방향 |
+| appstore-67-tilt-b2 | 기울어짐 B, 왼쪽 방향 |
+
+에셋 위치: `/public/frames/appstore/`, PNG 포맷. 기울어진 프레임은 `screenArea.rotation` 필드로 회전 클리핑 처리.
+
 프레임 선택 시 이미지 transform 초기화.
 
 ### 3-A. Device 설정 (Device 프레임 선택 시)
@@ -70,7 +83,17 @@
 - **None** (기본): 투명 (체커보드)
 - **White**: 흰색 채움
 - **Black**: 검정 채움
-- **Image (+)**: 이미지 업로드 → cover 방식으로 화면 영역 채움 (screenArea 클리핑)
+- **Color (스포이드)**: HexColorPicker 팝오버로 임의 hex 색상 선택 → screenArea 내부 채움
+- **Image**: 이미지 업로드 → cover 방식으로 화면 영역 채움 (screenArea 클리핑)
+
+### 3-C. App Store 설정 (App Store 프레임 선택 시)
+
+**Background** — 캔버스 전체 배경 (Device와 동일한 컨트롤, None 스와치 숨김):
+
+- **White** (기본): 흰색 채움
+- **Black**: 검정 채움
+- **Color (스포이드)**: HexColorPicker 팝오버로 임의 hex 색상 선택 → 캔버스 전체 채움
+- **Image**: 이미지 업로드 → cover 방식으로 캔버스 전체 채움
 
 ### 3-B. Browser 설정 (Browser 프레임 선택 시)
 
@@ -115,6 +138,10 @@ Device (noUpscale 없음, MacBook·iMac):
 Browser:
   effectiveScale = naturalScale  (상한 없음, 스크린샷 비례)
 
+App Store:
+  출력 캔버스 = appstoreMeta.canvasWidth × canvasHeight (1290×2796 고정)
+  effectiveScale = 1.0 고정 (noUpscale: true 처리)
+
 naturalScale:
   Device  → screenshot.naturalWidth / screenArea.width
   Browser → screenshot.naturalWidth / frameImg.naturalWidth
@@ -122,6 +149,7 @@ naturalScale:
 
 - noUpscale 프레임(iPhone)은 프레임 에셋을 절대 업스케일하지 않음 (cap=1.0)
 - Mac/Browser 프레임은 스크린샷 크기에 비례하여 export (상한 없음)
+- App Store 프레임은 항상 1290×2796 고정 출력
 - export 크기가 업로드 이미지보다 작을 때 리사이즈 안내 메시지 표시
 
 **Preview는 항상 scale=1** (사이드바 선택 즉시 전체 해상도 프리뷰).
