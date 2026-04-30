@@ -647,7 +647,11 @@ export const FRAMES: Frame[] = [
       roundCorners: "ALL",
     },
     aspectRatio: 1290 / 2796,
-    appstoreMeta: { canvasWidth: 1290, canvasHeight: 2796 },
+    appstoreMeta: {
+      canvasWidth: 1290,
+      canvasHeight: 2796,
+      textConfig: { x: 645, y: 192, align: "center" },
+    },
   },
   {
     id: "appstore-67-offset",
@@ -663,7 +667,11 @@ export const FRAMES: Frame[] = [
       roundCorners: "ALL",
     },
     aspectRatio: 1290 / 2796,
-    appstoreMeta: { canvasWidth: 1290, canvasHeight: 2796 },
+    appstoreMeta: {
+      canvasWidth: 1290,
+      canvasHeight: 2796,
+      textConfig: { x: 645, y: 311, align: "center" },
+    },
   },
   {
     id: "appstore-67-tilt-a1",
@@ -680,7 +688,11 @@ export const FRAMES: Frame[] = [
       rotation: -30,
     },
     aspectRatio: 1290 / 2796,
-    appstoreMeta: { canvasWidth: 1290, canvasHeight: 2796 },
+    appstoreMeta: {
+      canvasWidth: 1290,
+      canvasHeight: 2796,
+      textConfig: { x: 108, y: 2349, align: "left" },
+    },
   },
   {
     id: "appstore-67-tilt-a2",
@@ -697,7 +709,11 @@ export const FRAMES: Frame[] = [
       rotation: -30,
     },
     aspectRatio: 1290 / 2796,
-    appstoreMeta: { canvasWidth: 1290, canvasHeight: 2796 },
+    appstoreMeta: {
+      canvasWidth: 1290,
+      canvasHeight: 2796,
+      textConfig: { x: 1182, y: 180, align: "right" },
+    },
   },
   {
     id: "appstore-67-tilt-b1",
@@ -714,7 +730,11 @@ export const FRAMES: Frame[] = [
       rotation: 30,
     },
     aspectRatio: 1290 / 2796,
-    appstoreMeta: { canvasWidth: 1290, canvasHeight: 2796 },
+    appstoreMeta: {
+      canvasWidth: 1290,
+      canvasHeight: 2796,
+      textConfig: { x: 108, y: 180, align: "left" },
+    },
   },
   {
     id: "appstore-67-tilt-b2",
@@ -731,7 +751,11 @@ export const FRAMES: Frame[] = [
       rotation: 30,
     },
     aspectRatio: 1290 / 2796,
-    appstoreMeta: { canvasWidth: 1290, canvasHeight: 2796 },
+    appstoreMeta: {
+      canvasWidth: 1290,
+      canvasHeight: 2796,
+      textConfig: { x: 1182, y: 2349, align: "right" },
+    },
   },
 ];
 
