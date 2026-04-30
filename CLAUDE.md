@@ -37,7 +37,13 @@ ShadowCard/
 
 - 항상 `master`에서 새 브랜치를 따서 작업
 - 브랜치명: `feat/기능명`, `fix/버그명` 등
-- 작업 완료 후 `master`로 머지
+- 작업 완료 후 `master`로 **`--no-ff` 머지 커밋**으로 머지 (fast-forward 금지)
+- 머지 후 feature 브랜치 삭제
+
+```bash
+git merge --no-ff feat/기능명 -m "feat: 기능 설명"
+git branch -d feat/기능명
+```
 
 ## 커밋 메시지 규칙
 
