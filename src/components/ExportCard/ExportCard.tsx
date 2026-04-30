@@ -1,8 +1,8 @@
-import type { CanvasSize } from "../utils/compositor";
-import { Icon } from "./Icon";
-import { Spinner } from "./Spinner";
+import type { CanvasSize } from "../../utils/compositor";
+import { Icon } from "../Icon";
+import { Spinner } from "../Spinner";
 
-type ExportControlsProps = {
+type ExportCardProps = {
   onExport: () => void;
   disabled: boolean;
   isExporting?: boolean;
@@ -15,13 +15,13 @@ function formatFileSize(bytes: number): string {
   return `~${Math.round(bytes / 1024)} KB`;
 }
 
-export function ExportControls({
+export default function ExportCard({
   onExport,
   disabled,
   isExporting = false,
   getOutputSize,
   uploadSize,
-}: ExportControlsProps) {
+}: ExportCardProps) {
   const outputSize = getOutputSize?.() ?? null;
   const estimatedBytes = outputSize
     ? (outputSize.width * outputSize.height * 4) / 3

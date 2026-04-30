@@ -4,7 +4,7 @@ import type {
   ShadowConfig,
   ImageTransform,
   BrowserState,
-  DeviceBgConfig,
+  BackgroundConfig,
 } from "../types/frame";
 import {
   drawComposite,
@@ -20,7 +20,7 @@ export type CompositorParams = {
   shadow: ShadowConfig;
   browserState?: BrowserState;
   defaultFavicon?: HTMLImageElement | null;
-  deviceBg?: DeviceBgConfig;
+  background?: BackgroundConfig;
 };
 
 function resolveFrame(
@@ -55,7 +55,7 @@ export function useCompositor({
   shadow,
   browserState,
   defaultFavicon,
-  deviceBg,
+  background,
 }: CompositorParams) {
   const frameImgCache = useRef<Map<string, HTMLImageElement>>(new Map());
   const [, setFrameCacheVersion] = useState(0);
@@ -129,7 +129,7 @@ export function useCompositor({
           scale: 1,
           browserState,
           defaultFavicon,
-          deviceBg,
+          background,
         });
       } finally {
         setIsRendering(false);
@@ -142,7 +142,7 @@ export function useCompositor({
       shadow,
       browserState,
       defaultFavicon,
-      deviceBg,
+      background,
       loadFrameImage,
       applyAssetScale,
     ],
@@ -173,7 +173,7 @@ export function useCompositor({
         scale,
         browserState,
         defaultFavicon,
-        deviceBg,
+        background,
       });
 
       const blob = await new Promise<Blob | null>((resolve) => {
@@ -199,7 +199,7 @@ export function useCompositor({
     shadow,
     browserState,
     defaultFavicon,
-    deviceBg,
+    background,
     loadFrameImage,
     applyAssetScale,
   ]);

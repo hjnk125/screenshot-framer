@@ -1,13 +1,13 @@
 import { useRef } from "react";
-import type { Frame } from "../types/frame";
-import type { UseBrowserStateReturn } from "../hooks/useBrowserState";
+import type { Frame } from "../../types/frame";
+import type { UseBrowserStateReturn } from "../../hooks/useBrowserState";
 
 type BrowserControlsProps = {
   frame: Frame;
   state: UseBrowserStateReturn;
 };
 
-export function BrowserControls({ frame, state }: BrowserControlsProps) {
+export default function BrowserControls({ frame, state }: BrowserControlsProps) {
   const faviconInputRef = useRef<HTMLInputElement>(null);
   const hasTabArea = !!frame.browserMeta?.tabArea;
 

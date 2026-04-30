@@ -2,22 +2,38 @@
 
 ## 전체 흐름
 
+**Device / Browser:**
 ```
 스크린샷(HTMLImageElement)
     │
     ▼
 [offscreen canvas] ← 프레임 에셋 원본 크기로 생성
-    │  drawScreenshot()  — imageSmoothingQuality: high
     │  drawDeviceBg()    — 디바이스 배경색/이미지 (screenArea 클리핑)
+    │  drawScreenshot()  — imageSmoothingQuality: high
     │  drawImage(frameImg) — 프레임 오버레이 (1:1, 품질 손실 없음)
     │
     ▼
 applyToMainCanvas(effectiveScale)
     │  stepDown()        — 2배씩 단계적 축소 (한 번에 >2:1 축소 방지)
-    │  shadow canvas     — 그림자 레이어
+    │  shadow canvas     — 그림자 레이어 (+80px 패딩)
     │
     ▼
 최종 export canvas (PNG 다운로드)
+```
+
+**App Store:**
+```
+스크린샷(HTMLImageElement)
+    │
+    ▼
+[export canvas] ← appstoreMeta.canvasWidth × canvasHeight (1290×2796 고정)
+    │  drawAppStoreBg()  — 캔버스 전체 배경색/이미지 채움
+    │  drawScreenshot()  — rotation 있으면 pivot 기준 rotate + clip 후 drawImage
+    │  shadow (enabled)  — ctx.shadowBlur 설정 후 프레임 drawImage (캔버스 경계 내 클리핑)
+    │  drawImage(frameImg, 0, 0, 1290, 2796) — 프레임 오버레이
+    │
+    ▼
+최종 export canvas 1290×2796 (PNG 다운로드)
 ```
 
 ---
@@ -33,6 +49,10 @@ Device (noUpscale 없음, MacBook·iMac):
 
 Browser:
   effectiveScale = naturalScale  (상한 없음)
+
+App Store:
+  effectiveScale = 1.0 고정 (noUpscale: true 처리)
+  출력 캔버스 크기 = appstoreMeta.canvasWidth × canvasHeight
 
 naturalScale:
   Device  → screenshot.naturalWidth / screenArea.width
@@ -78,6 +98,33 @@ Mac·iMac·Browser 프레임은 @2x AVIF 에셋이 존재하거나 스크린샷 
 - `applyToMainCanvas` — `ctx.imageSmoothingQuality = "high"` ✓
 - `stepDown()` — 각 패스 `imageSmoothingQuality = "high"` ✓
 - `drawDeviceBg` — 배경 이미지는 cover 스케일, screenArea 클리핑 ✓
+- `drawAppStoreBg` — 배경 이미지는 cover 스케일, 캔버스 전체 채움 ✓
+
+---
+
+## App Store 그림자 처리
+
+Device/Browser와 달리 App Store는 캔버스 크기가 1290×2796으로 고정이므로 SHADOW_PADDING 확장 불가.  
+대신 `ctx.shadowBlur` / `ctx.shadowColor` / `ctx.shadowOffsetY` 설정 후 프레임 이미지를 `drawImage`하면 브라우저가 캔버스 경계 내에서 자동으로 그림자를 클리핑하여 렌더링한다.
+
+---
+
+## App Store rotation 클리핑
+
+기울어진 프레임(`screenArea.rotation !== 0`)은 아래와 같이 처리:
+
+```
+pivot = { x: screenArea.x + screenArea.width / 2,
+          y: screenArea.y + screenArea.height / 2 }
+
+ctx.save()
+ctx.translate(pivot.x, pivot.y)
+ctx.rotate(rotation * Math.PI / 180)
+ctx.translate(-screenArea.width / 2, -screenArea.height / 2)
+// roundedRect clip 적용
+// drawImage(screenshot, ...) with user transform
+ctx.restore()
+```
 
 ## stepDown 동작 조건
 

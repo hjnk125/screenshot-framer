@@ -97,7 +97,7 @@ export function PreviewCanvas({
   }
 
   return (
-    <div className="relative flex h-full items-center justify-center overflow-hidden rounded-card-dense border border-black/[0.07] bg-[url('/checkerboard.svg')] bg-repeat p-10">
+    <div className="relative flex h-full items-center justify-center overflow-hidden rounded-card-dense border border-black/[0.07] bg-[url('/checkerboard.svg')] bg-repeat p-5">
       <canvas
         ref={canvasRef}
         className="max-h-full max-w-full cursor-grab touch-none object-contain active:cursor-grabbing"

@@ -1,11 +1,11 @@
-import type { ShadowConfig } from "../types/frame";
+import type { ShadowConfig } from "../../types/frame";
 
-type ShadowControlsProps = {
+type ShadowCardProps = {
   value: ShadowConfig;
   onChange: (config: ShadowConfig) => void;
 };
 
-export function ShadowControls({ value, onChange }: ShadowControlsProps) {
+export default function ShadowCard({ value, onChange }: ShadowCardProps) {
   const update = (partial: Partial<ShadowConfig>) =>
     onChange({ ...value, ...partial });
   const pct = value.opacity;

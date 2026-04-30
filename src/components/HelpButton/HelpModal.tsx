@@ -2,7 +2,7 @@ type HelpModalProps = {
   onClose: () => void;
 };
 
-export function HelpModal({ onClose }: HelpModalProps) {
+export default function HelpModal({ onClose }: HelpModalProps) {
   return (
     <div
       className="fixed inset-0 z-[10000] flex items-center justify-center p-4"

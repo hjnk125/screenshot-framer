@@ -2,21 +2,26 @@
   "version": "0.2",
   "language": "en",
   "words": [
-    "macbook",
-    "imac",
-    "iphone",
-    "ipad",
-    "bezels",
+    "appstore",
     "bezel",
-    "vitest",
-    "tailwindcss",
-    "Csvg",
-    "Crect",
+    "bezels",
     "changefreq",
-    "sitemap",
-    "urlset",
+    "Crect",
+    "Csvg",
+    "imac",
+    "ipad",
+    "iphone",
+    "macbook",
     "pricecurrency",
-    "priceCurrency"
+    "priceCurrency",
+    "sitemap",
+    "tailwindcss",
+    "urlset",
+    "vitest"
   ],
-  "ignorePaths": ["node_modules", "dist", "*.lock"]
+  "ignorePaths": [
+    "node_modules",
+    "dist",
+    "*.lock"
+  ]
 }

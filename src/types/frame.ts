@@ -1,4 +1,4 @@
-export type FrameCategory = "device" | "browser";
+export type FrameCategory = "device" | "browser" | "appstore";
 
 export type TabArea = {
   x: number;
@@ -29,7 +29,7 @@ export type BrowserFrameMeta = {
     align: "left" | "center";
   };
   tabArea?: TabArea;
-  defaultFaviconPath?: string; // used when no user favicon uploaded
+  defaultFaviconPath?: string;
 };
 
 export type BrowserState = {
@@ -45,6 +45,12 @@ export type ScreenArea = {
   height: number;
   radius: number;
   roundCorners: "TOP" | "BOTTOM" | "ALL";
+  rotation?: number; // degrees, clockwise. 0 or undefined = upright
+};
+
+export type AppStoreMeta = {
+  canvasWidth: number;
+  canvasHeight: number;
 };
 
 export type Frame = {
@@ -57,6 +63,7 @@ export type Frame = {
   aspectRatio: number;
   noUpscale?: boolean; // cap effectiveScale at 1.0 — frame never upscales
   browserMeta?: BrowserFrameMeta;
+  appstoreMeta?: AppStoreMeta;
   // used when screenshot.naturalWidth < 800 (browser frames only)
   shortToolbar?: {
     assetPath: string;
@@ -77,9 +84,10 @@ export type ImageTransform = {
 
 export type ExportScale = number;
 
-export type DeviceBgType = "transparent" | "white" | "black" | "image";
+export type BackgroundType = "transparent" | "white" | "black" | "color" | "image";
 
-export type DeviceBgConfig = {
-  type: DeviceBgType;
+export type BackgroundConfig = {
+  type: BackgroundType;
+  color?: string; // hex, e.g. "#ff6b6b". type === "color" 일 때만 유효
   image: HTMLImageElement | null;
 };

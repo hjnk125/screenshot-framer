@@ -1,16 +1,16 @@
-import { Icon } from "./Icon";
+import { Icon } from "../Icon";
 
-type ImageAdjustProps = {
+type ImageScaleCardProps = {
   scale: number;
   onScaleChange: (scale: number) => void;
   onReset: () => void;
 };
 
-export function ImageAdjust({
+export default function ImageScaleCard({
   scale,
   onScaleChange,
   onReset,
-}: ImageAdjustProps) {
+}: ImageScaleCardProps) {
   const pct = ((scale - 0.5) / 2.5) * 100;
 
   return (

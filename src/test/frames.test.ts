@@ -35,3 +35,58 @@ describe("FRAMES 메타데이터", () => {
     expect(getFrameById("nonexistent")).toBeUndefined();
   });
 });
+
+describe("App Store 프레임", () => {
+  const appstoreFrames = FRAMES.filter((f) => f.category === "appstore");
+
+  it("appstore 프레임이 6개 정의되어 있다", () => {
+    expect(appstoreFrames).toHaveLength(6);
+  });
+
+  it("모든 appstore 프레임에 appstoreMeta가 정의되어 있다", () => {
+    appstoreFrames.forEach((f) => {
+      expect(f.appstoreMeta).toBeDefined();
+      expect(f.appstoreMeta?.canvasWidth).toBe(1290);
+      expect(f.appstoreMeta?.canvasHeight).toBe(2796);
+    });
+  });
+
+  it("모든 appstore 프레임의 aspectRatio가 1290/2796이다", () => {
+    appstoreFrames.forEach((f) => {
+      expect(f.aspectRatio).toBeCloseTo(1290 / 2796, 4);
+    });
+  });
+
+  it("appstore 프레임의 screenArea width/height가 양수이다", () => {
+    appstoreFrames.forEach((f) => {
+      expect(f.screenArea.width).toBeGreaterThan(0);
+      expect(f.screenArea.height).toBeGreaterThan(0);
+    });
+  });
+
+  it("틸트 프레임의 rotation 방향과 각도가 정확하다", () => {
+    const expectedRotations: Record<string, number> = {
+      "appstore-67-tilt-a1": -30,
+      "appstore-67-tilt-a2": -30,
+      "appstore-67-tilt-b1": 30,
+      "appstore-67-tilt-b2": 30,
+    };
+    Object.entries(expectedRotations).forEach(([id, rotation]) => {
+      const f = FRAMES.find((fr) => fr.id === id);
+      expect(f?.screenArea.rotation).toBe(rotation);
+    });
+  });
+
+  it("정면 프레임(full, offset)은 rotation이 없다", () => {
+    ["appstore-67-full", "appstore-67-offset"].forEach((id) => {
+      const f = FRAMES.find((fr) => fr.id === id);
+      expect(f?.screenArea.rotation ?? 0).toBe(0);
+    });
+  });
+
+  it("모든 appstore 프레임의 assetPath가 올바른 경로 형식이다", () => {
+    appstoreFrames.forEach((f) => {
+      expect(f.assetPath).toMatch(/^\/frames\/appstore\//);
+    });
+  });
+});

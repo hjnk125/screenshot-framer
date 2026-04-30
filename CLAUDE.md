@@ -11,6 +11,28 @@ URL: https://screenshot-framer.vercel.app/
 - `docs/rendering-pipeline.md` — 렌더링 파이프라인, effectiveScale 계산
 - `src/data/frames.ts` — 프레임 정의 (screenArea 좌표, browserMeta 등)
 
+## 컴포넌트 구조 규칙
+
+`src/components/` 아래 카드 디렉토리는 다음 규칙을 따른다:
+
+- `*Card/*Card.tsx` — wrapper 컴포넌트 (카드 전체 레이아웃, `export default`)
+- `*Card/*Controls.tsx` — 내부 입력 전용 컴포넌트 (`export default`, 필요할 때만)
+- 분리가 불필요한 경우 `*Controls.tsx` 없이 `*Card.tsx` 하나로 진행
+- 모든 컴포넌트는 `export default function` 사용
+
+```
+BackgroundCard/
+  BackgroundCard.tsx     ← wrapper
+  BackgroundControls.tsx ← 내부 색상/이미지 입력
+
+BrowserCard/
+  BrowserCard.tsx        ← wrapper
+  BrowserControls.tsx    ← URL·favicon 입력
+
+ShadowCard/
+  ShadowCard.tsx         ← wrapper (Controls 없이 단일 파일)
+```
+
 ## 브랜치 전략
 
 - 항상 `master`에서 새 브랜치를 따서 작업
