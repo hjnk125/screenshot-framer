@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { ExportControls } from "../components/ExportControls";
+import { ExportControls } from "../components/ExportCard/ExportControls";
 import { describe, it, expect, vi } from "vitest";
 
 describe("ExportControls", () => {

@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { ImageAdjust } from "../components/ImageAdjust";
+import { ImageAdjust } from "../components/ImageAdjustCard/ImageAdjust";
 import { describe, it, expect, vi } from "vitest";
 
 describe("ImageAdjust", () => {

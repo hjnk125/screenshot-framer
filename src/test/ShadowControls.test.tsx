@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { ShadowControls } from "../components/ShadowControls";
+import { ShadowControls } from "../components/ShadowCard/ShadowControls";
 import type { ShadowConfig } from "../types/frame";
 import { describe, it, expect, vi } from "vitest";
 

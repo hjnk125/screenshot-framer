@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { FramePicker } from "../components/FramePicker";
+import { FramePicker } from "../components/FramePickerCard/FramePicker";
 import { FRAMES } from "../data/frames";
 import { describe, it, expect, vi } from "vitest";
 

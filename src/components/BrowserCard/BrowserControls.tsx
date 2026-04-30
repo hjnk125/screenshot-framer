@@ -1,6 +1,6 @@
 import { useRef } from "react";
-import type { Frame } from "../types/frame";
-import type { UseBrowserStateReturn } from "../hooks/useBrowserState";
+import type { Frame } from "../../types/frame";
+import type { UseBrowserStateReturn } from "../../hooks/useBrowserState";
 
 type BrowserControlsProps = {
   frame: Frame;

@@ -1,4 +1,4 @@
-import type { ShadowConfig } from "../types/frame";
+import type { ShadowConfig } from "../../types/frame";
 
 type ShadowControlsProps = {
   value: ShadowConfig;

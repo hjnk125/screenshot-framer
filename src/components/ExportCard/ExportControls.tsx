@@ -1,6 +1,6 @@
-import type { CanvasSize } from "../utils/compositor";
-import { Icon } from "./Icon";
-import { Spinner } from "./Spinner";
+import type { CanvasSize } from "../../utils/compositor";
+import { Icon } from "../Icon";
+import { Spinner } from "../Spinner";
 
 type ExportControlsProps = {
   onExport: () => void;

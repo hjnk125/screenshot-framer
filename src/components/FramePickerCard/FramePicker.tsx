@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
-import type { Frame, FrameCategory } from "../types/frame";
-import { FRAMES } from "../data/frames";
-import { Icon } from "./Icon";
+import type { Frame, FrameCategory } from "../../types/frame";
+import { FRAMES } from "../../data/frames";
+import { Icon } from "../Icon";
 
 type FramePickerProps = {
   selectedId: string | null;
