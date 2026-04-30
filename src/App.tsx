@@ -12,7 +12,7 @@ import TitleCard from "./components/TitleCard/TitleCard";
 import { Toast } from "./components/Toast";
 import { useBrowserState } from "./hooks/useBrowserState";
 import { useCompositor } from "./hooks/useCompositor";
-import { useDeviceBg } from "./hooks/useDeviceBg";
+import { useBackground } from "./hooks/useBackground";
 import { useImageTransform } from "./hooks/useImageTransform";
 import { useImageUpload } from "./hooks/useImageUpload";
 import type { Frame, ShadowConfig } from "./types/frame";
@@ -34,7 +34,7 @@ export default function App() {
   const [selectedFrame, setSelectedFrame] = useState<Frame | null>(null);
   const [shadow, setShadow] = useState<ShadowConfig>(DEFAULT_SHADOW);
   const browserState = useBrowserState();
-  const deviceBgState = useDeviceBg();
+  const background = useBackground();
   const [defaultFavicon, setDefaultFavicon] = useState<HTMLImageElement | null>(
     null,
   );
@@ -65,7 +65,7 @@ export default function App() {
       shadow,
       browserState: isBrowser ? browserState : undefined,
       defaultFavicon: isBrowser ? defaultFavicon : null,
-      deviceBg: !isBrowser ? deviceBgState.deviceBg : undefined,
+      background: !isBrowser ? background.background : undefined,
     });
 
   // Fade visibility — show when aside has more content below
@@ -89,12 +89,12 @@ export default function App() {
       // appstore 프레임은 투명 배경을 허용하지 않으므로 transparent → white로 전환
       if (
         frame.category === "appstore" &&
-        deviceBgState.deviceBg.type === "transparent"
+        background.background.type === "transparent"
       ) {
-        deviceBgState.setType("white");
+        background.setType("white");
       }
     },
-    [resetTransform, deviceBgState],
+    [resetTransform, background],
   );
 
   return (
@@ -133,11 +133,11 @@ export default function App() {
 
             {/* 4b. Device controls — conditional */}
             {!isBrowser && selectedFrame && (
-              <BackgroundCard frame={selectedFrame} state={deviceBgState} />
+              <BackgroundCard frame={selectedFrame} state={background} />
             )}
 
             {/* Mobile/tablet preview — between Frame and ImageAdjust */}
-            <div className="h-[260px] shrink-0 lg:hidden">
+            <div className="h-[480px] shrink-0 lg:hidden">
               <PreviewCanvas
                 screenshot={image}
                 frame={selectedFrame}

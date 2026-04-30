@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from "vitest";
 import { PreviewCanvas } from "../components/PreviewCanvas";
 
 const mockImage = { src: "test.png" } as HTMLImageElement;
-const mockFrame = { id: "frame-1" } as any;
+const mockFrame = { id: "frame-1" } as unknown as import("../types/frame").Frame;
 const renderToCanvas = vi.fn().mockResolvedValue(undefined);
 
 describe("PreviewCanvas", () => {

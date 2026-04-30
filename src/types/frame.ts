@@ -46,7 +46,6 @@ export type ScreenArea = {
   radius: number;
   roundCorners: "TOP" | "BOTTOM" | "ALL";
   rotation?: number; // degrees, clockwise. 0 or undefined = upright
-  clipBounds?: { x: number; y: number; width: number; height: number }; // outer clip applied before rotation (prevents spill outside phone body)
 };
 
 export type AppStoreMeta = {
@@ -85,10 +84,10 @@ export type ImageTransform = {
 
 export type ExportScale = number;
 
-export type DeviceBgType = "transparent" | "white" | "black" | "color" | "image";
+export type BackgroundType = "transparent" | "white" | "black" | "color" | "image";
 
-export type DeviceBgConfig = {
-  type: DeviceBgType;
+export type BackgroundConfig = {
+  type: BackgroundType;
   color?: string; // hex, e.g. "#ff6b6b". type === "color" 일 때만 유효
   image: HTMLImageElement | null;
 };

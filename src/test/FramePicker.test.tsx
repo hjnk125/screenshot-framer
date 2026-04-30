@@ -34,4 +34,23 @@ describe("FramePickerCard", () => {
       FRAMES.find((f) => f.id === "macbook-pro-16"),
     );
   });
+
+  it("App Store 탭 클릭 시 appstore 프레임을 보여준다", async () => {
+    render(<FramePickerCard selectedId={null} onSelect={() => {}} />);
+    await userEvent.click(screen.getByRole("button", { name: "App Store" }));
+    const appstoreFrames = FRAMES.filter((f) => f.category === "appstore");
+    expect(appstoreFrames.length).toBeGreaterThan(0);
+    appstoreFrames.forEach((f) => {
+      expect(screen.getByText(f.label)).toBeInTheDocument();
+    });
+  });
+
+  it("App Store 프레임 선택 시 onSelect 콜백을 호출한다", async () => {
+    const onSelect = vi.fn();
+    render(<FramePickerCard selectedId={null} onSelect={onSelect} />);
+    await userEvent.click(screen.getByRole("button", { name: "App Store" }));
+    const firstAppstoreFrame = FRAMES.find((f) => f.category === "appstore")!;
+    await userEvent.click(screen.getByText(firstAppstoreFrame.label));
+    expect(onSelect).toHaveBeenCalledWith(firstAppstoreFrame);
+  });
 });

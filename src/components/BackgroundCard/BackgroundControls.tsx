@@ -1,15 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { HexColorPicker } from "react-colorful";
-import type { UseDeviceBgReturn } from "../../hooks/useDeviceBg";
-import type { DeviceBgType } from "../../types/frame";
+import type { UseBackgroundReturn } from "../../hooks/useBackground";
+import type { BackgroundType } from "../../types/frame";
 import { Icon } from "../Icon";
 
 type BackgroundControlsProps = {
-  state: UseDeviceBgReturn;
+  state: UseBackgroundReturn;
   hideTransparent?: boolean;
 };
 
-const PRESETS: { type: DeviceBgType; label: string }[] = [
+const PRESETS: { type: BackgroundType; label: string }[] = [
   { type: "transparent", label: "None" },
   { type: "white", label: "White" },
   { type: "black", label: "Black" },
@@ -22,7 +22,7 @@ export default function BackgroundControls({
   state,
   hideTransparent = false,
 }: BackgroundControlsProps) {
-  const { deviceBg, setType, setColor, handleImage, clearImage } = state;
+  const { background, setType, setColor, handleImage, clearImage } = state;
   const presets = hideTransparent
     ? PRESETS.filter((p) => p.type !== "transparent")
     : PRESETS;
@@ -31,8 +31,16 @@ export default function BackgroundControls({
   const pickerRef = useRef<HTMLDivElement>(null);
   const swatchRef = useRef<HTMLButtonElement>(null);
   const [hexInput, setHexInput] = useState(
-    deviceBg.color?.replace("#", "") ?? "ffffff",
+    background.color?.replace("#", "") ?? "ffffff",
   );
+
+  // background.color가 외부에서 변경될 때 hexInput 동기화
+  // React 권장 패턴: useState로 이전 값 추적, render 중 조건부 setState
+  const [prevColor, setPrevColor] = useState(background.color);
+  if (prevColor !== background.color) {
+    setPrevColor(background.color);
+    if (background.color) setHexInput(background.color.replace("#", ""));
+  }
 
   // 팝오버 외부 클릭 시 닫힘
   useEffect(() => {
@@ -71,14 +79,14 @@ export default function BackgroundControls({
   );
 
   const swatchBase =
-    "h-7 w-7 shrink-0 rounded-[7px] border-2 transition-all cursor-pointer";
+    "h-7 w-7 shrink-0 rounded-[7px] border-2 transition-all cursor-pointer overflow-hidden";
   const ring =
     "border-accent ring-2 ring-accent ring-offset-1 ring-offset-card";
   const noRing = "border-black/[0.10] hover:border-black/25";
 
-  const customColor = deviceBg.color ?? "#ffffff";
-  const hasCustomColor = !!deviceBg.color;
-  const isCustomActive = deviceBg.type === "color";
+  const customColor = background.color ?? "#ffffff";
+  const hasCustomColor = !!background.color;
+  const isCustomActive = background.type === "color";
 
   return (
     <div className="space-y-3">
@@ -90,12 +98,12 @@ export default function BackgroundControls({
               key={type}
               title={label}
               aria-label={label}
-              aria-pressed={deviceBg.type === type}
+              aria-pressed={background.type === type}
               onClick={() => setType(type)}
-              className={`${swatchBase} ${deviceBg.type === type ? ring : noRing}`}
+              className={`${swatchBase} ${background.type === type ? ring : noRing}`}
               style={
                 type === "transparent"
-                  ? { backgroundImage: CHECKER, backgroundSize: "8px 8px" }
+                  ? { backgroundImage: CHECKER, backgroundSize: "8px 8px", backgroundClip: "padding-box" }
                   : {
                       backgroundColor: type === "white" ? "#ffffff" : "#000000",
                     }
@@ -155,26 +163,26 @@ export default function BackgroundControls({
           </div>
 
           {/* Image upload swatch */}
-          {deviceBg.image ? (
+          {background.image ? (
             <div className="flex items-center gap-2">
               <button
                 title={
-                  deviceBg.type === "image" ? "Change image" : "Restore image"
+                  background.type === "image" ? "Change image" : "Restore image"
                 }
                 onClick={() => {
                   setType("image");
-                  if (deviceBg.type === "image") inputRef.current?.click();
+                  if (background.type === "image") inputRef.current?.click();
                 }}
                 className={`${swatchBase} overflow-hidden ${
-                  deviceBg.type === "image" ? ring : noRing
+                  background.type === "image" ? ring : noRing
                 }`}
               >
                 <img
-                  src={deviceBg.image.src}
+                  src={background.image.src}
                   className="h-full w-full object-cover"
                 />
               </button>
-              {deviceBg.type === "image" && (
+              {background.type === "image" && (
                 <button
                   onClick={clearImage}
                   className="text-[11.5px] font-medium text-muted transition-colors hover:text-ink"
