@@ -329,6 +329,52 @@ function drawDeviceComposite(params: DrawCompositeParams): void {
   applyToMainCanvas(canvas, offscreen, shadow, scale);
 }
 
+// 단어 단위 줄바꿈. maxLines 초과분은 마지막 줄에 … 처리.
+function wrapText(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  maxWidth: number,
+  maxLines: number,
+): string[] {
+  const words = text.split(/\s+/).filter(Boolean);
+  if (!words.length) return [];
+
+  const lines: string[] = [];
+  let lineWords: string[] = [];
+
+  for (let i = 0; i < words.length; i++) {
+    const test = [...lineWords, words[i]].join(" ");
+    if (ctx.measureText(test).width <= maxWidth) {
+      lineWords.push(words[i]);
+    } else if (lineWords.length === 0) {
+      // 단어 하나가 maxWidth를 초과 — 강제로 줄에 올림
+      lineWords.push(words[i]);
+    } else {
+      lines.push(lineWords.join(" "));
+      lineWords = [words[i]];
+      if (lines.length === maxLines - 1) {
+        // 마지막 허용 줄 — 남은 단어 모두 합쳐서 … 처리
+        const remaining = [words[i], ...words.slice(i + 1)].join(" ");
+        lineWords = [remaining];
+        break;
+      }
+    }
+  }
+
+  if (lineWords.length > 0) {
+    let lastLine = lineWords.join(" ");
+    if (ctx.measureText(lastLine).width > maxWidth) {
+      while (lastLine.length > 0 && ctx.measureText(lastLine + "…").width > maxWidth) {
+        lastLine = lastLine.slice(0, -1).replace(/\s+$/, "");
+      }
+      lastLine += "…";
+    }
+    lines.push(lastLine);
+  }
+
+  return lines;
+}
+
 function drawAppStoreBg(
   ctx: CanvasRenderingContext2D,
   bg: BackgroundConfig,
@@ -439,22 +485,47 @@ function drawAppStoreComposite(params: DrawCompositeParams): void {
   const { textConfig } = appstoreMeta;
   if (textConfig && appStoreText) {
     const { x, y, align } = textConfig;
+    const TEXT_MAX_WIDTH = w - 240; // 좌우 120px 여백
+    const TITLE_SIZE = 92;
+    const DESC_SIZE = 56;
+    const TITLE_LINE_H = Math.round(TITLE_SIZE * 1.1);   // 101px
+    const DESC_LINE_H = Math.round(DESC_SIZE * 1.4);     // 78px
+    const TITLE_DESC_GAP = 24;
+
     ctx.save();
     ctx.textBaseline = "top";
     ctx.textAlign = align;
     const textX = align === "center" ? w / 2 : x;
 
+    let cursorY = y;
+
     if (appStoreText.title) {
-      ctx.font = "600 92px 'Pretendard', sans-serif";
+      ctx.font = `600 ${TITLE_SIZE}px 'Pretendard', sans-serif`;
+      (ctx as CanvasRenderingContext2D & { letterSpacing?: string }).letterSpacing = "-1px";
       ctx.fillStyle = appStoreText.titleColor;
-      ctx.fillText(appStoreText.title, textX, y);
+
+      // 1줄 고정 — 넘치면 … 처리
+      let title = appStoreText.title;
+      if (ctx.measureText(title).width > TEXT_MAX_WIDTH) {
+        while (title.length > 0 && ctx.measureText(title + "…").width > TEXT_MAX_WIDTH) {
+          title = title.slice(0, -1).replace(/\s+$/, "");
+        }
+        title += "…";
+      }
+      ctx.fillText(title, textX, cursorY);
+      cursorY += TITLE_LINE_H + TITLE_DESC_GAP;
     }
 
     if (appStoreText.description) {
-      const descY = y + Math.round(92 * 1.2 + 24);
-      ctx.font = "500 56px 'Pretendard', sans-serif";
+      ctx.font = `500 ${DESC_SIZE}px 'Pretendard', sans-serif`;
+      (ctx as CanvasRenderingContext2D & { letterSpacing?: string }).letterSpacing = "0.3px";
       ctx.fillStyle = appStoreText.descriptionColor;
-      ctx.fillText(appStoreText.description, textX, descY);
+
+      const lines = wrapText(ctx, appStoreText.description, TEXT_MAX_WIDTH, 2);
+      for (const line of lines) {
+        ctx.fillText(line, textX, cursorY);
+        cursorY += DESC_LINE_H;
+      }
     }
 
     ctx.restore();
