@@ -6,6 +6,7 @@ import type {
   BrowserState,
   ScreenArea,
   BackgroundConfig,
+  AppStoreTextState,
 } from "../types/frame";
 
 // Step-wise downscaling: halve each pass with high-quality interpolation.
@@ -386,7 +387,7 @@ function buildPhoneSilhouette(
 }
 
 function drawAppStoreComposite(params: DrawCompositeParams): void {
-  const { canvas, screenshot, frameImg, frame, transform, shadow, background } = params;
+  const { canvas, screenshot, frameImg, frame, transform, shadow, background, appStoreText } = params;
   const { appstoreMeta } = frame;
   if (!appstoreMeta) return;
 
@@ -433,6 +434,31 @@ function drawAppStoreComposite(params: DrawCompositeParams): void {
 
   // 4. Frame overlay at 1:1 (same size as canvas)
   ctx.drawImage(frameImg, 0, 0, w, h);
+
+  // 5. Text overlay — title + description
+  const { textConfig } = appstoreMeta;
+  if (textConfig && appStoreText) {
+    const { x, y, align } = textConfig;
+    ctx.save();
+    ctx.textBaseline = "top";
+    ctx.textAlign = align;
+    const textX = align === "center" ? w / 2 : x;
+
+    if (appStoreText.title) {
+      ctx.font = "600 92px 'Pretendard', sans-serif";
+      ctx.fillStyle = appStoreText.titleColor;
+      ctx.fillText(appStoreText.title, textX, y);
+    }
+
+    if (appStoreText.description) {
+      const descY = y + Math.round(92 * 1.2) + 24;
+      ctx.font = "500 56px 'Pretendard', sans-serif";
+      ctx.fillStyle = appStoreText.descriptionColor;
+      ctx.fillText(appStoreText.description, textX, descY);
+    }
+
+    ctx.restore();
+  }
 }
 
 function drawBrowserComposite(params: DrawCompositeParams): void {
@@ -563,6 +589,7 @@ export type DrawCompositeParams = {
   browserState?: BrowserState;
   defaultFavicon?: HTMLImageElement | null;
   background?: BackgroundConfig;
+  appStoreText?: AppStoreTextState;
 };
 
 export function drawComposite(params: DrawCompositeParams): void {
