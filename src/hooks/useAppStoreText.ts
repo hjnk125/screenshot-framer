@@ -9,9 +9,9 @@ export type UseAppStoreTextReturn = AppStoreTextState & {
 };
 
 export function useAppStoreText(): UseAppStoreTextReturn {
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState("Your App Title");
   const [titleColor, setTitleColor] = useState("#000000");
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState("Your app description");
   const [descriptionColor, setDescriptionColor] = useState("#000000");
 
   return {
