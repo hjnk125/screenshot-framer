@@ -1,4 +1,4 @@
-export type FrameCategory = "device" | "browser";
+export type FrameCategory = "device" | "browser" | "appstore";
 
 export type TabArea = {
   x: number;
@@ -29,7 +29,7 @@ export type BrowserFrameMeta = {
     align: "left" | "center";
   };
   tabArea?: TabArea;
-  defaultFaviconPath?: string; // used when no user favicon uploaded
+  defaultFaviconPath?: string;
 };
 
 export type BrowserState = {
@@ -45,6 +45,13 @@ export type ScreenArea = {
   height: number;
   radius: number;
   roundCorners: "TOP" | "BOTTOM" | "ALL";
+  rotation?: number; // degrees, clockwise. 0 or undefined = upright
+  clipBounds?: { x: number; y: number; width: number; height: number }; // outer clip applied before rotation (prevents spill outside phone body)
+};
+
+export type AppStoreMeta = {
+  canvasWidth: number;
+  canvasHeight: number;
 };
 
 export type Frame = {
@@ -57,6 +64,7 @@ export type Frame = {
   aspectRatio: number;
   noUpscale?: boolean; // cap effectiveScale at 1.0 — frame never upscales
   browserMeta?: BrowserFrameMeta;
+  appstoreMeta?: AppStoreMeta;
   // used when screenshot.naturalWidth < 800 (browser frames only)
   shortToolbar?: {
     assetPath: string;
