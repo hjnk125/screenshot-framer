@@ -1,5 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
+import { FRAMES } from "../data/frames";
 import { useBackground } from "../hooks/useBackground";
 
 describe("useBackground", () => {
@@ -45,5 +46,34 @@ describe("useBackground", () => {
     act(() => result.current.clearImage());
     expect(result.current.background.type).toBe("transparent");
     expect(result.current.background.image).toBeNull();
+  });
+
+  it("appstore 프레임 선택 시 transparent → white로 전환된다 (App.tsx handleFrameSelect 계약)", () => {
+    const { result } = renderHook(() => useBackground());
+    expect(result.current.background.type).toBe("transparent");
+
+    const appstoreFrame = FRAMES.find((f) => f.category === "appstore")!;
+    // App.tsx handleFrameSelect의 coercion 로직 재현
+    act(() => {
+      if (appstoreFrame.category === "appstore" && result.current.background.type === "transparent") {
+        result.current.setType("white");
+      }
+    });
+
+    expect(result.current.background.type).toBe("white");
+  });
+
+  it("appstore 프레임 선택 시 transparent가 아니면 배경 타입을 바꾸지 않는다", () => {
+    const { result } = renderHook(() => useBackground());
+    act(() => result.current.setColor("#ff6b6b"));
+
+    const appstoreFrame = FRAMES.find((f) => f.category === "appstore")!;
+    act(() => {
+      if (appstoreFrame.category === "appstore" && result.current.background.type === "transparent") {
+        result.current.setType("white");
+      }
+    });
+
+    expect(result.current.background.type).toBe("color");
   });
 });

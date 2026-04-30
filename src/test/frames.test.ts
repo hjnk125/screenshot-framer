@@ -64,12 +64,16 @@ describe("App Store 프레임", () => {
     });
   });
 
-  it("틸트 프레임(tilt-a1, tilt-a2, tilt-b1, tilt-b2)에 rotation이 설정되어 있다", () => {
-    const tiltIds = ["appstore-67-tilt-a1", "appstore-67-tilt-a2", "appstore-67-tilt-b1", "appstore-67-tilt-b2"];
-    tiltIds.forEach((id) => {
+  it("틸트 프레임의 rotation 방향과 각도가 정확하다", () => {
+    const expectedRotations: Record<string, number> = {
+      "appstore-67-tilt-a1": -30,
+      "appstore-67-tilt-a2": -30,
+      "appstore-67-tilt-b1": 30,
+      "appstore-67-tilt-b2": 30,
+    };
+    Object.entries(expectedRotations).forEach(([id, rotation]) => {
       const f = FRAMES.find((fr) => fr.id === id);
-      expect(f?.screenArea.rotation).toBeDefined();
-      expect(Math.abs(f!.screenArea.rotation!)).toBe(30);
+      expect(f?.screenArea.rotation).toBe(rotation);
     });
   });
 
