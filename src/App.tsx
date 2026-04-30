@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import AppStoreTextCard from "./components/AppStoreTextCard/AppStoreTextCard";
 import BackgroundCard from "./components/BackgroundCard/BackgroundCard";
 import BrowserCard from "./components/BrowserCard/BrowserCard";
 import ExportCard from "./components/ExportCard/ExportCard";
@@ -138,6 +139,11 @@ export default function App() {
             {/* 4b. Device controls — conditional */}
             {!isBrowser && selectedFrame && (
               <BackgroundCard frame={selectedFrame} state={background} />
+            )}
+
+            {/* 4c. App Store text controls */}
+            {isAppStore && selectedFrame && (
+              <AppStoreTextCard frame={selectedFrame} state={appStoreText} />
             )}
 
             {/* Mobile/tablet preview — between Frame and ImageAdjust */}
