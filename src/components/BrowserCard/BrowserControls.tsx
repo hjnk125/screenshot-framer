@@ -7,7 +7,7 @@ type BrowserControlsProps = {
   state: UseBrowserStateReturn;
 };
 
-export function BrowserControls({ frame, state }: BrowserControlsProps) {
+export default function BrowserControls({ frame, state }: BrowserControlsProps) {
   const faviconInputRef = useRef<HTMLInputElement>(null);
   const hasTabArea = !!frame.browserMeta?.tabArea;
 

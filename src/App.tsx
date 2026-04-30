@@ -1,21 +1,21 @@
-import { useState, useCallback, useEffect, useRef } from "react";
-import type { Frame, ShadowConfig } from "./types/frame";
-import { useImageUpload } from "./hooks/useImageUpload";
-import { useImageTransform } from "./hooks/useImageTransform";
-import { useCompositor } from "./hooks/useCompositor";
-import { useBrowserState } from "./hooks/useBrowserState";
-import { useDeviceBg } from "./hooks/useDeviceBg";
-import { HelpButton } from "./components/HelpButton/HelpButton";
-import { TitleCard } from "./components/TitleCard/TitleCard";
-import { FileCard } from "./components/FileCard/FileCard";
-import { FramePicker } from "./components/FramePickerCard/FramePicker";
-import { BrowserCard } from "./components/BrowserCard/BrowserCard";
-import { DeviceCard } from "./components/DeviceCard/DeviceCard";
-import { ImageAdjust } from "./components/ImageAdjustCard/ImageAdjust";
-import { ShadowControls } from "./components/ShadowCard/ShadowControls";
-import { ExportControls } from "./components/ExportCard/ExportControls";
+import { useCallback, useEffect, useRef, useState } from "react";
+import BackgroundCard from "./components/BackgroundCard/BackgroundCard";
+import BrowserCard from "./components/BrowserCard/BrowserCard";
+import ExportCard from "./components/ExportCard/ExportCard";
+import FileCard from "./components/FileCard/FileCard";
+import FramePickerCard from "./components/FramePickerCard/FramePickerCard";
+import HelpButton from "./components/HelpButton/HelpButton";
+import ImageScaleCard from "./components/ImageScaleCard/ImageScaleCard";
 import { PreviewCanvas } from "./components/PreviewCanvas";
+import ShadowCard from "./components/ShadowCard/ShadowCard";
+import TitleCard from "./components/TitleCard/TitleCard";
 import { Toast } from "./components/Toast";
+import { useBrowserState } from "./hooks/useBrowserState";
+import { useCompositor } from "./hooks/useCompositor";
+import { useDeviceBg } from "./hooks/useDeviceBg";
+import { useImageTransform } from "./hooks/useImageTransform";
+import { useImageUpload } from "./hooks/useImageUpload";
+import type { Frame, ShadowConfig } from "./types/frame";
 
 const DEFAULT_SHADOW: ShadowConfig = {
   enabled: true,
@@ -23,7 +23,8 @@ const DEFAULT_SHADOW: ShadowConfig = {
 };
 
 export default function App() {
-  const { image, previewUrl, fileInfo, error, handleFile, clearImage } = useImageUpload();
+  const { image, previewUrl, fileInfo, error, handleFile, clearImage } =
+    useImageUpload();
   const {
     transform,
     setScale,
@@ -56,15 +57,16 @@ export default function App() {
     };
   }, [selectedFrame]);
 
-  const { renderToCanvas, exportPng, getOutputSize, isRendering, isExporting } = useCompositor({
-    screenshot: image,
-    frame: selectedFrame,
-    transform,
-    shadow,
-    browserState: isBrowser ? browserState : undefined,
-    defaultFavicon: isBrowser ? defaultFavicon : null,
-    deviceBg: !isBrowser ? deviceBgState.deviceBg : undefined,
-  });
+  const { renderToCanvas, exportPng, getOutputSize, isRendering, isExporting } =
+    useCompositor({
+      screenshot: image,
+      frame: selectedFrame,
+      transform,
+      shadow,
+      browserState: isBrowser ? browserState : undefined,
+      defaultFavicon: isBrowser ? defaultFavicon : null,
+      deviceBg: !isBrowser ? deviceBgState.deviceBg : undefined,
+    });
 
   // Fade visibility — show when aside has more content below
   const checkFade = useCallback(() => {
@@ -85,7 +87,10 @@ export default function App() {
       setSelectedFrame(frame);
       resetTransform();
       // appstore 프레임은 투명 배경을 허용하지 않으므로 transparent → white로 전환
-      if (frame.category === "appstore" && deviceBgState.deviceBg.type === "transparent") {
+      if (
+        frame.category === "appstore" &&
+        deviceBgState.deviceBg.type === "transparent"
+      ) {
         deviceBgState.setType("white");
       }
     },
@@ -115,7 +120,7 @@ export default function App() {
             />
 
             {/* 3. Frame picker */}
-            <FramePicker
+            <FramePickerCard
               selectedId={selectedFrame?.id ?? null}
               onSelect={handleFrameSelect}
               showHint={!!image && !selectedFrame}
@@ -128,7 +133,7 @@ export default function App() {
 
             {/* 4b. Device controls — conditional */}
             {!isBrowser && selectedFrame && (
-              <DeviceCard frame={selectedFrame} state={deviceBgState} />
+              <BackgroundCard frame={selectedFrame} state={deviceBgState} />
             )}
 
             {/* Mobile/tablet preview — between Frame and ImageAdjust */}
@@ -144,7 +149,7 @@ export default function App() {
 
             {/* 5. Image adjust — conditional */}
             {image && selectedFrame && (
-              <ImageAdjust
+              <ImageScaleCard
                 scale={transform.scale}
                 onScaleChange={setScale}
                 onReset={resetTransform}
@@ -152,7 +157,7 @@ export default function App() {
             )}
 
             {/* 6. Shadow */}
-            <ShadowControls value={shadow} onChange={setShadow} />
+            <ShadowCard value={shadow} onChange={setShadow} />
           </aside>
 
           {/* Bottom fade — desktop only, fades when scrollable content remains */}
@@ -173,12 +178,16 @@ export default function App() {
         </div>
 
         {/* Export */}
-        <ExportControls
+        <ExportCard
           onExport={exportPng}
           disabled={!image || !selectedFrame}
           isExporting={isExporting}
           getOutputSize={getOutputSize}
-          uploadSize={image ? { width: image.naturalWidth, height: image.naturalHeight } : null}
+          uploadSize={
+            image
+              ? { width: image.naturalWidth, height: image.naturalHeight }
+              : null
+          }
         />
 
         <Toast message={error} onClose={clearImage} />

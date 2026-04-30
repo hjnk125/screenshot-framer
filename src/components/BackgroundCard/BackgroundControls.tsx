@@ -1,10 +1,10 @@
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { HexColorPicker } from "react-colorful";
-import type { DeviceBgType } from "../../types/frame";
 import type { UseDeviceBgReturn } from "../../hooks/useDeviceBg";
+import type { DeviceBgType } from "../../types/frame";
 import { Icon } from "../Icon";
 
-type BackgroundColorControlsProps = {
+type BackgroundControlsProps = {
   state: UseDeviceBgReturn;
   hideTransparent?: boolean;
 };
@@ -18,14 +18,21 @@ const PRESETS: { type: DeviceBgType; label: string }[] = [
 const CHECKER =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Crect width='4' height='4' fill='%23ccc'/%3E%3Crect x='4' y='4' width='4' height='4' fill='%23ccc'/%3E%3C/svg%3E\")";
 
-export function BackgroundColorControls({ state, hideTransparent = false }: BackgroundColorControlsProps) {
+export default function BackgroundControls({
+  state,
+  hideTransparent = false,
+}: BackgroundControlsProps) {
   const { deviceBg, setType, setColor, handleImage, clearImage } = state;
-  const presets = hideTransparent ? PRESETS.filter((p) => p.type !== "transparent") : PRESETS;
+  const presets = hideTransparent
+    ? PRESETS.filter((p) => p.type !== "transparent")
+    : PRESETS;
   const inputRef = useRef<HTMLInputElement>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
   const pickerRef = useRef<HTMLDivElement>(null);
   const swatchRef = useRef<HTMLButtonElement>(null);
-  const [hexInput, setHexInput] = useState(deviceBg.color?.replace("#", "") ?? "ffffff");
+  const [hexInput, setHexInput] = useState(
+    deviceBg.color?.replace("#", "") ?? "ffffff",
+  );
 
   // 팝오버 외부 클릭 시 닫힘
   useEffect(() => {
@@ -49,7 +56,7 @@ export function BackgroundColorControls({ state, hideTransparent = false }: Back
       setColor(hex);
       setHexInput(hex.replace("#", ""));
     },
-    [setColor]
+    [setColor],
   );
 
   const handleHexInput = useCallback(
@@ -60,12 +67,13 @@ export function BackgroundColorControls({ state, hideTransparent = false }: Back
         setColor(`#${val}`);
       }
     },
-    [setColor]
+    [setColor],
   );
 
   const swatchBase =
     "h-7 w-7 shrink-0 rounded-[7px] border-2 transition-all cursor-pointer";
-  const ring = "border-accent ring-2 ring-accent ring-offset-1 ring-offset-card";
+  const ring =
+    "border-accent ring-2 ring-accent ring-offset-1 ring-offset-card";
   const noRing = "border-black/[0.10] hover:border-black/25";
 
   const customColor = deviceBg.color ?? "#ffffff";
@@ -88,7 +96,9 @@ export function BackgroundColorControls({ state, hideTransparent = false }: Back
               style={
                 type === "transparent"
                   ? { backgroundImage: CHECKER, backgroundSize: "8px 8px" }
-                  : { backgroundColor: type === "white" ? "#ffffff" : "#000000" }
+                  : {
+                      backgroundColor: type === "white" ? "#ffffff" : "#000000",
+                    }
               }
             />
           ))}
@@ -107,7 +117,9 @@ export function BackgroundColorControls({ state, hideTransparent = false }: Back
               className={`${swatchBase} flex items-center justify-center overflow-hidden ${
                 isCustomActive ? ring : noRing
               }`}
-              style={hasCustomColor ? { backgroundColor: customColor } : undefined}
+              style={
+                hasCustomColor ? { backgroundColor: customColor } : undefined
+              }
             >
               {!hasCustomColor && (
                 <Icon name="eyedropper" size={13} className="text-muted" />
@@ -146,7 +158,9 @@ export function BackgroundColorControls({ state, hideTransparent = false }: Back
           {deviceBg.image ? (
             <div className="flex items-center gap-2">
               <button
-                title={deviceBg.type === "image" ? "Change image" : "Restore image"}
+                title={
+                  deviceBg.type === "image" ? "Change image" : "Restore image"
+                }
                 onClick={() => {
                   setType("image");
                   if (deviceBg.type === "image") inputRef.current?.click();

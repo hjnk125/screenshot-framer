@@ -1,10 +1,10 @@
 import { useRef, useState } from "react";
 
-type UploadZoneProps = {
+type FileControlsProps = {
   onFile: (file: File) => void;
 };
 
-export function UploadZone({ onFile }: UploadZoneProps) {
+export default function FileControls({ onFile }: FileControlsProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
 

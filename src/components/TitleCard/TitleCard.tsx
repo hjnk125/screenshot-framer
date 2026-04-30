@@ -1,4 +1,4 @@
-export function TitleCard() {
+export default function TitleCard() {
   return (
     <div className="flex shrink-0 items-center justify-between gap-2 rounded-card-dense bg-ink px-3 py-[10px]">
       <div className="flex items-center gap-[9px]">

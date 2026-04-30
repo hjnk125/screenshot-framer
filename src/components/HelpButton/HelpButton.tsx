@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { HelpModal } from "./HelpModal";
+import HelpModal from "./HelpModal";
 
-export function HelpButton() {
+export default function HelpButton() {
   const [showHelp, setShowHelp] = useState(
     () => !localStorage.getItem("help-seen"),
   );

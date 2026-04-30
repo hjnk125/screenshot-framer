@@ -1,12 +1,12 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { ImageAdjust } from "../components/ImageAdjustCard/ImageAdjust";
+import ImageScaleCard from "../components/ImageScaleCard/ImageScaleCard";
 import { describe, it, expect, vi } from "vitest";
 
-describe("ImageAdjust", () => {
+describe("ImageScaleCard", () => {
   it("Scale 슬라이더를 렌더링한다", () => {
     render(
-      <ImageAdjust scale={1} onScaleChange={() => {}} onReset={() => {}} />,
+      <ImageScaleCard scale={1} onScaleChange={() => {}} onReset={() => {}} />,
     );
     expect(screen.getByRole("slider")).toBeInTheDocument();
   });
@@ -14,7 +14,7 @@ describe("ImageAdjust", () => {
   it("슬라이더 변경 시 onScaleChange를 호출한다", () => {
     const onScaleChange = vi.fn();
     render(
-      <ImageAdjust
+      <ImageScaleCard
         scale={1}
         onScaleChange={onScaleChange}
         onReset={() => {}}
@@ -28,7 +28,7 @@ describe("ImageAdjust", () => {
   it("초기화 버튼 클릭 시 onReset을 호출한다", async () => {
     const onReset = vi.fn();
     render(
-      <ImageAdjust scale={1.5} onScaleChange={() => {}} onReset={onReset} />,
+      <ImageScaleCard scale={1.5} onScaleChange={() => {}} onReset={onReset} />,
     );
     await userEvent.click(screen.getByRole("button", { name: /reset/i }));
     expect(onReset).toHaveBeenCalled();

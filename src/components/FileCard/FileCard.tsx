@@ -1,4 +1,4 @@
-import { UploadZone } from "./UploadZone";
+import FileControls from "./FileControls";
 
 type FileCardProps = {
   image: HTMLImageElement | null;
@@ -8,7 +8,7 @@ type FileCardProps = {
   onClear: () => void;
 };
 
-export function FileCard({ image, previewUrl, fileInfo, onFile, onClear }: FileCardProps) {
+export default function FileCard({ image, previewUrl, fileInfo, onFile, onClear }: FileCardProps) {
   return (
     <div className="shrink-0 rounded-card-dense border border-black/[0.07] bg-card-dense p-4">
       {image && fileInfo ? (
@@ -52,7 +52,7 @@ export function FileCard({ image, previewUrl, fileInfo, onFile, onClear }: FileC
               File
             </span>
           </div>
-          <UploadZone onFile={onFile} />
+          <FileControls onFile={onFile} />
         </>
       )}
     </div>

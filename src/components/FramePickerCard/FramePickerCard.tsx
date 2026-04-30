@@ -1,10 +1,10 @@
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import type { Frame, FrameCategory } from "../../types/frame";
 import { FRAMES } from "../../data/frames";
+import type { Frame, FrameCategory } from "../../types/frame";
 import { Icon } from "../Icon";
 
-type FramePickerProps = {
+type FramePickerCardProps = {
   selectedId: string | null;
   onSelect: (frame: Frame) => void;
   showHint?: boolean;
@@ -76,7 +76,10 @@ function FrameHintTooltip({
     >
       {pos.desktop ? (
         /* 데스크탑: 탭 우측 — 좌향 꼬리 */
-        <div className="flex items-center" style={{ transform: "translateY(-50%)" }}>
+        <div
+          className="flex items-center"
+          style={{ transform: "translateY(-50%)" }}
+        >
           <div
             style={{
               width: 0,
@@ -92,7 +95,10 @@ function FrameHintTooltip({
         </div>
       ) : (
         /* 모바일: 탭 위 — 아래향 꼬리 */
-        <div className="flex flex-col items-center" style={{ transform: "translateY(-100%)" }}>
+        <div
+          className="flex flex-col items-center"
+          style={{ transform: "translateY(-100%)" }}
+        >
           <div className="whitespace-nowrap rounded-[9px] bg-black/[0.72] px-[11px] py-[7px] text-[12.5px] font-semibold text-white backdrop-blur-sm">
             Pick a frame
           </div>
@@ -113,11 +119,11 @@ function FrameHintTooltip({
   );
 }
 
-export function FramePicker({
+export default function FramePickerCard({
   selectedId,
   onSelect,
   showHint,
-}: FramePickerProps) {
+}: FramePickerCardProps) {
   const [tab, setTab] = useState<FrameCategory>("device");
   const tabRef = useRef<HTMLDivElement>(null);
 
@@ -133,7 +139,10 @@ export function FramePicker({
         </div>
 
         {/* Segment control */}
-        <div ref={tabRef} className="mb-[10px] flex rounded-[10px] border border-black/[0.07] bg-card-inner p-[3px]">
+        <div
+          ref={tabRef}
+          className="mb-[10px] flex rounded-[10px] border border-black/[0.07] bg-card-inner p-[3px]"
+        >
           {(["device", "browser", "appstore"] as FrameCategory[]).map((cat) => (
             <button
               key={cat}
@@ -144,7 +153,11 @@ export function FramePicker({
                   : "bg-transparent text-soft hover:text-ink"
               }`}
             >
-              {cat === "device" ? "Device" : cat === "browser" ? "Browser" : "App Store"}
+              {cat === "device"
+                ? "Device"
+                : cat === "browser"
+                  ? "Browser"
+                  : "App Store"}
             </button>
           ))}
         </div>
