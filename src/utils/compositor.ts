@@ -272,6 +272,9 @@ function drawDeviceBg(
   if (bg.type === "white" || bg.type === "black") {
     ctx.fillStyle = bg.type === "white" ? "#ffffff" : "#000000";
     ctx.fillRect(x, y, w, h);
+  } else if (bg.type === "color" && bg.color) {
+    ctx.fillStyle = bg.color;
+    ctx.fillRect(x, y, w, h);
   } else if (bg.type === "image" && bg.image) {
     const { naturalWidth: iw, naturalHeight: ih } = bg.image;
     const bgScale = Math.max(w / iw, h / ih);
@@ -327,6 +330,9 @@ function drawAppStoreBg(
     ctx.fillRect(0, 0, w, h);
   } else if (bg.type === "black") {
     ctx.fillStyle = "#000000";
+    ctx.fillRect(0, 0, w, h);
+  } else if (bg.type === "color" && bg.color) {
+    ctx.fillStyle = bg.color;
     ctx.fillRect(0, 0, w, h);
   } else if (bg.type === "image" && bg.image) {
     const { naturalWidth: iw, naturalHeight: ih } = bg.image;

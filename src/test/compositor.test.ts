@@ -1,5 +1,5 @@
 import { calculateCanvasSize, computeEffectiveScale, calculateOutputSize } from "../utils/compositor";
-import type { Frame, ShadowConfig } from "../types/frame";
+import type { Frame, ShadowConfig, DeviceBgConfig } from "../types/frame";
 
 describe("calculateCanvasSize", () => {
   it("1x 스케일에서 에셋 기준 캔버스 크기를 반환한다", () => {
@@ -138,5 +138,18 @@ describe("calculateOutputSize — appstore", () => {
       width: 1290,
       height: 2796,
     });
+  });
+});
+
+describe("drawDeviceBg — color 타입", () => {
+  it("DeviceBgConfig type='color'가 타입 오류 없이 생성된다", () => {
+    const bg: DeviceBgConfig = { type: "color", color: "#ff6b6b", image: null };
+    expect(bg.type).toBe("color");
+    expect(bg.color).toBe("#ff6b6b");
+  });
+
+  it("DeviceBgConfig color 필드가 undefined여도 타입이 유효하다", () => {
+    const bg: DeviceBgConfig = { type: "transparent", image: null };
+    expect(bg.color).toBeUndefined();
   });
 });

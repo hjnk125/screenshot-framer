@@ -85,9 +85,10 @@ export type ImageTransform = {
 
 export type ExportScale = number;
 
-export type DeviceBgType = "transparent" | "white" | "black" | "image";
+export type DeviceBgType = "transparent" | "white" | "black" | "color" | "image";
 
 export type DeviceBgConfig = {
   type: DeviceBgType;
+  color?: string; // hex, e.g. "#ff6b6b". type === "color" 일 때만 유효
   image: HTMLImageElement | null;
 };
