@@ -51,6 +51,11 @@ export type ScreenArea = {
 export type AppStoreMeta = {
   canvasWidth: number;
   canvasHeight: number;
+  textConfig?: {
+    x: number;       // left/right 정렬 기준점 x. center는 canvasWidth/2 사용
+    y: number;       // title top y (px)
+    align: "left" | "center" | "right";
+  };
 };
 
 export type Frame = {
@@ -90,4 +95,11 @@ export type BackgroundConfig = {
   type: BackgroundType;
   color?: string; // hex, e.g. "#ff6b6b". type === "color" 일 때만 유효
   image: HTMLImageElement | null;
+};
+
+export type AppStoreTextState = {
+  title: string;
+  titleColor: string;        // hex, e.g. "#000000"
+  description: string;
+  descriptionColor: string;  // hex, e.g. "#000000"
 };

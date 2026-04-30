@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import AppStoreTextCard from "./components/AppStoreTextCard/AppStoreTextCard";
 import BackgroundCard from "./components/BackgroundCard/BackgroundCard";
 import BrowserCard from "./components/BrowserCard/BrowserCard";
 import ExportCard from "./components/ExportCard/ExportCard";
@@ -13,6 +14,7 @@ import { Toast } from "./components/Toast";
 import { useBrowserState } from "./hooks/useBrowserState";
 import { useCompositor } from "./hooks/useCompositor";
 import { useBackground } from "./hooks/useBackground";
+import { useAppStoreText } from "./hooks/useAppStoreText";
 import { useImageTransform } from "./hooks/useImageTransform";
 import { useImageUpload } from "./hooks/useImageUpload";
 import type { Frame, ShadowConfig } from "./types/frame";
@@ -35,6 +37,8 @@ export default function App() {
   const [shadow, setShadow] = useState<ShadowConfig>(DEFAULT_SHADOW);
   const browserState = useBrowserState();
   const background = useBackground();
+  const appStoreText = useAppStoreText();
+  const isAppStore = selectedFrame?.category === "appstore";
   const [defaultFavicon, setDefaultFavicon] = useState<HTMLImageElement | null>(
     null,
   );
@@ -66,6 +70,7 @@ export default function App() {
       browserState: isBrowser ? browserState : undefined,
       defaultFavicon: isBrowser ? defaultFavicon : null,
       background: !isBrowser ? background.background : undefined,
+      appStoreText: isAppStore ? appStoreText : undefined,
     });
 
   // Fade visibility — show when aside has more content below
@@ -134,6 +139,11 @@ export default function App() {
             {/* 4b. Device controls — conditional */}
             {!isBrowser && selectedFrame && (
               <BackgroundCard frame={selectedFrame} state={background} />
+            )}
+
+            {/* 4c. App Store text controls */}
+            {isAppStore && selectedFrame && (
+              <AppStoreTextCard frame={selectedFrame} state={appStoreText} />
             )}
 
             {/* Mobile/tablet preview — between Frame and ImageAdjust */}

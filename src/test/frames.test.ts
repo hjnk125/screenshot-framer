@@ -89,4 +89,26 @@ describe("App Store 프레임", () => {
       expect(f.assetPath).toMatch(/^\/frames\/appstore\//);
     });
   });
+
+  it("모든 appstore 프레임에 textConfig가 정의되어 있다", () => {
+    appstoreFrames.forEach((f) => {
+      expect(f.appstoreMeta?.textConfig).toBeDefined();
+      expect(f.appstoreMeta?.textConfig?.align).toMatch(/^(left|center|right)$/);
+      expect(typeof f.appstoreMeta?.textConfig?.y).toBe("number");
+    });
+  });
+
+  it("appstore 프레임 textConfig 정렬이 올바르다", () => {
+    const expected: Record<string, "left" | "center" | "right"> = {
+      "appstore-67-full": "center",
+      "appstore-67-offset": "center",
+      "appstore-67-tilt-a1": "left",
+      "appstore-67-tilt-a2": "right",
+      "appstore-67-tilt-b1": "left",
+      "appstore-67-tilt-b2": "right",
+    };
+    appstoreFrames.forEach((f) => {
+      expect(f.appstoreMeta?.textConfig?.align).toBe(expected[f.id]);
+    });
+  });
 });
